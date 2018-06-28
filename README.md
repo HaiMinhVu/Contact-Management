@@ -1,0 +1,3 @@
+# Factory-Management
+
+A database for small company and simple web-interface that allows people to manage inventory, employee ...
