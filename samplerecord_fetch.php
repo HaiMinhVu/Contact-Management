@@ -75,7 +75,6 @@ function get_total_all_records($dbconnect)
 }
 
 $output = array(
-	"draw"    			=> 	intval($_POST["draw"]),
 	"recordsTotal"  	=>  $filtered_rows,
 	"recordsFiltered" 	=> 	get_total_all_records($dbconnect),
 	"data"    			=> 	$data

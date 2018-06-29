@@ -27,33 +27,22 @@ if(isset($_POST['btn_action']))
 	//// load single item into update form
 	if($_POST['btn_action'] == 'fetch_single')
 	{
-    	$projectid = $_POST['project_id'];
-		$query = "
-		SELECT * FROM Project WHERE ProjectID = $projectid
-		";
-		$result = $dbconnect->query($query);
-    	while($row = $result->fetch_assoc()){
-        	// retrieve data from database and load into edit form
-			$output['project_name'] = $row['ProjectName'];
-        	$output['project_description'] = $row['ProjectDescription'];
-			$output['brand_id'] = $row['BrandBelongTo'];
-			//$output["brand_select_box"] = brand_option_list($dbconnect);
-			$output['dept_id'] = $row['DeptBelongTo'];
-        	//$output["dept_select_box"] = department_option_list($dbconnect);
-			$output['created_date'] = date('Y-m-d', strtotime($row['DateCreated']));
-			$output['start_date'] =  date('Y-m-d', strtotime($row['StartDate']));
-			$output['est_end_date'] =  date('Y-m-d', strtotime($row['EstEndDate']));
-        	if($row['EndDate'] == NULL){
-            	$output['end_date'] = "";
-            }
-        	else{
-				$output['end_date'] = date('Y-m-d', strtotime($row['EndDate']));
-            }
-        	$output['project_lead'] = $row['ProjectLead'];
-			$output['progress'] = $row['Progress'];
-        	$output['status'] = $row['ProjectStatus'];
-		}
-		echo json_encode($output);
+    	$ercid =  $_POST['ercid'];
+        $ercarray = explode(".", $ercid);
+        $ecid = $ercarray[0];
+        $eid = $ercarray[1];
+
+        $query = "SELECT * FROM Entity_RelateTo_Contact WHERE ECID = $ecid AND EID = $eid";
+        $result = $dbconnect->query($query);
+        while($row = $result->fetch_assoc()){
+            // retrieve data from database and load into edit form
+            $output['ercid'] = $ercid;
+            $output['eid'] = $row['EID'];
+            $output['ecid'] = $row['ECID'];
+            $output['priority'] = $row['Priority'];
+            $output['erctitle'] = $row['ERCTitle'];
+        }
+        echo json_encode($output);
 	}
 
 	//// submit update/edit item information
@@ -95,19 +84,25 @@ if(isset($_POST['btn_action']))
 
 	if($_POST['btn_action'] == 'delete')
 	{	
-    	echo $_POST['ercid'];
-    	/*
+    	$ercid =  $_POST['ercid'];
+        $ercarray = explode(".", $ercid);
+        $ecid = $ercarray[0];
+        $eid = $ercarray[1];
+    	
     	$modify_date = date("Y-m-d H:i");
     	$modify_by = $_SESSION['acct_id'];
     	$status = "Active";
-    	
-		$query = "UPDATE Project SET ProjectStatus = '$status', ModifyDate = '$modify_date', ModifyBy = $modify_by WHERE ProjectID = $project_id";
-		if($dbconnect->query($query) == TRUE){
-			echo 'Project '.$project_id.'  Set to '.$status;
-		}
-    	else{
-        	echo "Failed to Delete";
-        }*/
+        if($_POST['status'] == "Active"){
+            $status = "InActive";
+        }   
+        $query = "UPDATE Entity_RelateTo_Contact SET ERCStatus = '$status', ERCModifyDate = '$modify_date', ERCModifyBy = $modify_by WHERE EID = $eid AND ECID = $ecid";
+        if($dbconnect->query($query) == TRUE){
+            echo 'Relationship is Set to '.$status;
+        }
+        else{
+            echo $query;
+        }
+		
 	}
 }
 

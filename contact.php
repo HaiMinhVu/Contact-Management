@@ -31,14 +31,14 @@ include('header.php');
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-12 table-responsive">
-                            <table id="relation_data" class="table table-bordered table-striped">
+                            <table id="contact_data" class="table table-bordered table-striped">
                                 <thead><tr>
                                     <th>ID</th>
-                                    <th>Vender Name</th>
-                                    <th>Contact Name</th>
-                                    <th>Title</th>
+                                    <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
+                                    <th>Fax</th>
+                                    <th>Website</th>
                                     <th>Status</th>
                                     <th></th>
                                     <?php
@@ -57,9 +57,9 @@ include('header.php');
             </div>
         </div>
     </div>
-    <div id="RelationAddModal" class="modal fade">
+    <div id="ContactAddModal" class="modal fade">
         <div class="modal-dialog">
-            <form method="POST" id="relation_form">
+            <form method="POST" id="contact_form">
                 <div class="modal-content">
 
                     <div class="modal-header">
@@ -68,7 +68,7 @@ include('header.php');
                     </div>
                         
                     <div class="modal-body">
-                        <div class="relation-group">
+                        <div class="contact-group">
                                 <label>Select Vender</label>
                                 <select name="eid" id="eid" class="form-control" required>
                                     <option value="">Select Vender</option>
@@ -107,12 +107,12 @@ include('header.php');
 
 <script>
 $(document).ready(function(){
-    var dataTable = $('#relation_data').DataTable({
+    var dataTable = $('#contact_data').DataTable({
         "processing":true,
         "serverSide":true,
         "order":[],
         "ajax":{
-            url:"vendercontact_fetch.php",
+            url:"contact_fetch.php",
             type:"POST"
         },
         <?php
@@ -141,25 +141,25 @@ $(document).ready(function(){
 
     ////// Add new item to the table
     $('#add_button').click(function(){
-        $('#RelationAddModal').modal('show');
-        $('#relation_form')[0].reset();
+        $('#ContactAddModal').modal('show');
+        $('#contact_form')[0].reset();
         $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
         $('#action').val("Add");
         $('#btn_action').val("Add");
     });
 
-    $(document).on('submit', '#relation_form', function(event){
+    $(document).on('submit', '#contact_form', function(event){
         event.preventDefault();
         $('#action').attr('disabled', 'disabled');
         var form_data = $(this).serialize();
         $.ajax({
-            url:"vendercontact_action.php",
+            url:"contact_action.php",
             method:"POST",
             data:form_data,
             success:function(data)
             {
-                $('#relation_form')[0].reset();
-                $('#RelationAddModal').modal('hide');
+                $('#contact_form')[0].reset();
+                $('#ContactAddModal').modal('hide');
                 $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
                 $('#action').attr('disabled', false);
                 dataTable.ajax.reload();
@@ -172,12 +172,12 @@ $(document).ready(function(){
         var ercid = $(this).attr("id");
         var btn_action = 'fetch_single';
         $.ajax({
-            url:"vendercontact_action.php",
+            url:"contact_action.php",
             method:"POST",
             data:{ercid:ercid, btn_action:btn_action},
             dataType:"json",
             success:function(data){
-                $('#RelationAddModal').modal('show');
+                $('#ContactAddModal').modal('show');
                 $('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Project");
                 $('#id').val(data.ercid);
                 $('#eid').val(data.eid);
@@ -196,7 +196,7 @@ $(document).ready(function(){
         var status = $(this).data("status");
         if(confirm("Are you sure you want to delete?" )){
             $.ajax({
-                url:"vendercontact_action.php",
+                url:"contact_action.php",
                 method:"POST",
                 data:{ercid:ercid,btn_action:btn_action,status:status},
                 success:function(data){

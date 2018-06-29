@@ -31,7 +31,7 @@ function employee_option_list($dbconnect){
 }
 
 function entity_option_list($dbconnect){
-	$sql = "SELECT * FROM Entity";
+	$sql = "SELECT * FROM Entity WHERE EStatus = 'Active'";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
@@ -41,7 +41,7 @@ function entity_option_list($dbconnect){
 }
 
 function contact_option_list($dbconnect){
-	$sql = "SELECT * FROM Entity_Contact";
+	$sql = "SELECT * FROM Entity_Contact WHERE ECStatus = 'Active'";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
@@ -51,7 +51,7 @@ function contact_option_list($dbconnect){
 }
 
 function sample_option_list($dbconnect){
-	$sql = "SELECT * FROM Sample";
+	$sql = "SELECT * FROM Sample WHERE SStatus = 'Active'";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){

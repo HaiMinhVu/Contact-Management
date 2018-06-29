@@ -180,7 +180,6 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.update', function(){
-    	// display hidden fields - update has 3 more fields than add
         var eid = $(this).attr("id");
         var btn_action = 'fetch_single';
         $.ajax({
