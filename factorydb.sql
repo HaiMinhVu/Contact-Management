@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- version 4.7.9
+-- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 28, 2018 at 05:06 PM
--- Server version: 5.7.22-0ubuntu0.16.04.1
--- PHP Version: 7.0.30-0ubuntu0.16.04.1
+-- Generation Time: Jun 29, 2018 at 05:47 AM
+-- Server version: 10.1.31-MariaDB
+-- PHP Version: 7.2.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -74,22 +76,25 @@ CREATE TABLE `Entity_Contact` (
   `ECCity` varchar(255) DEFAULT NULL,
   `ECState` varchar(255) DEFAULT NULL,
   `ECZip` varchar(10) DEFAULT NULL,
-  `ECCountry` varchar(255) DEFAULT NULL
+  `ECCountry` varchar(255) DEFAULT NULL,
+  `ECModifyDate` datetime DEFAULT NULL,
+  `ECModifyBy` int(11) DEFAULT NULL,
+  `ECStatus` enum('Active','InActive') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Entity_Contact`
 --
 
-INSERT INTO `Entity_Contact` (`ECID`, `ECName`, `ECEmail`, `ECPhone`, `ECFax`, `ECWebsite`, `ECAddress1`, `ECAddress2`, `ECCity`, `ECState`, `ECZip`, `ECCountry`) VALUES
-(1, 'John', 'john@red.com', '123456789', '123456789', 'red.com', '123 china town', NULL, 'new york', 'new york', '55445', 'USA'),
-(2, 'Oanh', 'okt@gmail.com', '456789123', '456789123', 'okt.com', '456 hcm', NULL, 'sai gon', NULL, NULL, 'viet nam'),
-(3, 'william', 'will@gmail.com', '987654321', '987654321', 'will.com', '678 su van hanh', NULL, 'ho chi minh', NULL, NULL, 'viet nam'),
-(4, 'David', 'david@yahoo.com', '456897456', '455678123', 'abc.com', '123 khi nao em buon', NULL, 'Shanghai', NULL, '55487', 'China'),
-(5, 'chris', 'chris@email.com', '123653827', '127385639', 'abcd.com', '542 o dau vay', NULL, 'austin', 'texas', '73726', 'USA'),
-(6, 'sally', 'sally@email.com', '3243254552', '2312908353', 'jdh.com', '435 bellair', NULL, 'houston', 'texas', '77028', 'USA'),
-(7, 'emily', 'emily@email.com', '2342352359', '2352532350', 'ksdf.com', '4350 san ho he', NULL, 'santa anna', 'CA', '45233', 'USA'),
-(8, 'a', 'a@email.com', '1', '1', 'a', '1', '', '', '', '', '');
+INSERT INTO `Entity_Contact` (`ECID`, `ECName`, `ECEmail`, `ECPhone`, `ECFax`, `ECWebsite`, `ECAddress1`, `ECAddress2`, `ECCity`, `ECState`, `ECZip`, `ECCountry`, `ECModifyDate`, `ECModifyBy`, `ECStatus`) VALUES
+(1, 'John', 'john@red.com', '123456789', '123456789', 'red.com', '123 china town', NULL, 'new york', 'new york', '55445', 'USA', NULL, 2, 'Active'),
+(2, 'Oanh', 'okt@gmail.com', '456789123', '456789123', 'okt.com', '456 hcm', NULL, 'sai gon', NULL, NULL, 'viet nam', NULL, 1, 'Active'),
+(3, 'william', 'will@gmail.com', '987654321', '987654321', 'will.com', '678 su van hanh', NULL, 'ho chi minh', NULL, NULL, 'viet nam', NULL, 5, 'Active'),
+(4, 'David', 'david@yahoo.com', '456897456', '455678123', 'abc.com', '123 khi nao em buon', NULL, 'Shanghai', NULL, '55487', 'China', NULL, 6, 'Active'),
+(5, 'chris', 'chris@email.com', '123653827', '127385639', 'abcd.com', '542 o dau vay', NULL, 'austin', 'texas', '73726', 'USA', NULL, 1, 'Active'),
+(6, 'sally', 'sally@email.com', '3243254552', '2312908353', 'jdh.com', '435 bellair', NULL, 'houston', 'texas', '77028', 'USA', NULL, 2, 'Active'),
+(7, 'emily', 'emily@email.com', '2342352359', '2352532350', 'ksdf.com', '4350 san ho he', NULL, 'santa anna', 'CA', '45233', 'USA', NULL, 5, 'Active'),
+(8, 'a', 'a@email.com', '1', '1', 'a', '1', '', '', '', '', '', NULL, 1, 'InActive');
 
 -- --------------------------------------------------------
 
@@ -113,15 +118,17 @@ CREATE TABLE `Entity_RelateTo_Contact` (
 --
 
 INSERT INTO `Entity_RelateTo_Contact` (`EID`, `ECID`, `ERCTitle`, `Priority`, `DateCreated`, `ERCModifyDate`, `ERCModifyBy`, `ERCStatus`) VALUES
-(1, 1, 'CEO', 'Primary Contact', '2018-06-04 00:00:00', NULL, NULL, 'Active'),
-(2, 2, 'VP', 'Primary Contact', '2018-03-01 00:00:00', NULL, NULL, 'Active'),
-(2, 3, 'Representative', 'Alternative Contact', '2018-06-13 00:00:00', NULL, NULL, 'InActive'),
-(3, 1, 'Sale Manager', 'Primary Contact', '2017-12-04 00:00:00', '2018-06-06 00:00:00', NULL, 'InActive'),
-(4, 2, 'Sale Manager', 'Alternative Contact', '2018-06-05 00:00:00', NULL, NULL, 'Active'),
-(4, 4, 'Sale Director', 'Primary Contact', '2018-06-11 00:00:00', NULL, NULL, 'Active'),
-(5, 6, 'General Manager', 'Primary Contact', '2018-06-20 00:00:00', NULL, NULL, 'Active'),
-(5, 7, 'Accounting Manager', 'Primary Contact', '2018-03-13 00:00:00', NULL, NULL, 'Active'),
-(6, 6, 'General Manager', 'Primary Contact', '2018-06-12 00:00:00', NULL, NULL, 'Active'),
+(1, 1, 'CEO', 'Primary Contact', '2018-06-04 00:00:00', '2018-06-29 02:29:00', 5, 'InActive'),
+(1, 6, 'Manager', 'Alternative Contact', '2018-06-29 01:21:00', '2018-06-29 03:39:00', 1, 'Active'),
+(2, 2, 'VP', 'Primary Contact', '2018-03-01 00:00:00', '2018-06-29 02:30:00', 5, 'InActive'),
+(2, 3, 'Representative', 'Alternative Contact', '2018-06-13 00:00:00', '2018-06-29 02:22:00', 1, 'InActive'),
+(3, 1, 'Sale Manager', 'Primary Contact', '2017-12-04 00:00:00', '2018-06-29 04:42:00', 1, 'InActive'),
+(4, 2, 'Sale Manager', 'Alternative Contact', '2018-06-05 00:00:00', '2018-06-29 03:39:00', 1, 'Active'),
+(4, 4, 'Sale Director', 'Primary Contact', '2018-06-11 00:00:00', '2018-06-29 02:28:00', 1, 'Active'),
+(5, 6, 'General Manager', 'Primary Contact', '2018-06-20 00:00:00', '2018-06-29 03:39:00', 1, 'Active'),
+(5, 7, 'Accounting Manager', 'Primary Contact', '2018-03-13 00:00:00', '2018-06-29 03:39:00', 1, 'Active'),
+(5, 8, 'Manager', 'Primary Contact', '2018-06-29 03:44:00', '2018-06-29 03:44:00', 1, 'Active'),
+(6, 6, 'General Manager', 'Primary Contact', '2018-06-12 00:00:00', '2018-06-29 03:39:00', 1, 'Active'),
 (7, 5, 'Director', 'Primary Contact', '2018-06-28 04:51:00', '2018-06-28 04:51:00', 1, 'Active');
 
 -- --------------------------------------------------------
@@ -644,7 +651,8 @@ ALTER TABLE `Entity`
 -- Indexes for table `Entity_Contact`
 --
 ALTER TABLE `Entity_Contact`
-  ADD PRIMARY KEY (`ECID`);
+  ADD PRIMARY KEY (`ECID`),
+  ADD KEY `FK_ECModifyBy_Account` (`ECModifyBy`);
 
 --
 -- Indexes for table `Entity_RelateTo_Contact`
@@ -781,81 +789,97 @@ ALTER TABLE `test`
 --
 ALTER TABLE `Entity`
   MODIFY `EID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT for table `Entity_Contact`
 --
 ALTER TABLE `Entity_Contact`
   MODIFY `ECID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `Project`
 --
 ALTER TABLE `Project`
   MODIFY `ProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
 --
 -- AUTO_INCREMENT for table `Sample`
 --
 ALTER TABLE `Sample`
   MODIFY `SID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
 --
 -- AUTO_INCREMENT for table `SampleRecord`
 --
 ALTER TABLE `SampleRecord`
   MODIFY `SRID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
 --
 -- AUTO_INCREMENT for table `SampleRecord_LineItem`
 --
 ALTER TABLE `SampleRecord_LineItem`
   MODIFY `SRLID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `SampleTesting`
 --
 ALTER TABLE `SampleTesting`
   MODIFY `STID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `SMBrands`
 --
 ALTER TABLE `SMBrands`
-  MODIFY `BrandID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `BrandID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `SMCategories`
 --
 ALTER TABLE `SMCategories`
   MODIFY `CatID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
 --
 -- AUTO_INCREMENT for table `SMDBAccounts`
 --
 ALTER TABLE `SMDBAccounts`
   MODIFY `AcctID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `SMDepartments`
 --
 ALTER TABLE `SMDepartments`
   MODIFY `SMDeptID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+
 --
 -- AUTO_INCREMENT for table `SMEmployeePayRolls`
 --
 ALTER TABLE `SMEmployeePayRolls`
   MODIFY `PayID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `SMEmployees`
 --
 ALTER TABLE `SMEmployees`
   MODIFY `SMEmID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1009;
+
 --
 -- AUTO_INCREMENT for table `SMEmployeesContacts`
 --
 ALTER TABLE `SMEmployeesContacts`
   MODIFY `EmContactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `SMProductEvaluation`
 --
 ALTER TABLE `SMProductEvaluation`
   MODIFY `EvaluateID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `SMProducts`
 --
 ALTER TABLE `SMProducts`
   MODIFY `SMProID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
 --
 -- Constraints for dumped tables
 --
@@ -866,6 +890,12 @@ ALTER TABLE `SMProducts`
 ALTER TABLE `Entity`
   ADD CONSTRAINT `FK_EEnterBy_Account` FOREIGN KEY (`EEnterBy`) REFERENCES `SMDBAccounts` (`AcctID`),
   ADD CONSTRAINT `FK_EModifyBy_Account` FOREIGN KEY (`EModifyBy`) REFERENCES `SMDBAccounts` (`AcctID`);
+
+--
+-- Constraints for table `Entity_Contact`
+--
+ALTER TABLE `Entity_Contact`
+  ADD CONSTRAINT `FK_ECModifyBy_Account` FOREIGN KEY (`ECModifyBy`) REFERENCES `SMDBAccounts` (`AcctID`);
 
 --
 -- Constraints for table `Entity_RelateTo_Contact`
@@ -955,6 +985,7 @@ ALTER TABLE `SMProductEvaluation`
 --
 ALTER TABLE `SMProducts`
   ADD CONSTRAINT `FK_SMProducts` FOREIGN KEY (`CatID`) REFERENCES `SMCategories` (`CatID`) ON UPDATE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
