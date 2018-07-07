@@ -6,17 +6,23 @@
 	<head>
 		<title>Database System</title>
 		<script src="js/jquery-1.10.2.min.js"></script>
-		<link rel="stylesheet" href="css/bootstrap.min.css" />
-		<script src="js/jquery.dataTables.min.js"></script>
-		<script src="js/dataTables.bootstrap.min.js"></script>		
-		<link rel="stylesheet" href="css/dataTables.bootstrap.min.css" />
 		<script src="js/bootstrap.min.js"></script>
+		<script src="js/jquery.dataTables.min.js"></script>
+		<script src="js/dataTables.bootstrap.min.js"></script>	
+		<script type="text/javascript" src="js/selectize.js"></script>
+
+		<link rel="stylesheet" href="css/dataTables.bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+
+		<link href="js/selectize.default.css" media="screen" rel="stylesheet" type="text/css">
+		
+		<script type="text/javascript" src="js/selectize.min.js"></script>
 </style>
 	</head>
 	<body>
 		<br />
 		<div class="container">
-			<h2 align="center">Database Manager</h2>
+			<h2 align="center">Database Management</h2>
 
 			<nav class="navbar navbar-inverse">
 				<div class="container-fluid">
@@ -41,10 +47,10 @@
 					}
 					?>
                     	<li class="dropdown">
-							<a href="vender.php" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-pill label-danger count"></span>Vender</a>
+							<a href="vender.php" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-pill label-danger count"></span>Vendor</a>
 							<ul class="dropdown-menu">
-								<li><a href="vender.php">View Vender</a></li>
-								<li><a href="vendercontact.php">Vender Related Contact</a></li>
+								<li><a href="vender.php">View Vendor</a></li>
+								<li><a href="vendercontact.php">Vendor Related Contact</a></li>
                     			<li><a href="contact.php">All Contact</a></li>
 							</ul>
 						</li>

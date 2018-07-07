@@ -5,7 +5,7 @@ $query = '';
 
 $output = array();
 $query .= "
-	SELECT * FROM Entity_Contact ec INNER JOIN SMDBAccounts sma ON sma.AcctID = ec.ECModifyBy
+	SELECT * FROM Entity_Contact ec INNER JOIN SMDBAccounts sma ON sma.AcctID = ec.ECEnterBy
 ";
 
 if(isset($_POST["search"]["value"]))
@@ -55,8 +55,9 @@ while($row = $statement->fetch_assoc())
 	$sub_array[] = $row['ECFax'];
 	$sub_array[] = $row['ECWebsite'];
 	$sub_array[] = $status;
-	$sub_array[] = '<a href="vender_detail.php?eid='.$row["ECID"].'" class="btn btn-info btn-xs">View</a>';
-	$sub_array[] = '<button type="button" name="update" id="'.$row["ECID"].'" class="btn btn-warning btn-xs update">Update</button>';
+	$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'" class="btn btn-info btn-xs">View</a>';
+	$sub_array[] = '<a href="contact_update.php?ecid='.$row["ECID"].'" class="btn btn-warning btn-xs">Update</a>';
+	//$sub_array[] = '<button type="button" name="update" id="'.$row["ECID"].'" class="btn btn-warning btn-xs update">Update</button>';
 	$sub_array[] = '<button type="button" name="delete" id="'.$row["ECID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ECStatus"].'">Delete</button>';
 
 	$data[] = $sub_array;

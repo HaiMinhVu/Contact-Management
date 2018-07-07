@@ -102,5 +102,11 @@ if(isset($_POST['btn_action'])){
         	echo "Failed to Delete";
         }
 	}
+
+	if($_POST['btn_action'] == 'save'){
+    	echo $projectid = $_POST['project_id'];
+    }
+
+
 }
 ?>

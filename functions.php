@@ -1,11 +1,11 @@
 <?php
 // list all brands for option selected
 function brand_option_list($dbconnect){
-	$sql = "SELECT * FROM SMBrands WHERE BrandStatus='Active'";
+	$sql = "SELECT * FROM SMBrands";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
-    	$output .='<option value = "'.$row['BrandID'].'">'.$row['BrandName'].'</option>';
+    	$output .='<option value = "'.$row['BrandID'].'">'.$row['BrandName'].' - '.$row['BrandStatus'].'</option>';
     }
 	return $output;
 }
@@ -25,23 +25,23 @@ function employee_option_list($dbconnect){
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
-    	$output .='<option value = "'.$row['SMEmID'].'">'.$row['SMEmName'].'</option>';
+    	$output .='<option value = "'.$row['SMEmID'].'">'.$row['SMEmName'].' - '.$row['WorkStatus'].'</option>';
     }
 	return $output;
 }
 
 function entity_option_list($dbconnect){
-	$sql = "SELECT * FROM Entity WHERE EStatus = 'Active'";
+	$sql = "SELECT * FROM Entity";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
-    	$output .='<option value = "'.$row['EID'].'">'.$row['EName'].'</option>';
+    	$output .='<option value = "'.$row['EID'].'">'.$row['EName'].'  - '.$row['EStatus'].'</option>';
     }
 	return $output;
 }
 
 function contact_option_list($dbconnect){
-	$sql = "SELECT * FROM Entity_Contact WHERE ECStatus = 'Active'";
+	$sql = "SELECT * FROM Entity_Contact";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
@@ -51,11 +51,11 @@ function contact_option_list($dbconnect){
 }
 
 function sample_option_list($dbconnect){
-	$sql = "SELECT * FROM Sample WHERE SStatus = 'Active'";
+	$sql = "SELECT * FROM Sample";
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
-    	$output .='<option value = "'.$row['SID'].'">'.$row['SName'].'</option>';
+    	$output .='<option value = "'.$row['SID'].'">'.$row['SName'].'  - '.$row['SStatus'].'</option>';
     }
 	return $output;
 }
@@ -95,4 +95,8 @@ function count_total_department($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM SMDepartments");
 	return mysqli_num_rows($result);
 }
+
+
+
+
 ?>

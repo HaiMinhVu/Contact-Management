@@ -125,11 +125,11 @@ if(isset($_GET['sid'])){
 	$pdf->Ln(); // add blank line between sample and vender
 	$pdf->SetFont('Times','B', 14);
 	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".count($eidarray)." Vender Related", 1, 1, 'C');
+	$pdf->Cell(189	,10, "There are ".count($eidarray)." Vendor(s) Related", 1, 1, 'C');
 	$pdf->SetFont('Times','B', 12);	// reset font
 	$pdf->SetTextColor(0,0,0);
 	
-	$pdf->Cell(95	,5, "Vender Info", 1, 0, 'C');
+	$pdf->Cell(95	,5, "Vendor Info", 1, 0, 'C');
 	$pdf->Cell(94	,5, "Contact Info", 1, 1, 'C');
 	
 	$pdf->SetFont('Times','', 11);

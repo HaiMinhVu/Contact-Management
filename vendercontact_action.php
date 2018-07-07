@@ -47,34 +47,18 @@ if(isset($_POST['btn_action']))
 
 	//// submit update/edit item information
 	if($_POST['btn_action'] == 'Edit')
-	{
-    	$query = "";
-    	$projectid = $_POST['project_id'];
-    	$projectname = $_POST['project_name'];
-        $projectdescription = $_POST['project_description'];
-    	$brandid = $_POST['brand_id'];
-    	$deptid = $_POST['dept_id'];
-    	$date_created = $_POST['datecreated'];
-    	$start_date = $_POST['startdate'];
-    	$est_end_date = $_POST['estcompletedate'];
-    	$end_date = $_POST['completedate'];
-    	$project_lead = $_POST['project_lead'];
-    	$modify_date = date("Y-m-d H:i");
+	{	
+    	$eid = $_POST['eid'];
+    	$ecid = $_POST['ecid'];
+    	$erctitle = $_POST['erctitle'];
+    	$priority = $_POST['priority'];
+    	$modify_date = date("Y-m-d h:i");
     	$modify_by = $_SESSION['acct_id'];
-    	$project_progress = $_POST['progress'];
-    	$project_status = $_POST['status'];
     
-    	if($end_date == NULL){
-        	$query = "UPDATE Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', BrandBelongTo = '$brandid', DeptBelongTo = '$deptid', DateCreated = '$date_created', StartDate = '$start_date', EstEndDate = '$est_end_date', Progress = '$project_progress', ProjectStatus = '$project_status', ProjectLead = $project_lead, ModifyDate = '$modify_date', ModifyBy = $modify_by 
-            WHERE ProjectID = $projectid";
-        }
-    	else{
-			$query = "UPDATE Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', BrandBelongTo = '$brandid', DeptBelongTo = '$deptid', DateCreated = '$date_created', StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ProjectStatus = '$project_status', ProjectLead = $project_lead, ModifyDate = '$modify_date', ModifyBy = $modify_by 
-            WHERE ProjectID = $projectid";
-        }
+    	$query = "UPDATE Entity_RelateTo_Contact SET EID = $eid, ECID = $ecid, Priority = '$priority', ERCTitle = '$erctitle', ERCModifyDate = '$modify_date', ERCModifyBy = $modify_by WHERE ECID = $ecid AND EID = $eid";
 		if($dbconnect->query($query) === TRUE)
 		{
-			echo 'Project '.$projectname.' Updated';
+			echo 'Relationship Updated';
 		}
     	else
         {

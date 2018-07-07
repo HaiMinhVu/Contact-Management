@@ -20,7 +20,7 @@ include('header.php');
                              <?php
 							if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 							?>
-                             <button type="button" name="add" id="add_button" class="btn btn-success btn-xs">Add</button>   
+                             <button type="button" name="add" id="add_button"  onclick="location.href='samplerecord_add.php'" class="btn btn-success btn-xs">Add</button>   
 							<?php
                             }
                             ?>
@@ -172,13 +172,13 @@ $(document).ready(function(){
     });
 
     ////// Add new item to the table
-    $('#add_button').click(function(){
+    /*$('#add_button').click(function(){
         $('#SampleRecordAddModal').modal('show');
         $('#samplerecord_form')[0].reset();
         $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
         $('#action').val("Add");
         $('#btn_action').val("Add");
-    });
+    });*/
 
     $(document).on('submit', '#samplerecord_form', function(event){
         event.preventDefault();

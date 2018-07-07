@@ -20,7 +20,7 @@ include('header.php');
                              <?php
 							if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 							?>
-                             <button type="button" name="add" id="add_button" class="btn btn-success btn-xs">Add</button>   
+                             <button type="button" name="add" id="add_button" onclick="location.href='vender_add.php'" class="btn btn-success btn-xs">Add</button>   
 							<?php
                             }
                             ?>  		
@@ -34,7 +34,7 @@ include('header.php');
                     		<table id="vender_data" class="table table-bordered table-striped">
                     			<thead><tr>
 									<th>ID</th>
-									<th>Vender Name</th>
+									<th>Vendor Name</th>
 									<th>Register Name</th>
 									<th>Owner</th>
 									<th>Supplier</th>
@@ -152,13 +152,13 @@ $(document).ready(function(){
     });
 
     ////// Add new item to the table
-    $('#add_button').click(function(){
+    /*$('#add_button').click(function(){
         $('#EntityAddModal').modal('show');
         $('#vender_form')[0].reset();
         $('.modal-title').html("<i class='fa fa-plus'></i> Add New Vender");
         $('#action').val("Add");
         $('#btn_action').val("Add");
-    });
+    });*/
 
     $(document).on('submit', '#vender_form', function(event){
         event.preventDefault();

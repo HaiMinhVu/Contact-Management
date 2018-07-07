@@ -65,7 +65,7 @@ if(isset($_GET['eid'])){
 	$countcontact = mysqli_num_rows($contactfetch);
 	$pdf->SetFont('Times','B', 14);
 	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".$countcontact." Vender Related", 1, 1, 'C');
+	$pdf->Cell(189	,10, "There are ".$countcontact." Contact Related", 1, 1, 'C');
 	$pdf->SetFont('Times','', 11);	// reset font
 	$pdf->SetTextColor(0,0,0);
 

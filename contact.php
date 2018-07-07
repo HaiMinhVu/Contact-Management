@@ -12,7 +12,7 @@ include('header.php');
                 <div class="panel-heading">
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                         <div class="row">
-                            <h3 class="panel-title">Vender Contact Relationship List</h3>
+                            <h3 class="panel-title">Contact List</h3>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -20,7 +20,7 @@ include('header.php');
                             <?php
                             if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
                             ?>
-                             <button type="button" name="add" id="add_button" class="btn btn-success btn-xs">Add</button>   
+                             <button type="button" name="add" id="add_button" onclick="location.href='contact_add.php'" class="btn btn-success btn-xs">Add</button>   
                             <?php
                             }
                             ?>
@@ -68,34 +68,52 @@ include('header.php');
                     </div>
                         
                     <div class="modal-body">
-                        <div class="contact-group">
-                                <label>Select Vender</label>
-                                <select name="eid" id="eid" class="form-control" required>
-                                    <option value="">Select Vender</option>
-                                    <?php echo entity_option_list($dbconnect);?>
-                                </select>
+                        <div class="relation-group">
+                            <label>Enter Name</label>
+                            <input type="text" name="ecname" id="ecname" class="form-control" required />
                         </div>
                         <div class="relation-group">
-                                <label>Select Contact</label>
-                                <select name="ecid" id="ecid" class="form-control" required>
-                                    <option value="">Select Contact</option>
-                                    <?php echo contact_option_list($dbconnect);?>
-                                </select>
+                            <label>Enter Email</label>
+                            <input type="email" name="ecemail" id="ecemail" class="form-control" required />
                         </div>
                         <div class="relation-group">
-                                <label>Select Priority</label>
-                                <select name="priority" id="priority" class="form-control" required>
-                                    <option value="">Select Priority</option>
-                                    <option value="Primary Contact">Primary Contact</option>
-                                    <option value="Alternative Contact">Alternative Contact</option>
-                                </select>
+                            <label>Enter Phone</label>
+                            <input type="text" name="ecphone" id="ecphone" class="form-control" required />
                         </div>
                         <div class="relation-group">
-                            <label>Enter Title</label>
-                            <input type="text" name="erctitle" id="erctitle" class="form-control" required />
+                            <label>Enter Fax</label>
+                            <input type="text" name="ecfax" id="ecfax" class="form-control"  />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter Website</label>
+                            <input type="text" name="ecwebsite" id="ecwebsite" class="form-control"  />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter Address 1</label>
+                            <input type="text" name="ecaddress1" id="ecaddress1" class="form-control" required />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter Address 2</label>
+                            <input type="text" name="ecaddress2" id="ecaddress2" class="form-control"  />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter City</label>
+                            <input type="text" name="eccity" id="eccity" class="form-control"  />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter State</label>
+                            <input type="text" name="ecstate" id="ecstate" class="form-control"  />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter Zipcode</label>
+                            <input type="text" name="eczip" id="eczip" class="form-control"  />
+                        </div>
+                        <div class="relation-group">
+                            <label>Enter Country</label>
+                            <input type="text" name="eccountry" id="eccountry" class="form-control"  />
                         </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="ercid" id="ercid"/>
+                        <input type="hidden" name="ecid" id="ecid"/>
                         <input type="hidden" name="btn_action" id="btn_action"/>
                         <input type="submit" name="action" id="action" class="btn btn-info" value="Add" />
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -140,13 +158,13 @@ $(document).ready(function(){
     });
 
     ////// Add new item to the table
-    $('#add_button').click(function(){
+    /*$('#add_button').click(function(){
         $('#ContactAddModal').modal('show');
         $('#contact_form')[0].reset();
         $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
         $('#action').val("Add");
         $('#btn_action').val("Add");
-    });
+    });*/
 
     $(document).on('submit', '#contact_form', function(event){
         event.preventDefault();
@@ -191,14 +209,14 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.delete', function(){
-        var ercid = $(this).attr("id");
+        var ecid = $(this).attr("id");
         var btn_action = 'delete';
         var status = $(this).data("status");
         if(confirm("Are you sure you want to delete?" )){
             $.ajax({
                 url:"contact_action.php",
                 method:"POST",
-                data:{ercid:ercid,btn_action:btn_action,status:status},
+                data:{ecid:ecid,btn_action:btn_action,status:status},
                 success:function(data){
                     $('#alert_action').fadeIn().html('<div class="alert alert-info">'+data+'</div>');
                     dataTable.ajax.reload();

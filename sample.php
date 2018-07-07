@@ -20,7 +20,7 @@ include('header.php');
                              <?php
 							if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 							?>
-                             <button type="button" name="add" id="add_button" class="btn btn-success btn-xs">Add</button>   
+                             <button type="button" name="add" id="add_button" onclick="location.href='sample_add.php'" class="btn btn-success btn-xs">Add</button>   
 							<?php
                             }
                             ?>  		
@@ -75,7 +75,7 @@ include('header.php');
                         </div>
                         <div class="form-group">
     						<label>Link To Image</label>
-							<input type="text" name="simage" id="siamge" class="form-control" />
+							<input type="file" name="imageUpload" id="imageUpload">
                         </div>
     				<div class="modal-footer">
     					<input type="hidden" name="sid" id="sid"/>
@@ -124,13 +124,13 @@ $(document).ready(function(){
     });
 
     ////// Add new item to the table
-    $('#add_button').click(function(){
+    /*$('#add_button').click(function(){
         $('#SampleAddModal').modal('show');
         $('#sample_form')[0].reset();
         $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
         $('#action').val("Add");
         $('#btn_action').val("Add");
-    });
+    });*/
 
     $(document).on('submit', '#sample_form', function(event){
         event.preventDefault();
@@ -152,7 +152,6 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.update', function(){
-    	// display hidden fields - update has 3 more fields than add
         var sid = $(this).attr("id");
         var btn_action = 'fetch_single';
         $.ajax({

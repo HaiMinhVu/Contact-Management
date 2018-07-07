@@ -5,6 +5,7 @@ include('header.php');
 ?>
 
 </style>
+
 <span id="alert_action"></span>
 	<div class="row">
 		<div class="col-lg-12">
@@ -20,7 +21,7 @@ include('header.php');
 							<?php
 							if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 							?>
-                             <button type="button" name="add" id="add_button" class="btn btn-success btn-xs">Add</button>   
+                             <input type="button" name="add" id="add_button" onclick="location.href='project_add.php'" class="btn btn-success btn-xs" value="Add">   
 							<?php
                             }
                             ?>
@@ -137,6 +138,8 @@ include('header.php');
 <script>
 $(document).ready(function(){
     //// create table - project_fetch to load data into table
+    //
+    
     var projectdataTable = $('#project_data').DataTable({
         "processing":true,
         "serverSide":true,
@@ -166,18 +169,11 @@ $(document).ready(function(){
         <?php
         }
         ?>
-        "pageLength": 10,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
 
     ////// Add new item to the table
-    $('#add_button').click(function(){
-        $('#ProjectAddModal').modal('show');
-        $('#project_form')[0].reset();
-        $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
-        $('#action').val("Add");
-        $('#btn_action').val("Add");
-    });
-
+               
     $(document).on('submit', '#project_form', function(event){
         event.preventDefault();
         $('#action').attr('disabled', 'disabled');

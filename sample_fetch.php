@@ -55,8 +55,7 @@ while($row = $statement->fetch_assoc())
 	$sub_array[] = $row['username'];
 	$sub_array[] = $status;
 	$sub_array[] = '<a href="sample_detail.php?sid='.$row["SID"].'" class="btn btn-info btn-xs">View</a>';
-	//$sub_array[] = '<button type="button" name="view" id="'.$row["SID"].'" class="btn btn-info btn-xs view">View</button>';
-	$sub_array[] = '<button type="button" name="update" id="'.$row["SID"].'" class="btn btn-warning btn-xs update">Update</button>';
+	$sub_array[] = '<a href="sample_update.php?sid='.$row["SID"].'" class="btn btn-warning btn-xs">Update</a>';
 	$sub_array[] = '<button type="button" name="delete" id="'.$row["SID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["SStatus"].'">Delete</button>';
 	
 	

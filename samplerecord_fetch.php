@@ -61,8 +61,9 @@ while($row = $statement->fetch_assoc())
 	$sub_array[] = $row['PriceperUnit'];
 	$sub_array[] = $row['Type'];
 	$sub_array[] = $status;
-	$sub_array[] = '<a href="samplerecord_detail.php?srid='.$row["SRID"].'" class="btn btn-info btn-xs">View</a>';
-	$sub_array[] = '<button type="button" name="update" id="'.$row["SRID"].'" class="btn btn-warning btn-xs update">Update</button>';
+	$sub_array[] = '<a href="sample_detail.php?sid='.$row["SID"].'" class="btn btn-info btn-xs">View</a>';
+	$sub_array[] = '<a href="samplerecord_update.php?srid='.$row["SRID"].'" class="btn btn-warning btn-xs">Update</a>';
+	//$sub_array[] = '<button type="button" name="update" id="'.$row["SRID"].'" class="btn btn-warning btn-xs update">Update</button>';
 	$sub_array[] = '<button type="button" name="delete" id="'.$row["SRID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["SRStatus"].'">Delete</button>';
 
 	$data[] = $sub_array;
