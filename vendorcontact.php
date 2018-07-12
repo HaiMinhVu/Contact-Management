@@ -12,7 +12,7 @@ include('header.php');
                 <div class="panel-heading">
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                         <div class="row">
-                            <h3 class="panel-title">Vender Contact Relationship List</h3>
+                            <h3 class="panel-title">Vendor Contact Relationship List</h3>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -40,7 +40,6 @@ include('header.php');
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Status</th>
-                                    <th></th>
                                     <?php
                                     if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
                                     ?>
@@ -112,7 +111,7 @@ $(document).ready(function(){
         "serverSide":true,
         "order":[],
         "ajax":{
-            url:"vendercontact_fetch.php",
+            url:"vendorcontact_fetch.php",
             type:"POST"
         },
         <?php
@@ -120,7 +119,7 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8,9],
+                "targets":[0,1,2,3,4,5,6,7,8],
                 "orderable":false,
             },
         ],
@@ -129,21 +128,21 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7],
+                "targets":[0,1,2,3,4,5,6],
                 "orderable":false,
             },
         ],
         <?php
         }
         ?>
-        "pageLength": 10,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
 
     ////// Add new item to the table
     $('#add_button').click(function(){
         $('#RelationAddModal').modal('show');
         $('#relation_form')[0].reset();
-        $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
+        $('.modal-title').html("<i class='fa fa-plus'></i>Add Relationship");
         $('#action').val("Add");
         $('#btn_action').val("Add");
     });
@@ -153,7 +152,7 @@ $(document).ready(function(){
         $('#action').attr('disabled', 'disabled');
         var form_data = $(this).serialize();
         $.ajax({
-            url:"vendercontact_action.php",
+            url:"vendorcontact_action.php",
             method:"POST",
             data:form_data,
             success:function(data)
@@ -172,13 +171,13 @@ $(document).ready(function(){
         var ercid = $(this).attr("id");
         var btn_action = 'fetch_single';
         $.ajax({
-            url:"vendercontact_action.php",
+            url:"vendorcontact_action.php",
             method:"POST",
             data:{ercid:ercid, btn_action:btn_action},
             dataType:"json",
             success:function(data){
                 $('#RelationAddModal').modal('show');
-                $('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Project");
+                $('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Relationship");
                 $('#id').val(data.ercid);
                 $('#eid').val(data.eid);
                 $('#ecid').val(data.ecid);
@@ -196,7 +195,7 @@ $(document).ready(function(){
         var status = $(this).data("status");
         if(confirm("Are you sure you want to delete?" )){
             $.ajax({
-                url:"vendercontact_action.php",
+                url:"vendorcontact_action.php",
                 method:"POST",
                 data:{ercid:ercid,btn_action:btn_action,status:status},
                 success:function(data){

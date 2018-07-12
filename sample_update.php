@@ -3,10 +3,11 @@ include('dbconnect.php');
 include('functions.php');
 include('header.php');
 $sid =$_GET['sid'];
-$status;
-?>
+$status; $oldname;
 
-<form method="POST" id="sample_form">
+?>
+<span id="alert_action"></span>
+<form method="POST" id="sample_update_form" enctype="multipart/form-data">
 <div class="panel-body">
 	<div class="row">
 		<div class="col-sm-12 table-responsive">
@@ -26,19 +27,23 @@ $status;
 			$samplefetch = $dbconnect->query($sql);
 			while($row = $samplefetch->fetch_assoc()){
            		$status = $row['SStatus'];
+            	$oldname = $row['SImages'];
 			?>
 			<table id="sample_data" class="table table-bordered table-striped">
 				<tr>
-					<td width=20%>Sample Name</td>
-					<td><input type="text" name="sample_name" id="sample_name" value="<?php echo $row['SName'];?>" class="form-control"/></td>
+					<td width=10%>Sample Name</td>
+					<td width=60%><input type="text" name="sname" id="sname" value="<?php echo $row['SName'];?>" class="form-control"/></td>
+            		<td width=30%>Image</td>
+					
 				</tr>
 				<tr>
 					<td >Description</td>
-					<td><input type="text" name="sample_description" id="sample_description" value="<?php echo $row['SDescription'];?>" class="form-control"/></td>
+            		<td><textarea rows="4" name="sdescription" id="sdescription" class="form-control" ><?php echo $row['SDescription'];?></textarea></td>
+            		<td rowspan="5"><?php echo "<img src='images/". $row['SImages']."' height='250' width='300'>"; ?></td>
 				</tr>
             	<tr>
-					<td >Image</td>
-					<td><input type="text" name="sample_image" id="sample_image" value="<?php echo $row['SImages'];?>" class="form-control"/></td>
+					<td>Replace Image</td>
+					<td><input type="file" name="uploadimage" id="uploadimage" onchange="previewImage()"class="form-control"></td>
 				</tr>
             	<tr>
 					<td>Status</td>
@@ -66,8 +71,7 @@ $status;
 	</div>
 </div>
 </form>
-            
-<form method="POST" id="sample_form">
+
 <div class="panel-body">
 	<div class="row">
 		<div class="col-sm-12 table-responsive">
@@ -122,38 +126,102 @@ $status;
             <?php
             }
             ?>
-            
 		</div>
 	</div>
 </div>
-</form>
-            
+
+        
 <?php
-if(isset($_POST['Save'])){
-	$sname = $_POST['sample_name'];
-	$sdescription = $_POST['sample_description'];
-	$simage = $_POST['sample_image'];
+if(isset($_POST['Save'])) {
+	$sname = $_POST['sname'];
+	$sdescription = $_POST['sdescription'];
 	$status = $_POST['status'];
-	$modify_date = date('Y-m-d H:i');
+	$modify_date = date("Y-m-d h:i");
 	$modify_by = $_SESSION['acct_id'];
-	
-	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SImages = '$simage', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status'
-            WHERE SID = $sid";
-    if($dbconnect->query($sql) === TRUE){
-		//header("Refresh:2");
-		echo "<meta http-equiv='refresh' content='0'>";
-	}
-    else{
-        echo $sql;
+
+	$image = $_FILES['uploadimage'];
+	$imagename = $_FILES['uploadimage']['name'];
+	$imagesize = $_FILES['uploadimage']['size'];
+	$imageerror = $_FILES['uploadimage']['error'];
+	$destination = "images/";
+
+	$fileext = explode('.',$imagename);
+	$ext = strtolower(end($fileext));
+	$validext = array('jpg', 'jpeg', 'png');
+
+	if($imagename != ""){
+        unlink($destination.$oldname);
+        if(in_array($ext,$validext)){
+        	if($imageerror === 0){
+            	if($imagesize < 5000000){
+                	$view = compress_image($image, $destination, 100);
+
+                	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+                	$imageresult = $dbconnect->query($sql);
+                	if($imageresult){
+                    	echo "<script type='text/javascript'>
+                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
+           			 </script>";
+                    	echo "<meta http-equiv='refresh' content='1'>";
+                    }
+                }
+            	else{
+                	echo "<script type='text/javascript'>
+                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">File is too big</div>';
+           			 </script>";
+                }
+            }
+        	else{
+            	echo "<script type='text/javascript'>
+                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Error uploading image. Error Code: ".$imageerror."</div>';
+           			 </script>";
+            }
+        }
+        else{
+        	echo "<script type='text/javascript'>
+                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Only allow .jpg .png files</div>';
+           			 </script>";
+        }
     }
-}   
+	else{
+    	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+        $imageresult = $dbconnect->query($sql);
+    	if($imageresult){
+        	echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
+       			 </script>";
+            echo "<meta http-equiv='refresh' content='2'>";
+        }
+    	else{
+        	echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Failed to Update</div>';
+       			 </script>";
+        }
+    }
+}
 ?>
+
+<script type="text/javascript">
+function previewImage() {
+  var preview = document.querySelector('img');
+  var file    = document.querySelector('#uploadimage').files[0];
+  var reader  = new FileReader();
+
+  reader.addEventListener("load", function () {
+    preview.src = reader.result;
+  }, false);
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+
 <script>
 $(document).ready(function(){
 	$('#status').val("<?php echo $status?>");
 });
 </script>
-
 
 <?php
 include ('footer.php');

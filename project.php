@@ -41,7 +41,6 @@ include('header.php');
 									<th>Date Created</th>
 									<th>Progress</th>
 									<th>Status</th>
-									<th></th>
                             		<?php
 									if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 									?>
@@ -153,7 +152,7 @@ $(document).ready(function(){
 		?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8,9],
+                "targets":[0,1,2,3,4,5,6,7,8],
                 "orderable":false,
             },
         ],
@@ -162,7 +161,7 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7],
+                "targets":[0,1,2,3,4,5,6],
                 "orderable":false,
             },
         ],

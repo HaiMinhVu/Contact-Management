@@ -6,7 +6,7 @@ $ecid =$_GET['ecid'];
 $status;
 
 ?>
-
+<span id="alert_action"></span>
 <form method="POST" id="vender_form">
 <div class="panel-body">
 	<div class="row">
@@ -133,11 +133,15 @@ if(isset($_POST['Save'])){
 	$sql = "UPDATE Entity_Contact SET ECname = '$ecname', ECEmail = '$ecemail', ECPhone = '$ecphone', ECFax = '$ecfax', ECWebsite = '$ecwebsite', ECAddress1 = '$ecaddress1', ECAddress2 = '$ecaddress2', ECCity = '$eccity', ECState = '$ecstate', ECZip = '$eczip', ECCountry = '$eccountry', ECModifyDate = '$modify_date', ECModifyBy = $modify_by, ECStatus = '$ecstatus'
             WHERE ECID = $ecid";
     if($dbconnect->query($sql) === TRUE){
-		//header("Refresh:2");
-		echo "<meta http-equiv='refresh' content='0'>";
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Contact Updated</div>';
+       			 </script>";
+		echo "<meta http-equiv='refresh' content='2'>";
 	}
     else{
-        echo $sql;
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
     }
 }     
 ?>

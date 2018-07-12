@@ -33,7 +33,7 @@ if(isset($_GET['sid'])){
 
 		$pdf->Cell(30	,5, "Enter By", 'L', 0);
 		$pdf->Cell(85	,5, $row['username'], 0, 0);
-		$pdf->Cell(74	,5, "", 'R', 1, 'C');
+		$pdf->Cell(74	,5, $row['SImages'], 'R', 1, 'C');
 
     	
 		$pdf->Cell(30	,5, "Last Modify", 'L', 0);

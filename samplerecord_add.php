@@ -4,6 +4,7 @@ include('functions.php');
 include('header.php');
 
 ?>
+<span id="alert_action"></span>
 <form method="POST" id="sample_form">
 <div class="panel-body">
 	<div class="row">
@@ -36,20 +37,22 @@ include('header.php');
 				</tr>
 				<tr>
 					<td width=10%>Sample</td>
-					<td width=40%><select name="sid" id="sid" class="form-control" required>
+					<td width=40%><select name="sid" id="sid" class="selectpicker" data-live-search="true" required>
                                     <option value="">Select Sample</option>
                                     <?php echo sample_option_list($dbconnect);?>
-                    	</select></td>
+                    	</select>
+						<button type="button" name="addsample" id="addsample" class="btn btn-success btn-xs" onclick="window.location.href='sample_add.php'">Add</button></td></td>
             		<td width=10%>Est Deliver</td>
             		<td><input type="date" name="estdeliver" id="estdeliver" class="form-control" value="<?php echo date('Y-m-d') ;?>" /></td>
 				</tr>
             	<tr>
 					<td width=10%>Request From</td>
 					<td width=40%>
-            			<select name="eid" id="eid" class="form-control" required>
+            			<select name="eid" id="eid" class="selectpicker" data-live-search="true" required>
                                     <option value="">Select Vendor</option>
                                     <?php echo entity_option_list($dbconnect);?>
-                    	</select></td>
+                    	</select>
+						<button type="button" name="addvendor" id="addvendor" class="btn btn-success btn-xs" onclick="window.location.href='vendor_add.php'">Add</button></td>
             		<td width=10%>Arrival Date</td>
             		<td><input type="date" name="arrivaldate" id="arrivaldate" class="form-control" value="<?php echo date('Y-m-d') ;?>" /></td>
 				</tr>
@@ -105,10 +108,14 @@ if(isset($_POST['Add'])){
 	
 	$sql = "INSERT INTO SampleRecord VALUES(null, $sid, $eid, $quantity, $priceperunit, '$daterequested', '$type', '$estdeliver', '$arrivaldate', '$paymentterm', '$warrantyterm', '$shippingterm', $modify_by, '$modify_date', '$modify_by', '$status')";
     if($dbconnect->query($sql) === TRUE){
-		echo "New Record Added";
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Record Added</div>';
+       			 </script>";
 	}
     else{
-        echo $sql;
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
     }
 }     
 ?>

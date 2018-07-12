@@ -6,6 +6,7 @@ $srid =$_GET['srid'];
 $status; $type; $eid; $sid;
 
 ?>
+<span id="alert_action"></span>
 <form method="POST" id="sample_form">
 <div class="panel-body">
 	<div class="row">
@@ -13,7 +14,7 @@ $status; $type; $eid; $sid;
 
             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Sample Record Update</h3>
+            		<h3>Update Record</h3>
             	</div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -47,20 +48,22 @@ $status; $type; $eid; $sid;
 				</tr>
 				<tr>
 					<td width=10%>Sample</td>
-					<td width=40%><select name="sid" id="sid" class="form-control" required>
-                                    <option value="">Select Vender</option>
+					<td width=40%><select name="sid" id="sid" class="selectpicker" data-live-search="true" required>
+                                    <option value="">Select Sample</option>
                                     <?php echo sample_option_list($dbconnect);?>
-                    	</select></td>
+                    	</select>
+            			<button type="button" name="addsample" id="addsample" class="btn btn-success btn-xs" onclick="window.location.href='sample_add.php'">Add</button></td>
             		<td width=10%>Est Deliver</td>
             		<td><input type="date" name="estdeliver" id="estdeliver" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['EstDeliver'])) ;?>" /></td>
 				</tr>
             	<tr>
 					<td width=10%>Request From</td>
 					<td width=40%>
-            			<select name="eid" id="eid" class="form-control" required>
+            			<select name="eid" id="eid" class="selectpicker" data-live-search="true" required>
                                     <option value="">Select Vender</option>
                                     <?php echo entity_option_list($dbconnect);?>
-                    	</select></td>
+                    	</select>
+            			<button type="button" name="addvendor" id="addvendor" class="btn btn-success btn-xs" onclick="window.location.href='vendor_add.php'">Add</button></td>
             		<td width=10%>Arrival Date</td>
             		<td><input type="date" name="arrivaldate" id="arrivaldate" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['ArrivalDate'])) ;?>" /></td>
 				</tr>
@@ -137,10 +140,15 @@ if(isset($_POST['Save'])){
 	$sql = "UPDATE SampleRecord SET SID = $sid, EID = $eid, Type = '$type', Quantity = $quantity, PriceperUnit = $priceperunit, DateRequested = '$daterequested', EstDeliver = '$estdeliver', ArrivalDate = '$arrivaldate', PaymentTerms = '$paymentterm', ShippingTerms = '$shippingterm', WarrantyTerms = '$warrantyterm', SRModifyDate = '$modify_date', SRModifyBy = $modify_by, SRStatus = '$status'
             WHERE SRID = $srid";
     if($dbconnect->query($sql) === TRUE){
-		echo "<meta http-equiv='refresh' content='0'>";
+    	echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Record Updated</div>';
+       			 </script>";
+		echo "<meta http-equiv='refresh' content='2'>";
 	}
     else{
-        echo $sql;
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Failed to Update</div>';
+       			 </script>";
     }
 }     
 ?>

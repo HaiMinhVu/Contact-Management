@@ -39,7 +39,6 @@ include('header.php');
 									<th>Images</th>
 									<th>Enter By</th>
 									<th>Status</th>
-									<th></th>
 									<?php
 									if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 									?>
@@ -56,37 +55,22 @@ include('header.php');
             </div>
         </div>
     </div>
-    <div id="SampleAddModal" class="modal fade">
-    	<div class="modal-dialog">
-    		<form method="POST" id="sample_form">
-    			<div class="modal-content">
-    				<div class="modal-header">
-    					<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title"><i class="fa fa-plus"></i> Add Project</h4>
-    				</div>
-    				<div class="modal-body">
-                        <div class="form-group">
-    						<label>Enter Sample Name</label>
-							<input type="text" name="sname" id="sname" class="form-control" required />
-                        </div>
-                        <div class="form-group">
-    						<label>Enter Sample Description</label>
-							<textarea rows="5" name="sdescription" id="sdescription" class="form-control" ></textarea>
-                        </div>
-                        <div class="form-group">
-    						<label>Link To Image</label>
-							<input type="file" name="imageUpload" id="imageUpload">
-                        </div>
-    				<div class="modal-footer">
-    					<input type="hidden" name="sid" id="sid"/>
-    					<input type="hidden" name="btn_action" id="btn_action"/>
-    					<input type="submit" name="action" id="action" class="btn btn-info" value="Add" />
-    					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    				</div>
-    			</div>
-    		</form>
-    	</div>
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Image preview</h4>
+      </div>
+      <div class="modal-body">
+        <img src="" id="imagepreview" style="width: 400px; height: 264px;" >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
 
 <script>
 $(document).ready(function(){
@@ -104,7 +88,7 @@ $(document).ready(function(){
 		?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8],
+                "targets":[0,1,2,3,4,5,6,7],
                 "orderable":false,
             },
         ],
@@ -113,14 +97,14 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6],
+                "targets":[0,1,2,3,4,5],
                 "orderable":false,
             },
         ],
         <?php
         }
         ?>
-        "pageLength": 10,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
 
     ////// Add new item to the table
@@ -150,28 +134,12 @@ $(document).ready(function(){
             }
         })
     });
-
-    $(document).on('click', '.update', function(){
-        var sid = $(this).attr("id");
-        var btn_action = 'fetch_single';
-        $.ajax({
-            url:"sample_action.php",
-            method:"POST",
-            data:{sid:sid, btn_action:btn_action},
-            dataType:"json",
-            success:function(data){
-                $('#SampleAddModal').modal('show');
-            	$('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Project");
-            	$('#sid').val(sid);
-                $('#sname').val(data.sname);
-                $('#sdescription').val(data.sdescription);
-                $('#simage').val(data.simage);
-                $('#action').val("Edit");
-                $('#btn_action').val("Edit");
-            }
-        })
+	
+	$(document).on('click', '.viewimage', function(){
+    	var sid = $(this).attr("id");
+    	window.open('sample_image.php?id='+sid);
     });
-
+        
     $(document).on('click', '.delete', function(){
         var sid = $(this).attr("id"); /// this will get project id
    		var btn_action = 'delete';

@@ -1,5 +1,7 @@
 <?php
-//header.php
+if(!isset($_SESSION['type'])){
+	header('location:login.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,9 +15,13 @@
 
 		<link rel="stylesheet" href="css/dataTables.bootstrap.min.css" />
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
 
 		<link href="js/selectize.default.css" media="screen" rel="stylesheet" type="text/css">
-		
 		<script type="text/javascript" src="js/selectize.min.js"></script>
 </style>
 	</head>
@@ -37,9 +43,9 @@
                     	<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-pill label-danger count"></span>SellMark</a>
 							<ul class="dropdown-menu">
-								<li><a href="smbrand.php">Brand</a></li>
-								<li><a href="smcategory.php">Category</a></li>
-                    			<li><a href="smproduct.php">Product</a></li>
+								<li><a href="brand.php">Brand</a></li>
+								<li><a href="category.php">Category</a></li>
+                    			<li><a href="product.php">Product</a></li>
 							</ul>
 						</li>
 						
@@ -49,8 +55,8 @@
                     	<li class="dropdown">
 							<a href="vender.php" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-pill label-danger count"></span>Vendor</a>
 							<ul class="dropdown-menu">
-								<li><a href="vender.php">View Vendor</a></li>
-								<li><a href="vendercontact.php">Vendor Related Contact</a></li>
+								<li><a href="vendor.php">View Vendor</a></li>
+								<li><a href="vendorcontact.php">Vendor Related Contact</a></li>
                     			<li><a href="contact.php">All Contact</a></li>
 							</ul>
 						</li>
@@ -67,7 +73,6 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-pill label-danger count"></span> <?php echo $_SESSION["username"]; ?></a>
 							<ul class="dropdown-menu">
-								<li><a href="profile.php">Profile</a></li>
 								<li><a href="logout.php">Logout</a></li>
 							</ul>
 						</li>

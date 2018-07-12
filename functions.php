@@ -95,7 +95,49 @@ function count_total_department($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM SMDepartments");
 	return mysqli_num_rows($result);
 }
+// compress image return image name
+function compress_image($source, $destination, $quality){
+	$imagename = $source['name'];
+	$imagetmpname = $source['tmp_name'];
 
+	$fileext = explode('.',$imagename);
+	$ext = strtolower(end($fileext));
+	
+	$newimagename = uniqid('',true).".".$ext;
+    $destination .= $newimagename;
+	move_uploaded_file($imagetmpname, $destination);
+
+	list($width, $height) = getimagesize($destination);
+	if(($ext == "jpg") ||( $ext == "jpeg")){
+		$newfile = imagecreatefromjpeg($destination);
+    }
+	elseif($ext == "png"){
+    	$newfile = imagecreatefrompng($destination);
+    }
+
+	if(($width > 3200) || ($height > 2400)){
+		$newwidth = $width*0.125;
+		$newheight = $height*0.125;
+    }
+	elseif(($width > 1600) || ($height > 1200)){
+		$newwidth = $width*0.25;
+		$newheight = $height*0.25;
+    }
+	elseif(($width > 800) || ($height > 600)){
+    	$newwidth = $width*0.5;
+		$newheight = $height*0.5;
+    }
+	else{
+    	$newwidth = $width;
+    	$newheight = $height;
+    }
+	
+	$truecolor = imagecreatetruecolor($newwidth,$newheight);
+	imagecopyresampled($truecolor, $newfile, 0,0,0,0, $newwidth, $newheight, $width, $height);
+	imagejpeg($truecolor, $destination, $quality);
+	
+	return $newimagename;
+}
 
 
 

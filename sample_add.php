@@ -2,8 +2,9 @@
 include('dbconnect.php');
 include('functions.php');
 include('header.php');
-?>
 
+?>
+<span id="alert_action"></span>
 <form method="POST" id="sample_add_form" enctype="multipart/form-data">
 <div class="panel-body">
 	<div class="row">
@@ -18,96 +19,110 @@ include('header.php');
             		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button>   					
             	</div>
             </div>
-			<table id="sample_data" class="table table-bordered table-striped">
+			<table id="add_sample" class="table table-bordered table-striped">
 				<tr>
 					<td width=20%>Sample Name</td>
 					<td><input type="text" name="sname" id="sname" class="form-control" required /></td>
 				</tr>
             	<tr>
-					<td>Description</td>
-					<td><input type="text" name="sdescription" id="sdescription" class="form-control" /></td>
-				</tr>
-				<tr>
 					<td>Image</td>
-					<td><input type="file" name="uploadimage" id="uploadimage" onchange="previewImage()" class="form-control" />
-                    <img src="" height="200" alt="Image preview..."></td>
+					<td><input type="file" name="uploadimage" id="uploadimage" onchange="previewImage()"class="form-control"><br>
+					<img src="" height="200" alt="Image preview..."></td>
 				</tr>
 				<tr>
-                    <td>Status</td>
-                    <td><select name="status" id="status" class="form-control" required>
-                        <option value="">Select Status</option>
-                        <option value="Active" selected>Active</option>
+					<td>Status</td>
+					<td><select name="status" id="status" class="form-control">
+                    	<option value="">Select Status</option>
+                    	<option value="Active" selected>Active</option>
                         <option value="InActive">InActive</option>
                     </select></td>
-                </tr>
+				</tr>
+				<tr>
+					<td>Description</td>
+					<td><textarea rows="5" name="sdescription" id="sdescription" class="form-control" ></textarea></td>
+				</tr>
 			</table>
 			<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
-            <input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            <input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />	
 		</div>
 	</div>
 </div>
 </form>
 
 <?php
-if (isset($_POST['Add'])) {
-    $sname = $_POST['sname'];
-    $sdescription = $_POST['sdescription'];
-    
-    $status = $_POST['status'];
-    $modify_date = date("Y-m-d h:i");
-    $modify_by = $_SESSION['acct_id'];
+if(isset($_POST['Add'])) {
+	$sname = $_POST['sname'];
+	$sdescription = $_POST['sdescription'];
+	$status = $_POST['status'];
+	$modify_date = date("Y-m-d h:i");
+	$modify_by = $_SESSION['acct_id'];
 
-    //$image = $_FILES['uploadimage'];
-    $imagename = $_FILES['uploadimage']['name'];
-    $imagetmpname = $_FILES['uploadimage']['tmp_name'];
-    $imagesize = $_FILES['uploadimage']['size'];
-    $imageerror = $_FILES['uploadimage']['error'];
+	$imagename = $_FILES['uploadimage']['name'];
+	$imagesize = $_FILES['uploadimage']['size'];
+	$imageerror = $_FILES['uploadimage']['error'];
+	
+	$image = $_FILES['uploadimage'];
+	$destination = "images/";
 
-    $fileext = explode('.', $imagename);
-    $ext = strtolower(end($fileext));
-    $validext = array('jpg', 'jpeg', 'png', 'gif');
+	$fileext = explode('.',$imagename);
+	$ext = strtolower(end($fileext));
+	$validext = array('jpg', 'jpeg', 'png');
 
-    if (in_array($ext, $validext)) {
-        if ($imageerror === 0) {
-            if ($imagesize < 100000) {
-                $NewImageName = uniqid('',true).".".$ext;
-                $destination = "images/".$NewImageName;
-                move_uploaded_file($imagetmpname, $destination);
-
-                $imagesql = "INSERT INTO Sample VALUES(null, '$sname', '$sdescription', '$NewImageName', $modify_by, '$status', '$modify_date', $modify_by)";
-                $imageresult = $dbconnect->query($imagesql);
-
-                if($imageresult){
-                    echo "<div class='alert alert-warning'>New Sample Added</div>";
-                }
-            }
-            else{
-                echo "<div class='alert alert-warning'>File $imagename is too big</div>";
-            }
-        }
-        else{
-            echo "<div class='alert alert-warning'>Error uploading: $imageerror</div>";
-        }
+	if($imagename != ""){
+		if(in_array($ext,$validext)){
+    		if($imageerror === 0){
+        		if($imagesize < 5000000){
+            		$view = compress_image($image, $destination, 100);
+            		$imagesql = "INSERT INTO Sample VALUES(null, '$sname', '$sdescription', '$view', $modify_by, '$status', '$modify_date', $modify_by)";
+            		$imageresult = $dbconnect->query($imagesql);
+            		if($imageresult){
+                		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Sample Added</div>';
+       			 </script>";
+                	}
+            	}
+        		else{
+            		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">File is too big</div>';
+       			 </script>";
+            	}
+        	}
+    		else{
+        		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Error uploading image. Error Code: ".$imageerror."</div>';
+       			 </script>";
+        	}
+    	}
+		else{
+    		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Only allow .jpg .png files</div>';
+       			 </script>";
+    	}
     }
-    else{
-        echo "<div class='alert alert-warning'>Only allow .jpg, .png, .gif</div>";
+	else{
+    	$imagesql = "INSERT INTO Sample VALUES(null, '$sname', '$sdescription', null, $modify_by, '$status', '$modify_date', $modify_by)";
+        $imageresult = $dbconnect->query($imagesql);
+        if($imageresult){
+            echo '<div class="alert alert-info">New Sample Added</div>';
+        }
     }
 }
 ?>
 
 <script type="text/javascript">
-    function previewImage() {
-        var preview = document.querySelector('img');
-        var file    = document.querySelector('#uploadimage').files[0];
-        var reader = new FileReader();
+function previewImage() {
+  var preview = document.querySelector('img');
+  var file    = document.querySelector('#uploadimage').files[0];
+  var reader  = new FileReader();
 
-        reader.addEventListener("load", function(){
-            preview.src = reader.result;
-        }, false);
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
+  reader.addEventListener("load", function () {
+    preview.src = reader.result;
+  }, false);
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}
 </script>
 
 <?php

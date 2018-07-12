@@ -2,10 +2,8 @@
 include('dbconnect.php');
 include('functions.php');
 include('header.php');
-
 ?>
-
-
+<span id="alert_action"></span>
 <form method="POST" id="add_form">
 <div class="panel-body">
 	<div class="row">
@@ -27,29 +25,31 @@ include('header.php');
 				</tr>
 				<tr>
 					<td >Description</td>
-					<td><input type="text" name="project_description" id="project_description" class="form-control" required/></td>
+					<td><textarea rows="3" name="project_description" id="project_description" class="form-control" ></textarea></td>
 				</tr>
             	<tr>
 					<td >Brand</td>
-            		<td><select name="brand_id" id="brand_id" class="form-control" required >
+            		<td><select name="brand_id" id="brand_id" class="selectpicker" data-live-search="true" required >
                     	<option value="">Select Brand</option>
                     	<?php echo brand_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+					<button type="button" name="brandadd" id="brandadd" class="btn btn-success btn-xs" onclick="window.location.href='brand_add.php'">Add</button></td>
 				</tr>
             	<tr>
 					<td >Department</td>
-            		<td><select name="dept_id" id="dept_id" class="form-control" required >
-                    	<option value="">Select Brand</option>
+            		<td><select name="dept_id" id="dept_id" class="selectpicker" data-live-search="true" required >
+                    	<option value="">Select Department</option>
                     	<?php echo department_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+					<button type="button" name="deptadd" id="deptadd" class="btn btn-success btn-xs" onclick="window.location.href='dept_add.php'">Add</button></td>
 				</tr>
             	<tr>
 					<td >Date Created</td>
-            		<td><input type="date" name="datecreated" id="datecreated" class="form-control" value="<?php echo date('Y-m-d') ;?>" required /></td>
+            		<td><input type="date" name="datecreated" id="datecreated" class="form-control" value="<?php echo date('Y-m-d') ;?>"  /></td>
 				</tr>
             	<tr>
 					<td>Start Date</td>
-            		<td><input type="date" name="startdate" id="startdate" class="form-control" value="<?php echo date('Y-m-d') ;?>" required /></td>
+            		<td><input type="date" name="startdate" id="startdate" class="form-control" value="<?php echo date('Y-m-d') ;?>"  /></td>
 				</tr>
 				<tr>
 					<td >Estimate End Date</td>
@@ -61,24 +61,23 @@ include('header.php');
 				</tr>
             	<tr>
 					<td >Project Lead</td>
-            		<td><select name="project_lead" id="project_lead" class="form-control" required>
+            		<td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" required>
                     	<option value="">Select Leader</option>
                     	<?php echo employee_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+					<button type="button" name="empadd" id="empadd" class="btn btn-success btn-xs" onclick="window.location.href='employee_add.php'">Add</button></td>
 				</tr>
             	<tr>
 					<td >Progress</td>
-            		<td><select name="progress" id="progress" class="form-control" required >
-                    	<option value="">Select Progress</option>
+            		<td><select name="progress" id="progress" class="form-control"  >
                     	<option value="Complete">Complete</option>
-                        <option value="InComplete">InComplete</option>
+                        <option value="InComplete" selected>InComplete</option>
                     </select></td>
 				</tr>
             	<tr>
 					<td >Status</td>
-            		<td><select name="status" id="status" class="form-control" required>
-                    	<option value="">Select Status</option>
-                    	<option value="Active">Active</option>
+            		<td><select name="status" id="status" class="form-control" >
+                    	<option value="Active" selected>Active</option>
                         <option value="InActive">InActive</option>
                     </select></td>
 				</tr>
@@ -108,16 +107,15 @@ if(isset($_POST['Add'])){
 	
 	$sql = "INSERT INTO Project VALUES(null, '$projectname', '$projectdescription', $brandid, $deptid, '$date_created', '$start_date', '$est_end_date', '$end_date', $modify_by, $project_lead, '$modify_date', $modify_by, '$project_progress', '$status')";
     if($dbconnect->query($sql) == TRUE){
-		
-		echo "New Project Added";
-
-	}
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Project Added</div>';
+       			 </script>";	}
     else{
-        echo $sql;
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
     }
 }     
-
-
 ?>
 
 <?php

@@ -1,46 +1,30 @@
-<?php
-include ('dbconnect.php');
-?>
-<!DOCTYPE html>
-<html>
-<body>
-
-<form action="test.php" method="post" enctype="multipart/form-data">
-    Select image to upload:
-    <input type="file" name="fileToUpload" id="fileToUpload">
-    <input type="submit" value="Upload Image" name="submit">
-</form>
-
-<?php
-$getimage = "SELECT * FROM test";
-$imageresult = $dbconnect->query($getimage);
-while ($row = $imageresult->fetch_assoc()) {
-    echo "<div>";
-    echo "<p>".$row['id']."</p>";
-    echo "<img src = 'images/".$row['image']."'>";
-    echo "</div>";
-}
-?>
-
-</body>
-</html>
+<input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
+<div id="imgTest"></div>
 
 
-
-<?php
-if (isset($_POST['submit'])) {
-    $filename = $_FILES['fileToUpload']['name'];
+<canvas id="canvas" width="5" height="5"></canvas>
 
 
-    $target = "images/".basename($filename);
-    $sql = "INSERT INTO test VALUES (null, '$filename')";
-    $result = $dbconnect->query($sql);
+<script type='text/javascript'>
+  function encodeImageFileAsURL() {
 
-    if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)) {
-        echo "uploaded";
+    var filesSelected = document.getElementById("inputFileToLoad").files;
+    if (filesSelected.length > 0) {
+      var fileToLoad = filesSelected[0];
+
+      var fileReader = new FileReader();
+
+      fileReader.onload = function(fileLoadedEvent) {
+        var srcData = fileLoadedEvent.target.result; // <--- data: base64
+
+        var newImage = document.createElement('img');
+        newImage.src = srcData;
+
+        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+        alert("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+        console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+      }
+      fileReader.readAsDataURL(fileToLoad);
     }
-    else{
-        echo "failed";
-    }
-}
-?>
+  }
+</script>

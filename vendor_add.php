@@ -4,7 +4,7 @@ include('functions.php');
 include('header.php');
 
 ?>
-
+<span id="alert_action"></span>
 <form method="POST" id="sample_form">
 <div class="panel-body">
 	<div class="row">
@@ -16,13 +16,13 @@ include('header.php');
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
             	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='vender.php'">Back</button>   					
+            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='vendor.php'">Back</button>   					
             	</div>
             </div>
 			<table id="sample_data" class="table table-bordered table-striped">
 				<tr>
 					<td width=20%>Vendor Parent</td>
-					<td><select name="epid" id="epid" class="form-control">
+					<td><select name="epid" id="epid" class="selectpicker" data-live-search="true">
                                     <option value="">Select Parents</option>
                                     <?php echo entity_option_list($dbconnect);?>
                     </select></td>
@@ -61,7 +61,7 @@ include('header.php');
 				</tr>
             	<tr>
 					<td>Status</td>
-            		<td><select name="status" id="status" class="form-control" required>
+            		<td><select name="status" id="status" class="form-control" >
                     	<option value="">Select Status</option>
                     	<option value="Active" selected>Active</option>
                         <option value="InActive">InActive</option>
@@ -92,10 +92,14 @@ if(isset($_POST['Add'])){
 
         $query ="INSERT INTO Entity(EPID, Ename, ERegisteredName, Owner, Supplier, OEMCustomer, NumberofWorker, AnnualSales, ProductManufactured, EStatus, EEnterBy, EModifyDate, EModifyBy) VALUE ($epid, '$ename', '$eregisteredname', '$owner', '$supplier', '$oemcustomer', $numberofworker, $annualsale, '$productmanufactured', '$estatus', $eenterby, '$emodifydate', $emodifyby)";
 		if($dbconnect->query($query) == TRUE){
-			echo "New Vendor Added";
+			echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Vendor Added</div>';
+       			 </script>";
 		}
     	else{
-        	echo $query;
+        	echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
         }
 }
 ?>

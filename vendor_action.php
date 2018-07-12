@@ -30,7 +30,7 @@ if(isset($_POST['btn_action']))
         	$query ="INSERT INTO Entity(EPID, Ename, ERegisteredName, Owner, Supplier, OEMCustomer, NumberofWorker, AnnualSales, ProductManufactured, EStatus, EEnterBy, EModifyDate, EModifyBy) VALUE ($epid, '$ename', '$eregisteredname', '$owner', '$supplier', '$oemcustomer', $numberofworker, $annualsale, '$productmanufactured', '$estatus', $eenterby, '$emodifydate', $emodifyby)";
         }
 		if($dbconnect->query($query) === TRUE){
-			echo "New Vender Added";
+			echo "New Vendor Added";
 		}
     	else{
         	echo "Failed to Add";
@@ -83,7 +83,7 @@ if(isset($_POST['btn_action']))
             WHERE EID = $eid";
         }
 		if($dbconnect->query($query) === TRUE){
-			echo 'Vender '.$eid.' Updated';
+			echo 'Vendor '.$eid.' Updated';
 		}
     	else{
         	echo "Failed to Update";
@@ -102,7 +102,7 @@ if(isset($_POST['btn_action']))
         }	
 		$query = "UPDATE Entity SET EStatus = '$status', EModifyDate = '$modify_date', EModifyBy = $modify_by WHERE EID = $eid";
 		if($dbconnect->query($query) == TRUE){
-			echo 'Vender '.$eid.'  Set to '.$status;
+			echo 'Vendor '.$eid.'  Set to '.$status;
 		}
     	else{
         	echo "Failed to Delete";

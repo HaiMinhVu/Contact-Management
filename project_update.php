@@ -6,7 +6,7 @@ $projectid =$_GET['project_id'];
 $brandid;$deptid; $progress; $status; $empid;
 $eidarray = array();
 ?>
-
+<span id="alert_action"></span>
 <form method="POST" id="edit_form">
 <div class="panel-body">
 	<div class="row">
@@ -39,21 +39,24 @@ $eidarray = array();
 				</tr>
 				<tr>
 					<td >Description</td>
-					<td><input type="text" name="project_description" id="project_description" value="<?php echo $row['ProjectDescription'];?>" class="form-control"/></td>
+            		<td><textarea rows="3" name="project_description" id="project_description" class="form-control" ><?php echo $row['ProjectDescription'];?></textarea></td>
+					
 				</tr>
             	<tr>
 					<td >Brand</td>
-            		<td><select name="brand_id" id="brand_id" class="form-control" >
+            		<td><select name="brand_id" id="brand_id" class="selectpicker" data-live-search="true" >
                     	<option value="">Select Brand</option>
                     	<?php echo brand_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+            		<button type="button" name="brandadd" id="brandadd" class="btn btn-success btn-xs" onclick="window.location.href='brand_add.php'">Add</button></td>
 				</tr>
             	<tr>
 					<td >Department</td>
-            		<td><select name="dept_id" id="dept_id" class="form-control" >
-                    	<option value="">Select Brand</option>
+            		<td><select name="dept_id" id="dept_id" class="selectpicker" data-live-search="true" >
+                    	<option value="">Select Department</option>
                     	<?php echo department_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+            		<button type="button" name="deptadd" id="deptadd" class="btn btn-success btn-xs" onclick="window.location.href='dept_add.php'">Add</button></td>
 				</tr>
             	<tr>
 					<td >Date Created</td>
@@ -65,10 +68,11 @@ $eidarray = array();
 				</tr>
             	<tr>
 					<td >Project Lead</td>
-            		<td><select name="project_lead" id="project_lead" class="form-control" >
-                    	<option value="">Select Brand</option>
+            		<td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" >
+                    	<option value="">Select Leader</option>
                     	<?php echo employee_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+            		<button type="button" name="empadd" id="empadd" class="btn btn-success btn-xs" onclick="window.location.href='employee_add.php'">Add</button></td>
 				</tr>
             	<tr>
 					<td >Estimate End Date</td>
@@ -134,7 +138,7 @@ $eidarray = array();
             	</div>
             	<div class="row">
             		<div class="col-md-8"><h4>Sample Info</h4></div>
-  					<div class="col-md-4"><h4>Vender Info</h4></div>
+  					<div class="col-md-4"><h4>Vendor Info</h4></div>
             	</div>
             </div>
 
@@ -156,7 +160,7 @@ $eidarray = array();
 				<tr>
 					<td width=10%>Sample</td>
 					<td width=40%><?php echo $srow['SName'];?></td>
-            		<td width=10%>Vender</td>
+            		<td width=10%>Vendor</td>
             		<td width=40%><?php echo $srow['EName'];?></td>
 				</tr>
             	<tr>
@@ -286,11 +290,15 @@ if(isset($_POST['Save'])){
 	$sql = "UPDATE Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', BrandBelongTo = '$brandid', DeptBelongTo = '$deptid', DateCreated = '$date_created', StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ModifyDate = '$modify_date', ModifyBy = $modify_by, ProjectStatus = '$status', ProjectLead = '$project_lead'
             WHERE ProjectID = $projectid";
     if($dbconnect->query($sql) === TRUE){
-		//header("Refresh:2");
-		echo "<meta http-equiv='refresh' content='0'>";
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Project Updated</div>';
+       			 </script>";
+		echo "<meta http-equiv='refresh' content='2'>";
 	}
     else{
-        echo $sql;
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
     }
 }     
 ?>

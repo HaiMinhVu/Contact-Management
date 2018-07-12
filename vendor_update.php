@@ -6,6 +6,7 @@ $eid =$_GET['eid'];
 $status; $epid;
 
 ?>
+<span id="alert_action"></span>
 <form method="POST" id="vender_form">
 <div class="panel-body">
 	<div class="row">
@@ -25,16 +26,16 @@ $status; $epid;
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
             	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='vender.php'">Back</button>   					
+            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='vendor.php'">Back</button>   					
             	</div>
             </div>
 			
 			<table id="samplerecord_data" class="table table-bordered table-striped">
 				<tr>
-					<td width=10%>Vender Name</td>
+					<td width=10%>Vendor Name</td>
 					<td width=40%><input type="text" name="ename" id="ename" value="<?php echo $row['EName'];?>" class="form-control" required /></td>
-            		<td width=10%>Parent Vender</td>
-					<td width=40%><select name="epid" id="epid" class="form-control" >
+            		<td width=10%>Parent Vendor</td>
+					<td width=40%><select name="epid" id="epid" class="selectpicker" data-live-search="true" >
                                     <option value="">Select Parent Vender</option>
                                     <?php echo entity_option_list($dbconnect);?>
                                 </select></td>
@@ -187,11 +188,15 @@ if(isset($_POST['Save'])){
 	$sql = "UPDATE Entity SET EPID = $epid, EName = '$ename', ERegisteredName = '$eregisteredname', Owner = '$owner', Supplier = '$supplier', OEMCustomer = '$oemcustomer', NumberofWorker = $numberofworker, AnnualSales = $annualsale, ProductManufactured = '$productmanufactured', EModifyDate = '$modify_date', EModifyBy = $modify_by, EStatus = '$status'
             WHERE EID = $eid";
     if($dbconnect->query($sql) === TRUE){
-		//header("Refresh:2");
-		echo "<meta http-equiv='refresh' content='0'>";
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Vendor Updated</div>';
+       			 </script>";
+		echo "<meta http-equiv='refresh' content='2'>";
 	}
     else{
-        echo $sql;
+       echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
     }
 }     
 ?>

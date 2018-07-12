@@ -22,23 +22,15 @@ if(isset($_POST["search"]["value"]))
 	$query .= 'OR p.DateCreated LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR sme.SMEmName LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR sma.username LIKE "%'.$_POST["search"]["value"].'%" ';
-	
 }
 
-/*if(isset($_POST['order']))
-{
-	$query .= 'ORDER BY '.$_POST['order']['0']['column'].' '.$_POST['order']['0']['dir'].' ';
-}
-else
-{
-	$query .= 'ORDER BY product_id DESC ';
-}
+$query .= 'ORDER BY p.ProjectID DESC ';
 
 if($_POST['length'] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
-}*/
-$query .= "ORDER BY p.ProjectID DESC";
+}
+
 $statement = $dbconnect->query($query);
 $data = array();
 $filtered_rows = mysqli_num_rows($statement);
@@ -52,13 +44,13 @@ while($row = $statement->fetch_assoc()){
 	}
 	$sub_array = array();
 	$sub_array[] = $row['ProjectID'];
-	$sub_array[] = $row['ProjectName'];
+	$sub_array[] = '<a href="project_detail.php?project_id='.$row["ProjectID"].'">'.$row['ProjectName'].'</a>';
 	$sub_array[] = $row['username'];
 	$sub_array[] = $row['SMEmName'];
 	$sub_array[] = $row['DateCreated'];
 	$sub_array[] = $row['Progress'];
 	$sub_array[] = $status;
-	$sub_array[] = '<a href="project_detail.php?project_id='.$row["ProjectID"].'" class="btn btn-info btn-xs">View</a>';
+	//$sub_array[] = '<a href="project_detail.php?project_id='.$row["ProjectID"].'" class="btn btn-info btn-xs">View</a>';
 	$sub_array[] = '<a href="project_update.php?project_id='.$row["ProjectID"].'" class="btn btn-warning btn-xs update">Update</button>';
 	$sub_array[] = '<button type="button" name="delete" id="'.$row["ProjectID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ProjectStatus"].'">Delete</button>';
 	$data[] = $sub_array;

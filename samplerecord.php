@@ -42,7 +42,6 @@ include('header.php');
 									<th>Price/Unit</th>
                                     <th>Type</th>
 									<th>Status</th>
-									<th></th>
 									<?php
 									if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 									?>
@@ -152,7 +151,7 @@ $(document).ready(function(){
 		?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8,9,10,11],
+                "targets":[0,1,2,3,4,5,6,7,8,9,10],
                 "orderable":false,
             },
         ],
@@ -161,14 +160,14 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8,9],
+                "targets":[0,1,2,3,4,5,6,7,8],
                 "orderable":false,
             },
         ],
         <?php
         }
         ?>
-        "pageLength": 10,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
 
     ////// Add new item to the table

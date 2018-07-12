@@ -19,20 +19,12 @@ if(isset($_POST["search"]["value"]))
 	$query .= 'OR sma.username LIKE "%'.$_POST["search"]["value"].'%" ';
 }
 
-/*if(isset($_POST['order']))
-{
-	$query .= 'ORDER BY '.$_POST['order']['0']['column'].' '.$_POST['order']['0']['dir'].' ';
-}
-else
-{
-	$query .= 'ORDER BY product_id DESC ';
-}
+$query .= "ORDER BY ECID ";
 
 if($_POST['length'] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
-}*/
-$query .= "ORDER BY ECID";
+}
 $statement = $dbconnect->query($query);
 $data = array();
 $filtered_rows = mysqli_num_rows($statement);
@@ -49,15 +41,15 @@ while($row = $statement->fetch_assoc())
 	}
 	$sub_array = array();
 	$sub_array[] = $row['ECID'];
+	//$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'">'.$row['ECName'].'</a>';
 	$sub_array[] = $row['ECName'];
 	$sub_array[] = $row['ECEmail'];
 	$sub_array[] = $row['ECPhone'];
 	$sub_array[] = $row['ECFax'];
 	$sub_array[] = $row['ECWebsite'];
 	$sub_array[] = $status;
-	$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'" class="btn btn-info btn-xs">View</a>';
+	//$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'" class="btn btn-info btn-xs">View</a>';
 	$sub_array[] = '<a href="contact_update.php?ecid='.$row["ECID"].'" class="btn btn-warning btn-xs">Update</a>';
-	//$sub_array[] = '<button type="button" name="update" id="'.$row["ECID"].'" class="btn btn-warning btn-xs update">Update</button>';
 	$sub_array[] = '<button type="button" name="delete" id="'.$row["ECID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ECStatus"].'">Delete</button>';
 
 	$data[] = $sub_array;

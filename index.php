@@ -1,11 +1,6 @@
 <?php
-//index.php
 include('dbconnect.php');
 include('functions.php');
-if(!isset($_SESSION['type'])){
-	header('location:login.php');
-}
-
 include('header.php');
 
 ?>

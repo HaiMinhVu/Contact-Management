@@ -6,37 +6,8 @@ include('dbconnect.php');
 
 include('functions.php');
 
-
 if(isset($_POST['btn_action']))
 {
-	/* dynamic load brand for add new items
-	 * if($_POST['btn_action'] == 'load_brand')
-	{
-		echo fill_brand_list($connect, $_POST['category_id']);
-	}*/
-
-	//// add new item
-	if($_POST['btn_action'] == 'Add')
-	{	
-    	$sdescription = $simage = "";
-    	$sname = $_POST['sname'];
-    	$sdescription = $_POST['sdescription'];
-    	$simage = $_POST['simage'];
-    	$modify_date = date("Y-m-d h:i");
-    	$modify_by = $_SESSION['acct_id'];
-    	$status = "Active";
-    	$query = "INSERT INTO Sample VALUES(null, '$sname', '$sdescription', '$simage', $modify_by, '$status', '$modify_date', $modify_by)";
-    
-		if($dbconnect->query($query) == TRUE)
-		{
-			echo 'New Sample Added';
-		}
-    	else
-        {
-        	echo $query;
-        }
-	}
-
 	//// load single item into update form
 	if($_POST['btn_action'] == 'fetch_single')
 	{
@@ -96,5 +67,7 @@ if(isset($_POST['btn_action']))
 	}
 
 }
-
+if(isset($_POST['Add'])){
+	echo "1";
+}
 ?>

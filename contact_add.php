@@ -99,10 +99,14 @@ if(isset($_POST['Add'])){
 	
 	$sql = "INSERT INTO Entity_Contact VALUES(null, '$ecname', '$ecemail', '$ecphone', '$ecfax', '$ecwebsite', '$ecaddress1', '$ecaddress2', '$eccity', '$ecstate', '$eczip', '$eccountry', $modify_by, '$modify_date', $modify_by, '$ecstatus')";
     if($dbconnect->query($sql) === TRUE){
-		echo "<script>alert('New Contact Added');</script>";
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Contact Added</div>';
+       			 </script>";
 	}
     else{
-        echo $sql;
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
     }
 }     
 ?>
