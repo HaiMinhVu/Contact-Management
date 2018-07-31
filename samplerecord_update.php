@@ -7,21 +7,23 @@ $status; $type; $eid; $sid;
 
 ?>
 <span id="alert_action"></span>
-<form method="POST" id="sample_form">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
 
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Update Record</h3>
-            	</div>
+                	<h3 class="panel-title"><font color="#2775F5">Record Update</font></h3>
+                </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button>   					
-            	</div>
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button> 	
+                </div>
             </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<form method="POST" id="samplerecord_update_form">
 			<?php
             $recordquery = "SELECT * FROM SampleRecord sr INNER JOIN SMDBAccounts sma ON sma.AcctID = sr.SRRequestBy WHERE SRID = $srid";
 			$recordfetch = $dbconnect->query($recordquery);
@@ -98,7 +100,6 @@ $status; $type; $eid; $sid;
                     ?>
             		<td>Enter By</td>
             		<td><?php echo $row['username'];?></td>
-            		
 				</tr>
             	<tr>
 					<td width=10%>Status</td>
@@ -110,16 +111,63 @@ $status; $type; $eid; $sid;
             		
 				</tr>
 			</table>
-            <input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            <input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
             <?php
             }
             ?>
-            
+            	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
+            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            </form>
 		</div>
 	</div>
-</div>
-</form>
+
+    <!-- 
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Related Reviews</font></h3>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+            <?php
+            $getsreidsql = "SELECT SReID FROM SampleReview WHERE SRID = $srid";
+			$getsreidresult = $dbconnect->query($getsreidsql);
+			foreach ($getsreidresult as $sreidrow){
+            	$sreid = $sreidrow['SReID'];
+            	$sreidsql = "SELECT * FROM SampleReview JOIN SMDBAccounts ON ReviewBy = AcctID WHERE SReID = $sreid";
+            	$samplefetch = $dbconnect->query($sreidsql);
+				while($srerow = $samplefetch->fetch_assoc()){
+            ?>
+                <table id="samplereview_update_data" class="table table-bordered table-striped">
+            	<tr>
+            		<a href="samplereview_update.php?sreid=<?php echo $sreid; ?>" class="btn btn-warning btn-xs">Edit</a>
+            	</tr>
+				<tr>
+					<td width=10%>Comment</td>
+            		<td width=60%><?php echo $srerow['SReComments'];?></td>
+            		<td rowspan="3"><?php echo "<img src='images/sample_review/". $srerow['SReImages']."' height='250' width='250'>"; ?></td>
+				</tr>
+            	
+            	<tr>
+					<td>Review By</td>
+					<td><?php echo $srerow['username'] ;?></td>
+				</tr>
+            	<tr>
+					<td>Last Modify</td>
+            		<td><?php echo date('Y-m-d H:i', strtotime($srerow['ReviewDate'])) ;?></td>
+				</tr>
+			</table>
+            <br>
+            <?php
+                }
+            }
+            ?>
+		</div>
+	</div>
+    -->
+            
 <?php
 if(isset($_POST['Save'])){
 	$sid = $_POST['sid'];

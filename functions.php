@@ -55,23 +55,47 @@ function sample_option_list($dbconnect){
 	$result = $dbconnect->query($sql);
 	$output = '';
 	foreach ($result as $row){
-    	$output .='<option value = "'.$row['SID'].'">'.$row['SName'].'  - '.$row['SStatus'].'</option>';
+    	$output .='<option value = "'.$row['SID'].'">'.$row['SName'].'</option>';
     }
 	return $output;
 }
 
-function count_total_project($dbconnect){
+function samplerecord_option_list($dbconnect){
+	$sql = "SELECT * FROM SampleRecord sr INNER JOIN Sample s ON s.SID = sr.SID 
+    										INNER JOIN Entity e ON e.EID = sr.EID";
+	$result = $dbconnect->query($sql);
+	$output = '';
+	foreach ($result as $row){
+    	$output .= '<option value = "'.$row['SRID'].'">'.$row['SName'].' - '.$row['EName'].' - '.$row['Type'].'</option>';
+    }
+	return $output;
+}
+
+function count_total_project_active($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM Project WHERE ProjectStatus = 'Active'");
 	return mysqli_num_rows($result);
 }
-
-function count_total_entity($dbconnect){
-	$result = $dbconnect->query("SELECT * FROM Entity WHERE EStatus = 'Active'");
+function count_total_project_inactive($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Project WHERE ProjectStatus = 'InActive'");
 	return mysqli_num_rows($result);
 }
 
-function count_total_sample($dbconnect){
-	$result = $dbconnect->query("SELECT * FROM Sample");
+
+function count_total_entity_active($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Entity WHERE EStatus = 'Active'");
+	return mysqli_num_rows($result);
+}
+function count_total_entity_inactive($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Entity WHERE EStatus = 'InActive'");
+	return mysqli_num_rows($result);
+}
+
+function count_total_sample_active($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Sample WHERE SStatus = 'Active'");
+	return mysqli_num_rows($result);
+}
+function count_total_sample_inactive($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Sample WHERE SStatus = 'InActive'");
 	return mysqli_num_rows($result);
 }
 
@@ -102,7 +126,7 @@ function compress_image($source, $destination, $quality){
 
 	$fileext = explode('.',$imagename);
 	$ext = strtolower(end($fileext));
-	
+
 	$newimagename = uniqid('',true).".".$ext;
     $destination .= $newimagename;
 	move_uploaded_file($imagetmpname, $destination);

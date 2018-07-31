@@ -1,118 +1,187 @@
 <?php
-require('fpdf181/fpdf.php');
 include('dbconnect.php');
+include('functions.php');
+include('header.php');
+$eid =$_GET['eid'];
+$status; $epid;
+?>
+	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+    	<div class="row">
+			<h4>View Vendor Detail</h4> 
+		</div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        <div class="row" align="right">
+			<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='vendor.php'">Back</button>	
+        </div>
+    </div>
+	<div style="clear:both"></div>
 
-if(isset($_GET['eid'])){
-	$pdf = new FPDF('P', 'mm', 'A4');
-	$pdf->AddPage();
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Vendor</font></h3>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+					<?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+                    <a href="vendor_update.php?eid=<?php echo $eid ?>" class="btn btn-warning btn-xs">Edit</a> 	
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<?php
+            $entitysql = "SELECT * FROM Entity e INNER JOIN SMDBAccounts sma ON sma.AcctID = e.EEnterBy WHERE e.EID = $eid";
+			$entityfetch = $dbconnect->query($entitysql);
+			while($row = $entityfetch->fetch_array()){
+            	$status = $row['EStatus'];
+            	$epid = $row['EPID'];
+            ?>
+			<table id="samplerecord_data" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Vendor Name</td>
+					<td width=40%><?php echo $row['EName'];?></td>
+            		<td width=10%>Status</td>
+					<td width=40%><?php echo $row['EStatus'];?></td>
+				</tr>
+				<tr>
+					<td width=10%>Register As</td>
+					<td width=40%><?php echo $row['ERegisteredName'];?></td>
+            		<td width=10%>Supplier</td>
+            		<td><?php echo $row['Supplier'];?></td>
+				</tr>
+            	<tr>
+					<td>Owner</td>
+					<td><?php echo $row['Owner'];?></td>
+            		<td>Products Manufactured</td>
+            		<td><?php echo $row['ProductManufactured'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Last Modify On</td>
+					<td width=40%><?php echo date('Y-m-d H:i', strtotime($row['EModifyDate'])) ;?></td>
+            		<td width=10%>OEM Customer</td>
+            		<td><?php echo $row['OEMCustomer'];?></td>
+				</tr>
+            	<tr>
+            		<?php
+					$modifybyid = $row['EModifyBy'];
+    				$modifybyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
+    				while($modifyrow = $modifybyresult->fetch_assoc()){
+            		?>
+					<td width=10%>Last Modify By</td>
+					<td width=40%><?php echo $modifyrow['username'];?></td>
+                    <?php
+                    }
+                    ?>
+                    <td width=10%># of Employees</td>
+            		<td><?php echo $row['NumberofWorker'];?></td>
+				</tr>
+            	<tr>
+            		<td width=10%>Enter By</td>
+					<td width=40%><?php echo $row['username'];?></td>
+                    <td width=10%>Annual Sales</td>
+            		<td><?php echo $row['AnnualSales'];?></td>
+				</tr>
+                <?php
+                $contactsql = "SELECT * FROM Entity_Attribute WHERE EASubCategory = 'Primary'"    
+                ?>
+                    
+			</table>
+            <?php
+            }
+            ?>
+		</div>
+	</div>
 
-	$eid = $_GET['eid'];
-	
-	$entitysql = "SELECT * FROM Entity e INNER JOIN SMDBAccounts sma ON sma.AcctID = e.EEnterBy WHERE e.EID = $eid";
-	$entityfetch = $dbconnect->query($entitysql);
-	
-	$pdf->SetFont('Times','B', 14);
-    $pdf->SetTextColor(0,0,255);
-	
-	while($row = $entityfetch->fetch_array()){
-    	$pdf->Cell(189	,10, 'Vender '.$row['EName'], 1, 1, 'C');
-    
-    	$pdf->SetFont('Times', '', 11);
-    	$pdf->SetTextColor(0,0,0);
-    
-    	$pdf->Cell(30	,5, "Register As", 'L', 0);
-		$pdf->Cell(65	,5, $row['ERegisteredName'], 0, 0);
-		$pdf->Cell(30	,5, "Status", 0, 0 );
-		$pdf->Cell(64	,5, $row['EStatus'], 'R', 1);
-    
-    	$pdf->Cell(30	,5, "Owner", 'L', 0);
-		$pdf->Cell(65	,5, $row['Owner'], 0, 0);
-		$pdf->Cell(30	,5, "Supplier", 0, 0);
-		$pdf->Cell(64	,5, $row['Supplier'], 'R', 1);
-    
-    	$pdf->Cell(30	,5, "Enter By", 'L', 0);
-		$pdf->Cell(65	,5, $row['username'], 0, 0);
-		$pdf->Cell(30	,5, "Manufactured", 0, 0);
-		$pdf->Cell(64	,5, $row['ProductManufactured'], 'R', 1);
-    
-    	$pdf->Cell(30	,5, "Last Modify", 'L', 0);
-		$pdf->Cell(65	,5, $row['EModifyDate'], 0, 0);
-		$pdf->Cell(30	,5, "OEM Customer", 0, 0);
-		$pdf->Cell(64	,5, $row['OEMCustomer'], 'R', 1);
-    
-    	$modifybyid = $row['EModifyBy'];
-    	$modifybyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
-    	while($modifyrow = $modifybyresult->fetch_assoc()){
-    	$pdf->Cell(30	,5, "Modify By", 'L', 0);
-		$pdf->Cell(65	,5, $modifyrow['username'], '', 0);
-        }
-		$pdf->Cell(30	,5, "# of Worker", '', 0);
-		$pdf->Cell(64	,5, $row['NumberofWorker'], 'R', 1);
-        
-        $pdf->Cell(95	,5, "", 'LB', 0);
-		$pdf->Cell(30	,5, "Annual Sale", 'B', 0);
-		$pdf->Cell(64	,5, $row['AnnualSales'], 'BR', 1);
-        
-        $pdf->Ln();
-    
-    }
-	
-	$pdf->Ln();
-	$contactsql = "SELECT * FROM Entity_Contact ec INNER JOIN Entity_RelateTo_Contact erc ON erc.ECID = ec.ECID
-								INNER JOIN Entity e ON e.EID = erc.EID
-                                WHERE e.EID = $eid";
-    $contactfetch = $dbconnect->query($contactsql);
-	$countcontact = mysqli_num_rows($contactfetch);
-	$pdf->SetFont('Times','B', 14);
-	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".$countcontact." Contact Related", 1, 1, 'C');
-	$pdf->SetFont('Times','', 11);	// reset font
-	$pdf->SetTextColor(0,0,0);
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Contact Related</font></h3>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+            <?php
+    		$contactsql = "SELECT * FROM Entity e INNER JOIN Entity_RelateTo_Contact erc ON erc.EID = e.EID
+						INNER JOIN Entity_Contact_Person ec ON ec.ECPID = erc.ECID
+                        WHERE e.EID = $eid ORDER BY erc.Priority";
 
-    while($row = $contactfetch->fetch_array()){
-        $pdf->Cell(30	,5, "Status", 'L', 0);
-       	$pdf->SetTextColor(255,0,0);
-		$pdf->Cell(65	,5, $row['ERCStatus'], '', 0);
-       	$pdf->SetTextColor(0,0,0);
-    	$pdf->Cell(30	,5, "Priority", '', 0);
-       	$pdf->SetTextColor(255,0,0);
-		$pdf->Cell(64	,5, $row['Priority'], 'R', 1);
-       	$pdf->SetTextColor(0,0,0);
-        
-       	$pdf->Cell(30	,5, "Name", 'L', 0);
-		$pdf->Cell(65	,5, $row['ECName'], '', 0);
-    	$pdf->Cell(30	,5, "Address 1", '', 0);
-		$pdf->Cell(64	,5, $row['ECAddress1'], 'R', 1);
-    
-    	$pdf->Cell(30	,5, "Title", 'L', 0);
-		$pdf->Cell(65	,5, $row['ERCTitle'], '', 0);
-    	$pdf->Cell(30	,5, "Address 2", '', 0);
-		$pdf->Cell(64	,5, $row['ECAddress2'], 'R', 1);
-    	
-    	$pdf->Cell(30	,5, "Email", 'L', 0);
-		$pdf->Cell(65	,5, $row['ECEmail'], '', 0);
-    	$pdf->Cell(30	,5, "City", '', 0);
-		$pdf->Cell(64	,5, $row['ECCity'], 'R', 1);
+    		$contactfetch = $dbconnect->query($contactsql);
+    		while($crow = $contactfetch->fetch_array()){
+			?>
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+            		<h5>Title: <?php echo $crow['ERCTitle'];?>
+            	</div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+                    <?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+                    <a href="contact_update.php?ecid=<?php echo $crow['ECID']; ?>" class="btn btn-warning btn-xs">Edit</a> 	
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+			<table id="contact_view" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Name</td>
+					<td width=40%><?php echo $crow['ECName'];?></td>
+            		<td width=10%>Address 1</td>
+            		<td width=40%><?php echo $crow['ECAddress1'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Email</td>
+					<td width=40%><?php echo $crow['ECEmail'];?></td>
+            		<td width=10%>Address 2</td>
+            		<td width=40%><?php echo $crow['ECAddress2'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Phone</td>
+					<td width=40%><?php echo $crow['ECPhone'];?></td>
+            		<td width=10%>City</td>
+            		<td width=40%><?php echo $crow['ECCity'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Fax</td>
+					<td width=40%><?php echo $crow['ECFax'];?></td>
+            		<td width=10%>State-Zip</td>
+            		<td width=40%><?php echo $crow['ECState']."-".$crow['ECZip'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Website</td>
+					<td width=40%><?php echo $crow['ECWebsite'];?></td>
+            		<td width=10%>Country</td>
+            		<td width=40%><?php echo $crow['ECCountry'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Status</td>
+					<td width=40%><?php echo $crow['ECStatus'];?></td>
+                    <td width=10%>Priority</td>
+					<td width=40%><?php echo $crow['Priority'];?></td>
+				</tr>
+			</table>
+            <?php
+            }
+            ?>  
+            
+		</div>
+	</div>
 
-        $pdf->Cell(30	,5, "Phone", 'L', 0);
-		$pdf->Cell(65	,5, $row['ECPhone'], '', 0);
-    	$pdf->Cell(30	,5, "State", '', 0);
-		$pdf->Cell(64	,5, $row['ECState'], 'R', 1);
-    
-    	$pdf->Cell(30	,5, "Fax", 'L', 0);
-		$pdf->Cell(65	,5, $row['ECFax'], '', 0);
-    	$pdf->Cell(30	,5, "Zipcode", '', 0);
-		$pdf->Cell(64	,5, $row['ECZip'], 'R', 1);
-    
-    	$pdf->Cell(30	,5, "Website", 'L', 0);
-		$pdf->Cell(65	,5, $row['ECWebsite'], '', 0);
-		$pdf->Cell(30	,5, "Country", '', 0);
-		$pdf->Cell(64	,5, $row['ECCountry'], 'R', 1);
-        
-       	$pdf->Cell(189	,5, "", 'LBR', 1, 'C');
-    }
-	
-	$pdf->Output();
-}
-
+<?php
+include ('footer.php');
 ?>

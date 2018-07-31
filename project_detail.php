@@ -1,221 +1,289 @@
 <?php
-require('fpdf181/fpdf.php');
 include('dbconnect.php');
-if(isset($_GET['project_id']))
-{
-	$pdf = new FPDF('P', 'mm', 'A4');
-	$pdf->AddPage();
-
-	$projectid = $_GET['project_id'];
-
-	/////  project load
-	$projectquery = "
-	SELECT * FROM Project p
-	INNER JOIN SMEmployees sme ON sme.SMEmID = p.ProjectLead
-	INNER JOIN SMDBAccounts sma ON sma.AcctID = p.EnterBy
-    WHERE p.ProjectID = $projectid
-	";
-	$projectfetch = $dbconnect->query($projectquery);
-
-	$pdf->SetFont('Times','B', 14);
-    $pdf->SetTextColor(0,0,255);
-	while($row = $projectfetch->fetch_assoc()){
-    
-		
-		$pdf->Cell(189	,10, 'Project '.$row['ProjectName'], 1, 1, 'C');
-		
-		$pdf->SetFont('Times', '', 11);
-    	$pdf->SetTextColor(0,0,0);
-		
-    	$enterbyid = $row['EnterBy'];
-    	$enterbyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $enterbyid");
-    	while($enterrow = $enterbyresult->fetch_assoc()){
-		$pdf->Cell(30	,5, "Enter By", 'L', 0);
-		$pdf->Cell(85	,5, $enterrow['username'], 0, 0);
-        }
-		$pdf->Cell(30	,5, "Created", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['DateCreated'], 'R', 1, 'R');
-
-		$pdf->Cell(30	,5, "Leader", 'L', 0);
-		$pdf->Cell(85	,5, $row['SMEmName'], 0, 0);
-		$pdf->Cell(30	,5, "Start On", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['StartDate'], 'R', 1, 'R');
-
-		$pdf->Cell(30	,5, "Progress", 'L', 0);
-		$pdf->Cell(85	,5, $row['Progress'], 0, 0);
-		$pdf->Cell(30	,5, "Est Finish", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['EstEndDate'], 'R', 1, 'R');
-
-		$pdf->Cell(30	,5, "Status", 'L', 0);
-    	$pdf->SetTextColor(255,0,0);
-		$pdf->Cell(85	,5, $row['ProjectStatus'], 0, 0);
-    	$pdf->SetTextColor(0,0,0);
-		$pdf->Cell(30	,5, "Finish On", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['EndDate'], 'R', 1, 'R');
-
-    	$modifybyid = $row['ModifyBy'];
-    	$modifybyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
-    	while($modifyrow = $modifybyresult->fetch_assoc()){
-		$pdf->Cell(30	,5, "Last Modify", 'L', 0);
-		$pdf->Cell(85	,5, $modifyrow['username'], 0, 0);
-        }
-		$pdf->Cell(30	,5, "Modify Date", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['ModifyDate'], 'R', 1, 'R');
-
-		$pdf->Cell(189	,5, "Description", 'LR', 1);
+include('functions.php');
+include('header.php');
+$projectid =$_GET['project_id'];
+$brandid;$deptid; $progress; $status; $empid;
+$eidarray = array();
+?>
 	
-		$pdf->Cell(30	,15, "" , 'LB', 0);
-		$pdf->Cell(159	,15, $row['ProjectDescription'], 'BR', 1);
-    }
-	
-	///// sample load
-	$samplequery = "SELECT * FROM Project p 
+	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+    	<div class="row">
+			<h4>View Project Detail</h4> 
+		</div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        <div class="row" align="right">
+			<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='project.php'">Back</button>	
+        </div>
+    </div>
+	<div style="clear:both"></div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Project</font></h3>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+					<?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+                    <a href="project_update.php?project_id=<?php echo $projectid ?>" class="btn btn-warning btn-xs">Edit</a>	
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<?php
+			$projectsql = "SELECT * FROM Project p INNER JOIN SMDBAccounts sma ON sma.AcctID = p.EnterBy
+                        INNER JOIN SMEmployees sme ON sme.SMEmID = p.ProjectLead
+						WHERE ProjectID = $projectid";
+			$projectfetch = $dbconnect->query($projectsql);
+			while($row = $projectfetch->fetch_assoc()){
+            $status = $row['ProjectStatus'];
+            $empid = $row['ProjectLead'];
+            $modifybyid = $row['ModifyBy'];
+			?>
+			<table id="project_data" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Project Name</td>
+					<td><?php echo $row['ProjectName'];?></td>
+				</tr>
+				<tr>
+					<td>Description</td>
+            		<td><?php echo $row['ProjectDescription'];?></td>
+					
+				</tr>
+            	<tr>
+					<td>Date Created</td>
+            		<td><?php echo date('Y-m-d', strtotime($row['DateCreated'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>Created By</td>
+					<td><?php echo $row['username'] ;?></td>
+				</tr>
+            	<tr>
+					<td>Start Date</td>
+            		<td><?php echo date('Y-m-d', strtotime($row['StartDate'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>Project Lead</td>
+            		<td><?php echo $row['SMEmName']?></td>
+				</tr>
+            	<tr>
+					<td>Estimate End Date</td>
+            		<td><?php echo date('Y-m-d', strtotime($row['EstEndDate'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>End Date</td>
+            		<td><?php echo date('Y-m-d', strtotime($row['EndDate'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>Progress</td>
+            		<td><?php echo $row['Progress']?></td>
+				</tr>
+            	<tr>
+					<td>Status</td>
+            		<td><?php echo $row['ProjectStatus']?></td>
+				</tr>
+            	<tr>
+					<td>Modify Date</td>
+            		<td><?php echo date('Y-m-d H:i', strtotime($row['ModifyDate'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>Modify By</td>
+            		<?php
+            		$modifyidsql = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
+					while($modifyidrow = $modifyidsql->fetch_assoc()){
+            		?>
+            		<td><?php echo $modifyidrow['username'] ;?></td>
+                    <?php
+                    }
+                    ?>
+				</tr>
+			</table>
+            <?php
+            }
+            ?>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Sample Related</font></h3>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+            <?php
+			$samplequery = "SELECT * FROM Project p 
     			INNER JOIN Project_Require_Sample prs ON prs.ProjectID = p.ProjectID
 				INNER JOIN Sample s ON s.SID = prs.SID
                 INNER JOIN SampleRecord sr ON sr.SID = s.SID
+                INNER JOIN Entity e ON e.EID = sr.EID
                 WHERE p.ProjectID = $projectid";
-	$samplefetch = $dbconnect->query($samplequery);
-	$countsample = mysqli_num_rows($samplefetch);
-	//echo $samplequery;
-	
-	$pdf->Ln();	
-	$pdf->SetFont('Times','B', 14);
-	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".$countsample." Sample Related", 1, 1, 'C');
-	$pdf->SetFont('Times','', 11);	// reset font
- 	$pdf->SetTextColor(0,0,0);
+			$samplefetch = $dbconnect->query($samplequery);
+			while($srow = $samplefetch->fetch_array()){
+            	$eid = $srow['EID'];
+    			if(!in_array($eid, $eidarray, true)){
+        			array_push($eidarray, $eid);
+        		}
+			?>
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h5>Sample Info</h5>
+            		<?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+            		<a href="sample_update.php?sid=<?php echo $srow['SID']; ?>" class="btn btn-warning btn-xs">Edit Sample</a>
+                    <?php
+                    }
+                    ?>
+            		<a href="sample_detail.php?sid=<?php echo $srow['SID']; ?>" class="btn btn-info btn-xs">View Sample</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+                    <h5>Vendor Info</h5> 
+                    <?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+            		<a href="vendor_update.php?eid=<?php echo $srow['EID']; ?>" class="btn btn-warning btn-xs">Edit Vendor</a>
+                    <?php
+                    }
+                    ?>
+                    <a href="vendor_detail.php?eid=<?php echo $srow['EID']; ?>" class="btn btn-info btn-xs">View Vendor</a>
+                </div>
+            </div>
+			<table id="sample_view" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Sample</td>
+					<td width=40%><?php echo $srow['SName'];?></td>
+            		<td width=10%>Vendor</td>
+            		<td width=40%><?php echo $srow['EName'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Type</td>
+					<td width=40%><?php echo $srow['Type'];?></td>
+            		<td width=10%>Owner</td>
+            		<td width=40%><?php echo $srow['Owner'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Quantity</td>
+					<td width=40%><?php echo $srow['Quantity'];?></td>
+            		<td width=10%>Supplier</td>
+            		<td width=40%><?php echo $srow['Supplier'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Price/Unit</td>
+					<td width=40%><?php echo $srow['PriceperUnit'];?></td>
+            		<td width=10%>Manufactured</td>
+            		<td width=40%><?php echo $srow['ProductManufactured'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%></td>
+					<td width=40%></td>
+            		<td width=10%>Annual Sale</td>
+            		<td width=40%><?php echo $srow['AnnualSales'];?></td>
+				</tr>
+			</table>
+            <br>
+            <?php
+            }
+            ?>  
+		</div>
+	</div>
 
-	$eidarray = array();
-	
-	while($row = $samplefetch->fetch_array()){
-		$pdf->Cell(30	,5, "Sample", 'L', 0);
-		$pdf->Cell(85	,5, $row['SName'], 0, 0);
-		$pdf->Cell(30	,5, "Date Requested", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['DateRequested'], 'R', 1, 'R');
-		
-    	$pdf->Cell(30	,5, "Type", 'L', 0);
-		$pdf->Cell(85	,5, $row['Type'], 0, 0);
-		$pdf->Cell(30	,5, "Est Deliver", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['EstDeliver'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Quantity", 'L', 0);
-		$pdf->Cell(85	,5, $row['Quantity'], 0, 0);
-		$pdf->Cell(30	,5, "Arrival Date", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['ArrivalDate'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Price/Unit", 'L', 0);
-		$pdf->Cell(85	,5, $row['PriceperUnit'], 0, 0);
-		$pdf->Cell(30	,5, "Payment Terms", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['PaymentTerms'], 'R', 1, 'R');
-    
-    	$eid = $row['EID'];
-    	if(!in_array($eid, $eidarray, true)){
-        	array_push($eidarray, $eid);
-        }
-    	
-    	$enamefetch = $dbconnect->query("SELECT EName FROM Entity WHERE EID = $eid");
-    	while($enamerow = $enamefetch->fetch_array()){
-    	$pdf->Cell(30	,5, "From Vender", 'L', 0);
-		$pdf->Cell(85	,5, $enamerow['EName'], 0, 0);
-		$pdf->Cell(30	,5, "Warranty", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['WarrantyTerms'], 'R', 1, 'R');
-        }
-    
-    	$pdf->Cell(115	,5, "", 'LB', 0);
-		$pdf->Cell(30	,5, "Shipping", 'B', 0, 'R');
-		$pdf->Cell(44	,5, $row['ShippingTerms'], 'BR', 1, 'R');
-    	
-    }
-	
-	$pdf->Ln();
-	$pdf->SetFont('Times','B', 14);
-	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".count($eidarray)." Vender Related", 1, 1, 'C');
-	$pdf->SetFont('Times','B', 12);	// reset font
-	$pdf->SetTextColor(0,0,0);
-	
-	$pdf->Cell(95	,7, "Vender Info", 1, 0, 'C');
-	$pdf->Cell(94	,7, "Contact Info", 1, 1, 'C');
-
-	$pdf->SetFont('Times','', 11);
-	foreach($eidarray as $eid){
-    	$contactsql = "SELECT * FROM Entity e INNER JOIN Entity_RelateTo_Contact erc ON erc.EID = e.EID
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Contacts Related</font></h3>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+            <?php
+			foreach($eidarray as $eid){
+    		$contactsql = "SELECT * FROM Entity e INNER JOIN Entity_RelateTo_Contact erc ON erc.EID = e.EID
 						INNER JOIN Entity_Contact ec ON ec.ECID = erc.ECID
                         WHERE e.EID = $eid";
 
-    	$contactfetch = $dbconnect->query($contactsql);
-    	while($row = $contactfetch->fetch_array()){
-        	$pdf->Cell(30	,5, "Status", 'L', 0);
-        	$pdf->SetTextColor(255,0,0);
-			$pdf->Cell(65	,5, $row['EStatus'], 'R', 0);
-        	$pdf->SetTextColor(0,0,0);
-			$pdf->Cell(30	,5, "Status", 0, 0);
-        	$pdf->SetTextColor(255,0,0);
-			$pdf->Cell(64	,5, $row['ERCStatus'], 'R', 1);
-        	$pdf->SetTextColor(0,0,0);
-        
-        	$pdf->Cell(30	,5, "Name", 'L', 0);
-			$pdf->Cell(65	,5, $row['EName'], 'R', 0);
-			$pdf->Cell(30	,5, "Name", 0, 0);
-			$pdf->Cell(64	,5, $row['ECName'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Registered As", 'L', 0);
-			$pdf->Cell(65	,5, $row['ERegisteredName'], 'R', 0);
-			$pdf->Cell(30	,5, "Phone", 0, 0);
-			$pdf->Cell(64	,5, $row['ECPhone'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Owner", 'L', 0);
-			$pdf->Cell(65	,5, $row['Owner'], 'R', 0);
-			$pdf->Cell(30	,5, "Email", 0, 0);
-			$pdf->Cell(64	,5, $row['ECEmail'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Supplier", 'L', 0);
-			$pdf->Cell(65	,5, $row['Supplier'], 'R', 0);
-			$pdf->Cell(30	,5, "Fax", 0, 0);
-			$pdf->Cell(64	,5, $row['ECFax'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "OEM Customer", 'L', 0);
-			$pdf->Cell(65	,5, $row['OEMCustomer'], 'R', 0);
-			$pdf->Cell(30	,5, "Address 1", 0, 0);
-			$pdf->Cell(64	,5, $row['ECAddress1'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "# of Worker", 'L', 0);
-			$pdf->Cell(65	,5, $row['NumberofWorker'], 'R', 0);
-			$pdf->Cell(30	,5, "Address 2", 0, 0);
-			$pdf->Cell(64	,5, $row['ECAddress2'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Annual Sale", 'L', 0);
-			$pdf->Cell(65	,5, $row['AnnualSales'], 'R', 0);
-			$pdf->Cell(30	,5, "City", 0, 0);
-			$pdf->Cell(64	,5, $row['ECCity'], 'R', 1);
-        	
-        	$pdf->Cell(30	,5, "Manufactured", 'L', 0);
-			$pdf->Cell(65	,5, $row['ProductManufactured'], 'R', 0);
-			$pdf->Cell(30	,5, "State", 0, 0);
-			$pdf->Cell(64	,5, $row['ECState'], 'R', 1);	
-        
-        	$pdf->Cell(30	,5, "", 'L', 0);
-			$pdf->Cell(65	,5, "", 'R', 0);
-			$pdf->Cell(30	,5, "Zip Code", 0, 0);
-			$pdf->Cell(64	,5, $row['ECZip'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "", 'L', 0);
-			$pdf->Cell(65	,5, "", 'R', 0);
-			$pdf->Cell(30	,5, "Country", '', 0);
-			$pdf->Cell(64	,5, $row['ECCountry'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "", 'L', 0);
-			$pdf->Cell(65	,5, "", 'R', 0);
-			$pdf->Cell(30	,5, "Title", '', 0);
-			$pdf->Cell(64	,5, $row['ERCTitle'], 'R', 1);
-        
-        	$pdf->Cell(189	,5, "", 'LBR', 1, 'C');
+    		$contactfetch = $dbconnect->query($contactsql);
+    		while($crow = $contactfetch->fetch_array()){
+			?>
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+            		<h5>Vendor: <?php echo $crow['EName'];?></h5>
+                    <?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+                    <a href="contact_update.php?ecid=<?php echo $crow['ECID']; ?>" class="btn btn-warning btn-xs">Edit Contact</a> 	
+                    <?php
+                    }
+                    ?>
+            	</div>
+            </div>
+			<table id="contact_view" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Name</td>
+					<td width=40%><?php echo $crow['ECName'];?></td>
+            		<td width=10%>Title</td>
+                    <td width=40%><?php echo $crow['ERCTitle'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Email</td>
+					<td width=40%><?php echo $crow['ECEmail'];?></td>
+            		<td width=10%>Address 1</td>
+            		<td width=40%><?php echo $crow['ECAddress1'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Phone</td>
+					<td width=40%><?php echo $crow['ECPhone'];?></td>
+            		<td width=10%>Address 2</td>
+            		<td width=40%><?php echo $crow['ECAddress2'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Fax</td>
+					<td width=40%><?php echo $crow['ECFax'];?></td>
+            		<td width=10%>City</td>
+            		<td width=40%><?php echo $crow['ECCity'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Website</td>
+					<td width=40%><?php echo $crow['ECWebsite'];?></td>
+            		<td width=10%>State-Zip</td>
+            		<td width=40%><?php echo $crow['ECState']."-".$crow['ECZip'];?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Status</td>
+					<td width=40%><?php echo $crow['ECStatus'];?></td>
+                    <td width=10%>Country</td>
+            		<td width=40%><?php echo $crow['ECCountry'];?></td>
+				</tr>
+			</table>
+            <?php
+            }
+            }
+            ?>  
+		</div>
+	</div>
 
-        }
-    }
-
-
-	$pdf->Output();
-}
-
+            
+<?php
+include ('footer.php');
 ?>

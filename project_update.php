@@ -3,35 +3,41 @@ include('dbconnect.php');
 include('functions.php');
 include('header.php');
 $projectid =$_GET['project_id'];
-$brandid;$deptid; $progress; $status; $empid;
-$eidarray = array();
+$progress; $status; $empid;
+$sidarray = array();
+$p_require_s = "SELECT SID FROM Project_Require_Sample WHERE ProjectID = $projectid";
+$p_require_s_result = $dbconnect->query($p_require_s);
+while($sidrow = $p_require_s_result->fetch_assoc()){
+	array_push($sidarray, $sidrow['SID']);
+}
 ?>
 <span id="alert_action"></span>
-<form method="POST" id="edit_form">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Project Update</font></h3>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='project.php'">Back</button> 	
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
 			<?php
 			$projectsql = "SELECT * FROM Project JOIN SMDBAccounts ON EnterBy = AcctID WHERE ProjectID = $projectid";
 			$projectfetch = $dbconnect->query($projectsql);
 			while($row = $projectfetch->fetch_assoc()){
-            $brandid = $row['BrandBelongTo'];
-            $deptid = $row['DeptBelongTo'];
             $progress = $row['Progress'];
             $status = $row['ProjectStatus'];
             $empid = $row['ProjectLead'];
             $modifybyid = $row['ModifyBy'];
 			?>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-            		<h3>Project Update</h3>
-            	</div>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='project.php'">Back</button>   					
-            	</div>
-            </div>
+            <form method="POST" id="project_update_form">
 			<table id="project_data" class="table table-bordered table-striped">
 				<tr>
 					<td width=20%>Project Name</td>
@@ -43,24 +49,12 @@ $eidarray = array();
 					
 				</tr>
             	<tr>
-					<td >Brand</td>
-            		<td><select name="brand_id" id="brand_id" class="selectpicker" data-live-search="true" >
-                    	<option value="">Select Brand</option>
-                    	<?php echo brand_option_list($dbconnect);?>
-                    </select>
-            		<button type="button" name="brandadd" id="brandadd" class="btn btn-success btn-xs" onclick="window.location.href='brand_add.php'">Add</button></td>
-				</tr>
-            	<tr>
-					<td >Department</td>
-            		<td><select name="dept_id" id="dept_id" class="selectpicker" data-live-search="true" >
-                    	<option value="">Select Department</option>
-                    	<?php echo department_option_list($dbconnect);?>
-                    </select>
-            		<button type="button" name="deptadd" id="deptadd" class="btn btn-success btn-xs" onclick="window.location.href='dept_add.php'">Add</button></td>
-				</tr>
-            	<tr>
 					<td >Date Created</td>
-            		<td><input type="date" name="datecreated" id="datecreated" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['DateCreated'])) ;?>" required /></td>
+            		<td><?php echo date('Y-m-d', strtotime($row['DateCreated'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>Created By</td>
+					<td><?php echo $row['username'] ;?></td>
 				</tr>
             	<tr>
 					<td>Start Date</td>
@@ -68,39 +62,26 @@ $eidarray = array();
 				</tr>
             	<tr>
 					<td >Project Lead</td>
-            		<td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" >
+            		<td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" data-style="btn-primary">
                     	<option value="">Select Leader</option>
                     	<?php echo employee_option_list($dbconnect);?>
-                    </select>
-            		<button type="button" name="empadd" id="empadd" class="btn btn-success btn-xs" onclick="window.location.href='employee_add.php'">Add</button></td>
+                    </select></td>
 				</tr>
             	<tr>
 					<td >Estimate End Date</td>
             		<td><input type="date" name="estcompletedate" id="estcompletedate" value="<?php echo date('Y-m-d', strtotime($row['EstEndDate'])) ;?>" class="form-control" required /></td>
 				</tr>
             	<tr>
-					<td >End Date</td>
+					<td>End Date</td>
             		<td><input type="date" name="completedate" id="completedate" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['EndDate'])) ;?>"required /></td>
 				</tr>
             	<tr>
-					<td >Progress</td>
+					<td>Progress</td>
             		<td><select name="progress" id="progress" class="form-control" >
                     	<option value="">Select Progress</option>
                     	<option value="Complete">Complete</option>
                         <option value="InComplete">InComplete</option>
                     </select></td>
-				</tr>
-            	<tr>
-					<td >Status</td>
-            		<td><select name="status" id="status" class="form-control" >
-                    	<option value="">Select Status</option>
-                    	<option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
-                    </select></td>
-				</tr>
-            	<tr>
-					<td >Enter By</td>
-					<td ><?php echo $row['username'] ;?></td>
 				</tr>
             	<tr>
 					<td >Modify Date</td>
@@ -117,198 +98,96 @@ $eidarray = array();
                     }
                     ?>
 				</tr>
+                <tr>
+					<td>Select Sample</td>
+            		<td><select name="sampleid[]" id="sampleid" multiple class="selectpicker" data-live-search="true" data-width="fit" data-style="btn-primary" >
+                    	<?php echo sample_option_list($dbconnect);?>
+                    </select></td>
+				</tr>
+                <tr>
+					<td>Status</td>
+            		<td><input type="checkbox" name="projectstatus" id="projectstatus" value="status"> Active</td>
+				</tr>
 			</table>
             <?php
             }
             ?>
-            <input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            <input type="submit" name="Reset" id="Reset" class="btn btn-warning" value="Reset" />
-		</div>
-	</div>
-</div>
-</form>
+            	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
+            	<input type="submit" name="Reset" id="Reset" class="btn btn-warning" value="Reset" />
+            </form>
             
-<form method="POST" id="view_sample">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-            		<h3>Sample Related</h3>
-            	</div>
-            	<div class="row">
-            		<div class="col-md-8"><h4>Sample Info</h4></div>
-  					<div class="col-md-4"><h4>Vendor Info</h4></div>
-            	</div>
-            </div>
-
-            <?php
-			$samplequery = "SELECT * FROM Project p 
-    			INNER JOIN Project_Require_Sample prs ON prs.ProjectID = p.ProjectID
-				INNER JOIN Sample s ON s.SID = prs.SID
-                INNER JOIN SampleRecord sr ON sr.SID = s.SID
-                INNER JOIN Entity e ON e.EID = sr.EID
-                WHERE p.ProjectID = $projectid";
-			$samplefetch = $dbconnect->query($samplequery);
-			while($srow = $samplefetch->fetch_array()){
-            	$eid = $srow['EID'];
-    			if(!in_array($eid, $eidarray, true)){
-        			array_push($eidarray, $eid);
-        		}
-			?>
-			<table id="sample_view" class="table table-bordered table-striped">
-				<tr>
-					<td width=10%>Sample</td>
-					<td width=40%><?php echo $srow['SName'];?></td>
-            		<td width=10%>Vendor</td>
-            		<td width=40%><?php echo $srow['EName'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Type</td>
-					<td width=40%><?php echo $srow['Type'];?></td>
-            		<td width=10%>Owner</td>
-            		<td width=40%><?php echo $srow['Owner'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Quantity</td>
-					<td width=40%><?php echo $srow['Quantity'];?></td>
-            		<td width=10%>Supplier</td>
-            		<td width=40%><?php echo $srow['Supplier'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Price/Unit</td>
-					<td width=40%><?php echo $srow['PriceperUnit'];?></td>
-            		<td width=10%>Manufactured</td>
-            		<td width=40%><?php echo $srow['ProductManufactured'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Image</td>
-					<td width=40%><?php echo $srow['Images'];?></td>
-            		<td width=10%>Annual Sale</td>
-            		<td width=40%><?php echo $srow['AnnualSales'];?></td>
-				</tr>
-            	
-			</table>
-            <br>
-            <?php
-            }
-            ?>  
 		</div>
 	</div>
-</div>
-</form>
-
-<form method="POST" id="view_sample">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-            		<h3>Contacts Related</h3>
-            	</div>
-            </div>
-            <?php
-			foreach($eidarray as $eid){
-    		$contactsql = "SELECT * FROM Entity e INNER JOIN Entity_RelateTo_Contact erc ON erc.EID = e.EID
-						INNER JOIN Entity_Contact ec ON ec.ECID = erc.ECID
-                        WHERE e.EID = $eid";
-
-    		$contactfetch = $dbconnect->query($contactsql);
-    		while($crow = $contactfetch->fetch_array()){
-			?>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-            		<div class="col-md-8"><h4>Vendor: <?php echo $crow['EName'];?></h4></div>
-            	</div>
-            </div>
-			<table id="contact_view" class="table table-bordered table-striped">
-				<tr>
-					<td width=10%>Name</td>
-					<td width=40%><?php echo $crow['ECName'];?></td>
-            		<td width=10%>Title</td>
-                    <td width=40%><?php echo $crow['ERCTitle'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Email</td>
-					<td width=40%><?php echo $crow['ECEmail'];?></td>
-            		<td width=10%>Address 1</td>
-            		<td width=40%><?php echo $crow['ECAddress1'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Phone</td>
-					<td width=40%><?php echo $crow['ECPhone'];?></td>
-            		<td width=10%>Address 2</td>
-            		<td width=40%><?php echo $crow['ECAddress2'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Fax</td>
-					<td width=40%><?php echo $crow['ECFax'];?></td>
-            		<td width=10%>City</td>
-            		<td width=40%><?php echo $crow['ECCity'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Website</td>
-					<td width=40%><?php echo $crow['ECWebsite'];?></td>
-            		<td width=10%>State-Zip</td>
-            		<td width=40%><?php echo $crow['ECState']."-".$crow['ECZip'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Status</td>
-					<td width=40%><?php echo $crow['ECStatus'];?></td>
-                    <td width=10%>Country</td>
-            		<td width=40%><?php echo $crow['ECCountry'];?></td>
-				</tr>
-            	
-			</table>
-            <?php
-            }
-            }
-            ?>  
-		</div>
-	</div>
-</div>
-</form>
-
-            
+         
 <?php
-
 if(isset($_POST['Save'])){
+	if(empty($_POST['projectstatus'])){
+    	$status = 'InActive';
+    }
+	else{
+    	$status = 'Active';
+    }
 	$projectname = $_POST['project_name'];
 	$projectdescription = $_POST['project_description'];
-	$brandid = $_POST['brand_id'];
-	$deptid = $_POST['dept_id'];
-	$date_created = $_POST['datecreated'];
 	$start_date = $_POST['startdate'];
 	$est_end_date = $_POST['estcompletedate'];
 	$end_date = $_POST['completedate'];
 	$project_progress = $_POST['progress'];
 	$project_lead = $_POST['project_lead'];
-	$status = $_POST['status'];
 	$modify_date = date('Y-m-d H:i');
 	$modify_by = $_SESSION['acct_id'];
 	
-	$sql = "UPDATE Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', BrandBelongTo = '$brandid', DeptBelongTo = '$deptid', DateCreated = '$date_created', StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ModifyDate = '$modify_date', ModifyBy = $modify_by, ProjectStatus = '$status', ProjectLead = '$project_lead'
+	$sampleid = $_POST['sampleid'];
+
+	$sql = "UPDATE Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ModifyDate = '$modify_date', ModifyBy = $modify_by, ProjectStatus = '$status', ProjectLead = '$project_lead'
             WHERE ProjectID = $projectid";
+	$oldarray = $newarray = $lostarray = array();
+	foreach ($sampleid as $sid){
+    	if(in_array($sid, $sidarray)){
+        	array_push($oldarray, $sid);
+        }
+    	else{
+        	array_push($newarray, $sid);
+        }
+    }
+	$lostarray = array_diff( $sidarray, $sampleid);
+	
     if($dbconnect->query($sql) === TRUE){
+    	foreach ($newarray as $newsid){
+            	$newsql = "INSERT INTO Project_Require_Sample VALUES($projectid, $newsid)";
+            	$newresult = $dbconnect->query($newsql);
+        }
+    	foreach ($lostarray as $lostsid){
+            	$lostsql = "DELETE FROM Project_Require_Sample WHERE ProjectID = $projectid AND SID = $lostsid";
+            	$lostresult = $dbconnect->query($lostsql);
+        		//echo $lostsql;
+        }
 		echo "<script type='text/javascript'>
             	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Project Updated</div>';
-       			 </script>";
+       			</script>";
 		echo "<meta http-equiv='refresh' content='2'>";
 	}
     else{
         echo "<script type='text/javascript'>
             	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
-       			 </script>";
+       		 	</script>";
     }
 }     
 ?>
 <script>
 $(document).ready(function(){
-	$('#brand_id').val(<?php echo $brandid;?>);
-	$('#dept_id').val(<?php echo $deptid;?>);
+	var pro_status = "<?php echo $status; ?>";
+	if(pro_status == "Active"){
+    	$('#projectstatus').prop("checked", true);
+    }
+	else{
+    	$('#projectstatus').prop("checked", false);
+    }
     $('#progress').val("<?php echo $progress;?>");
-	$('#status').val("<?php echo $status?>");
 	$('#project_lead').val("<?php echo $empid?>");
+	$('#sampleid').val([<?php foreach($sidarray as $id){echo '"'.$id.'",'; } ?>]);
+
+	
 });
 </script>
 

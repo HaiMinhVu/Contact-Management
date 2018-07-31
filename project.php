@@ -7,21 +7,33 @@ include('header.php');
 </style>
 
 <span id="alert_action"></span>
+<h4>Project List</h4>
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
+
                 <div class="panel-heading">
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-                        <div class="row">
-                            <h3 class="panel-title">Project List</h3>
-                        </div>
+                        <div class="input-daterange">
+      						<div class="col-md-4">
+       							<input type="date" name="start_date" id="start_date" class="form-control" />
+      						</div>
+      						<div class="col-md-4">
+       							<input type="date" name="end_date" id="end_date" class="form-control" />
+      						</div>      
+     					</div>
+     					<div class="col-md-4">
+      						<input type="button" name="filterdate" id="filterdate" value="Filter" class="btn btn-success" />
+							<input type="button" name="clearfilter" id="clearfilter" value="Clear" class="btn btn-success" />
+     					</div>
                     </div>
+					
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
                         <div class="row" align="right">
 							<?php
 							if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 							?>
-                             <input type="button" name="add" id="add_button" onclick="location.href='project_add.php'" class="btn btn-success btn-xs" value="Add">   
+                             <input type="button" name="add" id="add_button" onclick="location.href='project_add.php'" class="btn btn-success" value="Add">   
 							<?php
                             }
                             ?>
@@ -36,9 +48,9 @@ include('header.php');
                     			<thead><tr>
 									<th>ID</th>
 									<th>Project Name</th>
-									<th>Enter By</th>
+									<th>Created By</th>
 									<th>Project Lead</th>
-									<th>Date Created</th>
+                            		<th>Start Date</th>
 									<th>Progress</th>
 									<th>Status</th>
                             		<?php
@@ -57,102 +69,30 @@ include('header.php');
             </div>
         </div>
     </div>
-    <div id="ProjectAddModal" class="modal fade">
-    	<div class="modal-dialog">
-    		<form method="POST" id="project_form">
-    			<div class="modal-content">
-
-    				<div class="modal-header">
-    					<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title"><i class="fa fa-plus"></i> Add Project</h4>
-    				</div>
-                        
-    				<div class="modal-body">
-                        <div class="project_add_form">
-    						<label>Enter Project Name</label>
-							<input type="text" name="project_name" id="project_name" class="form-control" required />
-                        </div>
-                        <div class="project_add_form">
-                            <label>Enter Project Description</label>
-                            <textarea name="project_description" id="project_description" class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="project_add_form">
-                                <label>Brand Belong To</label>
-                                <select name="brand_id" id="brand_id" class="form-control" required>
-                                    <option value="">Select Brand</option>
-                                    <?php echo brand_option_list($dbconnect);?>
-                                </select>
-    					</div>
-                        <div class="project_add_form">
-                                <label>Department Belong To</label>
-                                <select name="dept_id" id="dept_id" class="form-control" required>
-                                    <option value="">Select Department</option>
-                                    <?php echo department_option_list($dbconnect);?>
-                                </select>
-    					</div>
-                        <div class="project_add_form">
-    						<label>Date Created</label>
-							<input type="date" name="datecreated" id="datecreated" value="<?php echo date("Y-m-d");?>" class="form-control" required />
-                        </div>
-                        <div class="project_add_form">
-    						<label>Start Date</label>
-							<input type="date" name="startdate" id="startdate" value="<?php echo date("Y-m-d");?>" class="form-control" required />
-                        </div>
-                        <div class="project_add_form">
-    						<label>Estimate Complete Date</label>
-							<input type="date" name="estcompletedate" id="estcompletedate" value="<?php echo date("Y-m-d");?>" class="form-control" required />
-                        </div>
-
-                        <div class="project_add_form">
-    						<label>Complete Date</label>
-							<input type="date" name="completedate" id="completedate" class="form-control"  />
-                        </div>
-                        <div class="project_add_form">
-                                <label>Project Lead</label>
-                                <select name="project_lead" id="project_lead" class="form-control" required>
-                                    <option value="">Select Leader</option>
-                                    <?php echo employee_option_list($dbconnect);?>
-                                </select>
-    					</div>
-                        <div class="project_add_form">
-    						<label>Progress</label>
-							<select name="progress" id="progress" class="form-control" >
-                                <option value="">Select Progress</option>
-                        		<option value="Complete">Complete</option>
-                        		<option value="InComplete">InComplete</option>
-                            </select>
-                        </div>	  
-                        
-    				<div class="modal-footer">
-    					<input type="hidden" name="project_id" id="project_id"/>
-    					<input type="hidden" name="btn_action" id="btn_action"/>
-    					<input type="submit" name="action" id="action" class="btn btn-info" value="Add" />
-    					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    				</div>
-    			</div>
-    		</form>
-    	</div>
-    </div>
 
 <script>
 $(document).ready(function(){
-    //// create table - project_fetch to load data into table
-    //
-    
-    var projectdataTable = $('#project_data').DataTable({
+	var projectdataTable;
+	fetch_data('no');                     
+ 	function fetch_data(is_date_search, start_date='', end_date='')
+ 	{
+  		projectdataTable = $('#project_data').DataTable({
         "processing":true,
         "serverSide":true,
-        "order":[],
+        "order": [],
         "ajax":{
             url:"project_fetch.php",
-            type:"POST"
-        },
+            type:"POST",
+    		data:{
+     		is_date_search:is_date_search, start_date:start_date, end_date:end_date
+    		}
+   		},
     	<?php
 		if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
 		?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8],
+                "targets":[0,2,3,4,5,6,7,8],
                 "orderable":false,
             },
         ],
@@ -161,18 +101,35 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6],
+                "targets":[0,2,3,4,5,6],
                 "orderable":false,
             },
         ],
         <?php
         }
         ?>
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        "lengthMenu": [[15, 30, 50, -1], [15, 30, 50, "All"]]
+    	});
+ 	}
+
+ 	$('#filterdate').click(function(){
+    	var start_date = $('#start_date').val();
+  		var end_date = $('#end_date').val();
+    	is_date_search = 'yes'
+  		if(start_date != '' && end_date !=''){
+   			$('#project_data').DataTable().destroy();
+   			fetch_data(is_date_search, start_date, end_date);
+  		}
+  		else{
+   			alert("Both Date is Required");
+  		}
+ 	}); 
+                                    
+	$('#clearfilter').click(function(){
+    	$('#project_data').DataTable().destroy();
+    	fetch_data('no');
     });
 
-    ////// Add new item to the table
-               
     $(document).on('submit', '#project_form', function(event){
         event.preventDefault();
         $('#action').attr('disabled', 'disabled');
@@ -191,7 +148,8 @@ $(document).ready(function(){
             }
         })
     });
-                        
+           
+	              
     $(document).on('click', '.update', function(){
     	// display hidden fields - update has 3 more fields than add
         var project_id = $(this).attr("id");

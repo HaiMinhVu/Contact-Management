@@ -4,7 +4,27 @@ include('functions.php');
 
 if(isset($_POST['btn_action']))
 {
-	//// add new item
+	
+	/// delete an item
+	if($_POST['btn_action'] == 'delete')
+	{	
+    	$modify_date = date("Y-m-d H:i");
+    	$modify_by = $_SESSION['acct_id'];
+    	$eid = $_POST['eid'];
+		$status = "Active";
+    	if($_POST['status'] == "Active"){
+        	$status = "InActive";
+        }	
+		$query = "UPDATE Entity SET EStatus = '$status', EModifyDate = '$modify_date', EModifyBy = $modify_by WHERE EID = $eid";
+		if($dbconnect->query($query) == TRUE){
+			echo 'Vendor '.$eid.'  Set to '.$status;
+		}
+    	else{
+        	echo "Failed to Delete";
+        }
+	}
+	/*
+	
 	if($_POST['btn_action'] == 'Add')
 	{	
     	$query = "";
@@ -37,7 +57,7 @@ if(isset($_POST['btn_action']))
         }
 	}
 
-	//// load single item into update form
+	
 	if($_POST['btn_action'] == 'fetch_single')
 	{
     	$eid = $_POST['eid'];
@@ -57,7 +77,7 @@ if(isset($_POST['btn_action']))
 		echo json_encode($output);
 	}
 
-	//// submit update/edit item information
+	
 	if($_POST['btn_action'] == 'Edit')
 	{
     	$query = "";
@@ -88,26 +108,8 @@ if(isset($_POST['btn_action']))
     	else{
         	echo "Failed to Update";
         }
-	}
+	}*/
 
-	/// delete an item
-	if($_POST['btn_action'] == 'delete')
-	{	
-    	$modify_date = date("Y-m-d H:i");
-    	$modify_by = $_SESSION['acct_id'];
-    	$eid = $_POST['eid'];
-		$status = "Active";
-    	if($_POST['status'] == "Active"){
-        	$status = "InActive";
-        }	
-		$query = "UPDATE Entity SET EStatus = '$status', EModifyDate = '$modify_date', EModifyBy = $modify_by WHERE EID = $eid";
-		if($dbconnect->query($query) == TRUE){
-			echo 'Vendor '.$eid.'  Set to '.$status;
-		}
-    	else{
-        	echo "Failed to Delete";
-        }
-	}
 }
 
 ?>

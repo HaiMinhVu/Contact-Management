@@ -68,7 +68,7 @@ include('header.php');
                         
                     <div class="modal-body">
                         <div class="relation-group">
-                                <label>Select Vender</label>
+                                <label>Select Vendor</label>
                                 <select name="eid" id="eid" class="form-control" required>
                                     <option value="">Select Vender</option>
                                     <?php echo entity_option_list($dbconnect);?>

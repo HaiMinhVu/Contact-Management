@@ -36,7 +36,7 @@ include('header.php');
 									<th>ID</th>
 									<th>Sample Name</th>
 									<th>Description</th>
-									<th>Images</th>
+									<th>Image</th>
 									<th>Enter By</th>
 									<th>Status</th>
 									<?php

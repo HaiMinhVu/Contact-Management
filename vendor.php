@@ -35,10 +35,10 @@ include('header.php');
                     			<thead><tr>
 									<th>ID</th>
 									<th>Vendor Name</th>
-									<th>Register Name</th>
-									<th>Owner</th>
-									<th>Supplier</th>
-									<th>Manufactured</th>
+									<th>Primary Email</th>
+									<th>Primary Phone</th>
+                            		<th>Supplier Type</th>
+									<th>Products Manufactured</th>
 									<th>Status</th>
 									<?php
 									if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
@@ -147,17 +147,8 @@ $(document).ready(function(){
         <?php
         }
         ?>
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        "lengthMenu": [[15, 30, 50, -1], [15, 30, 50, "All"]]
     });
-
-    ////// Add new item to the table
-    /*$('#add_button').click(function(){
-        $('#EntityAddModal').modal('show');
-        $('#vender_form')[0].reset();
-        $('.modal-title').html("<i class='fa fa-plus'></i> Add New Vender");
-        $('#action').val("Add");
-        $('#btn_action').val("Add");
-    });*/
 
     $(document).on('submit', '#vender_form', function(event){
         event.preventDefault();
@@ -174,32 +165,6 @@ $(document).ready(function(){
                 $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
                 $('#action').attr('disabled', false);
                 dataTable.ajax.reload();
-            }
-        })
-    });
-
-    $(document).on('click', '.update', function(){
-        var eid = $(this).attr("id");
-        var btn_action = 'fetch_single';
-        $.ajax({
-            url:"vendor_action.php",
-            method:"POST",
-            data:{eid:eid, btn_action:btn_action},
-            dataType:"json",
-            success:function(data){
-                $('#EntityAddModal').modal('show');
-            	$('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Vender");
-            	$('#eid').val(eid);
-                $('#ename').val(data.ename);
-                $('#eregisteredname').val(data.eregisteredname);
-                $('#owner').val(data.owner);
-                $('#supplier').val(data.supplier);
-            	$('#oemcustomer').val(data.oemcustomer);
-                $('#numberofworker').val(data.numberofworker);
-                $('#annualsale').val(data.annualsale);
-            	$('#productmanufactured').val(data.productmanufactured);
-                $('#action').val("Edit");
-                $('#btn_action').val("Edit");
             }
         })
     });

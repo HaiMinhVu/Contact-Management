@@ -43,7 +43,7 @@ while($row = $statement->fetch_assoc())
 	}
 	$sub_array = array();
 	$sub_array[] = $row['ECID'];
-	$sub_array[] = '<a href="vender_detail.php?eid='.$row["EID"].'">'.$row['EName'].'</a>';
+	$sub_array[] = '<a href="vendor_detail.php?eid='.$row["EID"].'">'.$row['EName'].'</a>';
 	$sub_array[] = $row['ECName'];
 	$sub_array[] = $row['ERCTitle'];
 	$sub_array[] = $row['ECEmail'];

@@ -4,26 +4,27 @@ include('functions.php');
 include('header.php');
 $sid =$_GET['sid'];
 $status; $oldname;
-
 ?>
 <span id="alert_action"></span>
-<form method="POST" id="sample_update_form" enctype="multipart/form-data">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
-			
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Sample Update</h3>
-            	</div>
+                	<h3 class="panel-title"><font color="#2775F5">Sample Update</font></h3>
+                </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button>   					
-            	</div>
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button> 	
+                </div>
             </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<form method="POST" id="sample_update_form" enctype="multipart/form-data">
 			<?php
-			$sql = "SELECT * FROM Sample JOIN SMDBAccounts ON SEnterBy = AcctID WHERE SID = $sid";
+			$sql = "SELECT * FROM Sample JOIN SMDBAccounts ON SModifyBy = AcctID WHERE SID = $sid";
 			$samplefetch = $dbconnect->query($sql);
 			while($row = $samplefetch->fetch_assoc()){
            		$status = $row['SStatus'];
@@ -39,7 +40,7 @@ $status; $oldname;
 				<tr>
 					<td >Description</td>
             		<td><textarea rows="4" name="sdescription" id="sdescription" class="form-control" ><?php echo $row['SDescription'];?></textarea></td>
-            		<td rowspan="5"><?php echo "<img src='images/". $row['SImages']."' height='250' width='300'>"; ?></td>
+            		<td rowspan="5"><?php echo "<img id='previewim' src='images/sample/". $row['SImages']."' height='300' width='300'>"; ?></td>
 				</tr>
             	<tr>
 					<td>Replace Image</td>
@@ -54,32 +55,33 @@ $status; $oldname;
                     </select></td>
 				</tr>
             	<tr>
-					<td >Enter By</td>
+					<td >Last Modify By</td>
 					<td ><?php echo $row['username'] ;?></td>
 				</tr>
             	<tr>
-					<td >Modify Date</td>
+					<td >Last Modify On</td>
             		<td><?php echo date('Y-m-d H:i', strtotime($row['SModifyDate'])) ;?></td>
 				</tr>
 			</table>
             <?php
             }
             ?>
-			<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            <input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+				<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
+            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            </form>
 		</div>
 	</div>
-</div>
-</form>
-
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+	<!--
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Records Related</h3>
-            	</div>
+                	<h3 class="panel-title"><font color="#2775F5">Records Related</font></h3>
+                </div>
             </div>
+            <div style="clear:both"></div>         
+        </div>
+		<div class="panel-body">
 			<?php
             $recordquery = "SELECT * FROM SampleRecord sr INNER JOIN Entity e ON sr.EID = e.EID
 								INNER JOIN SMDBAccounts sma ON sma.AcctID = sr.SRRequestBy WHERE SID = $sid";
@@ -88,9 +90,15 @@ $status; $oldname;
             ?>
             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h4>Request From: <?php echo $rcrow['EName']?></h4>
+            		<h5>Request From: <?php echo $rcrow['EName']?></h5>
             	</div>
             </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+                    <a href="samplerecord_update.php?srid=<?php echo $rcrow["SRID"]; ?>" class="btn btn-warning btn-xs">EDIT</a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
 			<table id="sample_data" class="table table-bordered table-striped">
 				<tr>
 					<td width=10%>Type</td>
@@ -128,9 +136,7 @@ $status; $oldname;
             ?>
 		</div>
 	</div>
-</div>
-
-        
+	-->
 <?php
 if(isset($_POST['Save'])) {
 	$sname = $_POST['sname'];
@@ -143,45 +149,44 @@ if(isset($_POST['Save'])) {
 	$imagename = $_FILES['uploadimage']['name'];
 	$imagesize = $_FILES['uploadimage']['size'];
 	$imageerror = $_FILES['uploadimage']['error'];
-	$destination = "images/";
+	$destination = "images/sample/";
 
 	$fileext = explode('.',$imagename);
 	$ext = strtolower(end($fileext));
 	$validext = array('jpg', 'jpeg', 'png');
 
 	if($imagename != ""){
-        unlink($destination.$oldname);
-        if(in_array($ext,$validext)){
-        	if($imageerror === 0){
-            	if($imagesize < 5000000){
-                	$view = compress_image($image, $destination, 100);
-
-                	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
-                	$imageresult = $dbconnect->query($sql);
-                	if($imageresult){
-                    	echo "<script type='text/javascript'>
-                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
-           			 </script>";
-                    	echo "<meta http-equiv='refresh' content='1'>";
-                    }
-                }
-            	else{
-                	echo "<script type='text/javascript'>
-                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">File is too big</div>';
-           			 </script>";
-                }
-            }
-        	else{
-            	echo "<script type='text/javascript'>
-                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Error uploading image. Error Code: ".$imageerror."</div>';
-           			 </script>";
-            }
-        }
-        else{
-        	echo "<script type='text/javascript'>
-                	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Only allow .jpg .png files</div>';
-           			 </script>";
-        }
+    	unlink($destination.$oldname);	// delete old image when uploading new one
+		if(in_array($ext,$validext)){
+    		if($imageerror === 0){
+        		if($imagesize < 5000000){
+            		$view = compress_image($image, $destination, 100);
+            		$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+            		$imageresult = $dbconnect->query($sql);
+            		if($imageresult){
+                		echo "<script type='text/javascript'>
+            				document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
+       			 			</script>";
+                		echo "<meta http-equiv='refresh' content='1'>";
+               		}
+            	}
+        		else{
+            			echo "<script type='text/javascript'>
+            			document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">File is too big</div>';
+       			 		</script>";
+            	}
+        	}
+    		else{
+        		echo "<script type='text/javascript'>
+            		document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Error uploading image. Error Code: ".$imageerror."</div>';
+       			 	</script>";
+        	}
+    	}
+		else{
+    		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Only allow .jpg .png files</div>';
+       			 </script>";
+    	}
     }
 	else{
     	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
@@ -203,7 +208,7 @@ if(isset($_POST['Save'])) {
 
 <script type="text/javascript">
 function previewImage() {
-  var preview = document.querySelector('img');
+  var preview = document.querySelector('#previewim');
   var file    = document.querySelector('#uploadimage').files[0];
   var reader  = new FileReader();
 

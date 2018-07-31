@@ -1,215 +1,244 @@
 <?php
-require('fpdf181/fpdf.php');
 include('dbconnect.php');
-
-if(isset($_GET['sid'])){
-	$pdf = new FPDF('P', 'mm', 'A4');
-	$pdf->AddPage();
-
-	$sid = $_GET['sid'];
-
-	/////  project load
-	$samplequery = "
-	SELECT * FROM Sample s INNER JOIN SMDBAccounts sma ON sma.AcctID = s.SEnterBy
-    						WHERE s.SID = $sid
-	";
-	$samplefetch = $dbconnect->query($samplequery);
-
-	$pdf->SetFont('Times','B', 14);
-    $pdf->SetTextColor(0,0,255);
-	while($row = $samplefetch->fetch_array()){
-
-		$pdf->Cell(189	,10, 'Sample '.$row['SName'], 1, 1, 'C');
-		
-		$pdf->SetFont('Times', '', 11);
-    	$pdf->SetTextColor(0,0,0);
-
-		$pdf->Cell(30	,5, "Status", 'L', 0);
-    	$pdf->SetTextColor(255,0,0);
-		$pdf->Cell(85	,5, $row['SStatus'], 0, 0);
-    	$pdf->SetTextColor(0,0,0);
-		$pdf->Cell(74	,5, "Image", 'R', 1, 'C');
-		
-
-		$pdf->Cell(30	,5, "Enter By", 'L', 0);
-		$pdf->Cell(85	,5, $row['username'], 0, 0);
-		$pdf->Cell(74	,5, $row['SImages'], 'R', 1, 'C');
-
-    	
-		$pdf->Cell(30	,5, "Last Modify", 'L', 0);
-		$pdf->Cell(85	,5, $row['SModifyDate'], 0, 0);
-		$pdf->Cell(74	,5, "", 'R', 1);
-    
-		$modifybyid = $row['SModifyBy'];
-    	$modifybyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
-    	while($modifyrow = $modifybyresult->fetch_assoc()){
-		$pdf->Cell(30	,5, "Modify By", 'L', 0);
-		$pdf->Cell(85	,5, $modifyrow['username'], 0, 0);
-        $pdf->Cell(74	,5, "", 'R', 1);
-    	}
-
-		$pdf->Cell(30	,5, "Description", 'L', 0);
-		$pdf->Cell(85	,5, $row['SDescription'], '', 0);
-    	$pdf->Cell(74	,5, "", 'R', 1);
-    
-    	$pdf->Cell(189	,5, "", 'LBR', 1, 'C');
-		
-    }
+include('functions.php');
+include('header.php');
+$sid =$_GET['sid'];
+$status; $oldname;
+?>
+	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+    	<div class="row">
+			<h4>View Sample Detail</h4> 
+		</div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        <div class="row" align="right">
+			<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button>	
+        </div>
+    </div>
+	<div style="clear:both"></div>
 	
-	$recordquery = "SELECT * FROM SampleRecord sr INNER JOIN Entity e ON sr.EID = e.EID
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Sample</font></h3>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+					<a href="sample_review.php?sid=<?php echo $sid ?>" class="btn btn-info btn-xs">Review</a>
+					<?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+					<a href="sample_update.php?sid=<?php echo $sid ?>" class="btn btn-warning btn-xs">Edit</a>	
+                    <?php
+                    }
+					?>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<?php
+			$sql = "SELECT * FROM Sample JOIN SMDBAccounts ON SModifyBy = AcctID WHERE SID = $sid";
+			$samplefetch = $dbconnect->query($sql);
+			while($row = $samplefetch->fetch_assoc()){
+			?>
+			<table id="sample_data" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Sample Name</td>
+					<td width=65%><?php echo $row['SName'];?></td>
+            		<td >Image</td>
+				</tr>
+				<tr>
+					<td >Description</td>
+            		<td><?php echo $row['SDescription'];?></td>
+            		<td width=25% rowspan="4"><?php echo "<img src='images/sample/". $row['SImages']."' height='200' width='200'>"; ?></td>
+				</tr>
+            	<tr>
+					<td>Status</td>
+            		<td><?php echo $row['SStatus'];?></td>
+				</tr>
+            	<tr>
+					<td>Last Modify By</td>
+					<td><?php echo $row['username'] ;?></td>
+				</tr>
+            	<tr>
+					<td>Last Modify On</td>
+            		<td><?php echo date('Y-m-d H:i', strtotime($row['SModifyDate'])) ;?></td>
+				</tr>
+			</table>
+            <?php
+            }
+            ?>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Request Records</font></h3>
+                </div>
+            </div>
+            <div style="clear:both"></div>         
+        </div>
+		<div class="panel-body">
+			<?php
+            $recordquery = "SELECT * FROM SampleRecord sr INNER JOIN Entity e ON sr.EID = e.EID
 								INNER JOIN SMDBAccounts sma ON sma.AcctID = sr.SRRequestBy WHERE SID = $sid";
-	$recordfetch = $dbconnect->query($recordquery);
-	$countrecord = mysqli_num_rows($recordfetch);
+			$recordfetch = $dbconnect->query($recordquery);
+			while($rcrow = $recordfetch->fetch_array()){
+            ?>
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+            		<h5>Request From: <?php echo $rcrow['EName']?></h5>
+            	</div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+                    <?php
+					if(($_SESSION['type'] == 'Admin') || ($_SESSION['type'] == 'Manager'))
+					{
+					?>
+                    <a href="samplerecord_detail.php?srid=<?php echo $rcrow["SRID"]; ?>" class="btn btn-info btn-xs">View</a>
+                    <a href="samplerecord_update.php?srid=<?php echo $rcrow["SRID"]; ?>" class="btn btn-warning btn-xs">Edit</a>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+			<table id="record_data" class="table table-bordered table-striped">
+				<tr>
+					<td width=10%>Type</td>
+					<td width=40%><?php echo $rcrow['Type']?></td>
+            		<td width=10%>Requested On</td>
+            		<td><?php echo $rcrow['DateRequested']?></td>
+				</tr>
+				<tr>
+					<td width=10%>Requested By</td>
+					<td width=40%><?php echo $rcrow['username'] ;?></td>
+            		<td width=10%>Est Deliver</td>
+            		<td><?php echo $rcrow['EstDeliver']?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Quantity</td>
+					<td width=40%><?php echo $rcrow['Quantity'] ;?></td>
+            		<td width=10%>Payment Term</td>
+            		<td><?php echo $rcrow['PaymentTerms']?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Price/Unit</td>
+					<td width=40%><?php echo $rcrow['PriceperUnit'] ;?></td>
+            		<td width=10%>Warranty Term</td>
+            		<td><?php echo $rcrow['WarrantyTerms']?></td>
+				</tr>
+            	<tr>
+					<td width=10%>Status</td>
+					<td width=40%><?php echo $rcrow['SRStatus'] ;?></td>
+            		<td width=10%>Shipping Term</td>
+            		<td><?php echo $rcrow['ShippingTerms']?></td>
+				</tr>
+			</table>
+            <?php
+            }
+            ?>
+		</div>
+	</div>
 
-	$pdf->Ln(); // add blank line between project and sample	
-	$pdf->SetFont('Times','B', 14);
-	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".$countrecord." Records Related", 1, 1, 'C');
-	$pdf->SetFont('Times','', 11);	// reset font
- 	$pdf->SetTextColor(0,0,0);
+<?php
+if(isset($_POST['Save'])) {
+	$sname = $_POST['sname'];
+	$sdescription = $_POST['sdescription'];
+	$status = $_POST['status'];
+	$modify_date = date("Y-m-d h:i");
+	$modify_by = $_SESSION['acct_id'];
 
-	$eidarray = array();
-	while($row = $recordfetch->fetch_array()){
-    	$eid = $row['EID'];
-    	if(!in_array($eid, $eidarray, true)){
-        	array_push($eidarray, $eid);
-        }
-    
-    	$pdf->Cell(30	,5, "Status",'L', 0);
-    	$pdf->SetTextColor(255,0,0);
-		$pdf->Cell(85	,5, $row['SRStatus'], 0, 0);
-    	$pdf->SetTextColor(0,0,0);
-		$pdf->Cell(30	,5, "Date Request", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['DateRequested'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Type", 'L', 0);
-		$pdf->Cell(85	,5, $row['Type'], 0, 0);
-		$pdf->Cell(30	,5, "Estimate Deliver", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['EstDeliver'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Request By", 'L', 0);
-		$pdf->Cell(85	,5, $row['username'], 0, 0);
-		$pdf->Cell(30	,5, "Arrival Date", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['ArrivalDate'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Request From", 'L', 0);
-		$pdf->Cell(85	,5, $row['EName'], 0, 0);
-		$pdf->Cell(30	,5, "Payment", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['PaymentTerms'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Quantity", 'L', 0);
-		$pdf->Cell(85	,5, $row['Quantity'], 0, 0);
-		$pdf->Cell(30	,5, "Warranty", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['WarrantyTerms'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Price/Unit", 'L', 0);
-		$pdf->Cell(85	,5, $row['PriceperUnit'], 0, 0);
-		$pdf->Cell(30	,5, "Shipping", 0, 0, 'R');
-		$pdf->Cell(44	,5, $row['ShippingTerms'], 'R', 1, 'R');
-    
-    	$pdf->Cell(30	,5, "Last Modify", 'L', 0);
-		$pdf->Cell(85	,5, $row['SRModifyDate'], 0, 0);
-    	$pdf->Cell(74	,5, "", 'R', 1);
-		
-    	$modifybyid = $row['SRModifyBy'];
-    	$modifybyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
-    	while($modifyrow = $modifybyresult->fetch_assoc()){
-    	$pdf->Cell(30	,5, "Modify By", 'L', 0);
-		$pdf->Cell(85	,5, $modifyrow['username'], '', 0);
-        $pdf->Cell(74	,5, "", 'R', 1);
-        }
-    
-    	$pdf->Cell(189	,5, "", 'LBR', 1, 'C');
+	$image = $_FILES['uploadimage'];
+	$imagename = $_FILES['uploadimage']['name'];
+	$imagesize = $_FILES['uploadimage']['size'];
+	$imageerror = $_FILES['uploadimage']['error'];
+	$destination = "images/sample/";
+
+	$fileext = explode('.',$imagename);
+	$ext = strtolower(end($fileext));
+	$validext = array('jpg', 'jpeg', 'png');
+
+	if($imagename != ""){
+    	unlink($destination.$oldname);	// delete old image when uploading new one
+		if(in_array($ext,$validext)){
+    		if($imageerror === 0){
+        		if($imagesize < 5000000){
+            		$view = compress_image($image, $destination, 100);
+            		$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+            		$imageresult = $dbconnect->query($sql);
+            		if($imageresult){
+                		echo "<script type='text/javascript'>
+            				document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
+       			 			</script>";
+                		echo "<meta http-equiv='refresh' content='1'>";
+               		}
+            	}
+        		else{
+            			echo "<script type='text/javascript'>
+            			document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">File is too big</div>';
+       			 		</script>";
+            	}
+        	}
+    		else{
+        		echo "<script type='text/javascript'>
+            		document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Error uploading image. Error Code: ".$imageerror."</div>';
+       			 	</script>";
+        	}
+    	}
+		else{
+    		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Only allow .jpg .png files</div>';
+       			 </script>";
+    	}
     }
-
-	$pdf->Ln(); // add blank line between sample and vender
-	$pdf->SetFont('Times','B', 14);
-	$pdf->SetTextColor(0,0,255);
-	$pdf->Cell(189	,10, "There are ".count($eidarray)." Vendor(s) Related", 1, 1, 'C');
-	$pdf->SetFont('Times','B', 12);	// reset font
-	$pdf->SetTextColor(0,0,0);
-	
-	$pdf->Cell(95	,5, "Vendor Info", 1, 0, 'C');
-	$pdf->Cell(94	,5, "Contact Info", 1, 1, 'C');
-	
-	$pdf->SetFont('Times','', 11);
-	foreach($eidarray as $eid){
-    	$contactsql = "SELECT * FROM Entity e INNER JOIN Entity_RelateTo_Contact erc ON erc.EID = e.EID
-						INNER JOIN Entity_Contact ec ON ec.ECID = erc.ECID
-                        WHERE e.EID = $eid";
-
-    	$contactfetch = $dbconnect->query($contactsql);
-    	while($row = $contactfetch->fetch_array()){
-        	$pdf->Cell(30	,5, "Status", 'L', 0);
-        	$pdf->SetTextColor(255,0,0);
-			$pdf->Cell(65	,5, $row['EStatus'], 'R', 0);
-        	$pdf->SetTextColor(0,0,0);
-			$pdf->Cell(30	,5, "Status", 0, 0);
-        	$pdf->SetTextColor(255,0,0);
-			$pdf->Cell(64	,5, $row['ERCStatus'], 'R', 1);
-        	$pdf->SetTextColor(0,0,0);
-        
-        	$pdf->Cell(30	,5, "Name", 'L', 0);
-			$pdf->Cell(65	,5, $row['EName'], 'R', 0);
-			$pdf->Cell(30	,5, "Name", 0, 0);
-			$pdf->Cell(64	,5, $row['ECName'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Registered As", 'L', 0);
-			$pdf->Cell(65	,5, $row['ERegisteredName'], 'R', 0);
-			$pdf->Cell(30	,5, "Phone", 0, 0);
-			$pdf->Cell(64	,5, $row['ECPhone'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Owner", 'L', 0);
-			$pdf->Cell(65	,5, $row['Owner'], 'R', 0);
-			$pdf->Cell(30	,5, "Email", 0, 0);
-			$pdf->Cell(64	,5, $row['ECEmail'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Supplier", 'L', 0);
-			$pdf->Cell(65	,5, $row['Supplier'], 'R', 0);
-			$pdf->Cell(30	,5, "Fax", 0, 0);
-			$pdf->Cell(64	,5, $row['ECFax'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "OEM Customer", 'L', 0);
-			$pdf->Cell(65	,5, $row['OEMCustomer'], 'R', 0);
-			$pdf->Cell(30	,5, "Address 1", 0, 0);
-			$pdf->Cell(64	,5, $row['ECAddress1'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "# of Worker", 'L', 0);
-			$pdf->Cell(65	,5, $row['NumberofWorker'], 'R', 0);
-			$pdf->Cell(30	,5, "Address 2", 0, 0);
-			$pdf->Cell(64	,5, $row['ECAddress2'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "Annual Sale", 'L', 0);
-			$pdf->Cell(65	,5, $row['AnnualSales'], 'R', 0);
-			$pdf->Cell(30	,5, "City", 0, 0);
-			$pdf->Cell(64	,5, $row['ECCity'], 'R', 1);
-        	
-        	$pdf->Cell(30	,5, "Manufactured", 'L', 0);
-			$pdf->Cell(65	,5, $row['ProductManufactured'], 'R', 0);
-			$pdf->Cell(30	,5, "State", 0, 0);
-			$pdf->Cell(64	,5, $row['ECState'], 'R', 1);	
-        
-        	$pdf->Cell(30	,5, "", 'L', 0);
-			$pdf->Cell(65	,5, "", 'R', 0);
-			$pdf->Cell(30	,5, "Zip Code", 0, 0);
-			$pdf->Cell(64	,5, $row['ECZip'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "", 'L', 0);
-			$pdf->Cell(65	,5, "", 'R', 0);
-			$pdf->Cell(30	,5, "Country", '', 0);
-			$pdf->Cell(64	,5, $row['ECCountry'], 'R', 1);
-        
-        	$pdf->Cell(30	,5, "", 'L', 0);
-			$pdf->Cell(65	,5, "", 'R', 0);
-			$pdf->Cell(30	,5, "Title", '', 0);
-			$pdf->Cell(64	,5, $row['ERCTitle'], 'R', 1);
-        
-        	$pdf->Cell(189	,5, "", 'LBR', 1, 'C');
-
+	else{
+    	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+        $imageresult = $dbconnect->query($sql);
+    	if($imageresult){
+        	echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
+       			 </script>";
+            echo "<meta http-equiv='refresh' content='2'>";
+        }
+    	else{
+        	echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Failed to Update</div>';
+       			 </script>";
         }
     }
-	
-	$pdf->Output();
 }
+?>
 
+<script type="text/javascript">
+function previewImage() {
+  var preview = document.querySelector('img');
+  var file    = document.querySelector('#uploadimage').files[0];
+  var reader  = new FileReader();
+
+  reader.addEventListener("load", function () {
+    preview.src = reader.result;
+  }, false);
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+
+<script>
+$(document).ready(function(){
+	$('#status').val("<?php echo $status?>");
+});
+</script>
+
+<?php
+include ('footer.php');
 ?>

@@ -5,49 +5,50 @@ include('header.php');
 
 ?>
 <span id="alert_action"></span>
-<form method="POST" id="sample_add_form" enctype="multipart/form-data">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-            		<h3>Add New Sample</h3>
-            	</div>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button>   					
-            	</div>
-            </div>
-			<table id="add_sample" class="table table-bordered table-striped">
-				<tr>
-					<td width=20%>Sample Name</td>
-					<td><input type="text" name="sname" id="sname" class="form-control" required /></td>
-				</tr>
-            	<tr>
-					<td>Image</td>
-					<td><input type="file" name="uploadimage" id="uploadimage" onchange="previewImage()"class="form-control"><br>
-					<img src="" height="200" alt="Image preview..."></td>
-				</tr>
-				<tr>
-					<td>Status</td>
-					<td><select name="status" id="status" class="form-control">
-                    	<option value="">Select Status</option>
-                    	<option value="Active" selected>Active</option>
-                        <option value="InActive">InActive</option>
-                    </select></td>
-				</tr>
-				<tr>
-					<td>Description</td>
-					<td><textarea rows="5" name="sdescription" id="sdescription" class="form-control" ></textarea></td>
-				</tr>
-			</table>
-			<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
-            <input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />	
-		</div>
-	</div>
-</div>
-</form>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+                        <div class="row">
+                            <h3 class="panel-title"><font color="#2775F5">Add New Sample</font></h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                        <div class="row" align="right">
+                            <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button>	
+                        </div>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+				<div class="panel-body">
+				<form method="POST" id="sample_add_form" enctype="multipart/form-data">
+					<table id="add_sample" class="table table-bordered table-striped">
+						<tr>
+							<td width=20%>Sample Name</td>
+							<td><input type="text" name="sname" id="sname" class="form-control" required /></td>
+						</tr>
+            			<tr>
+							<td>Image</td>
+							<td><input type="file" name="uploadimage" id="uploadimage" onchange="previewImage()"class="form-control"><br>
+							<img id="previewim" src="" height="200" alt="Image preview..."></td>
+						</tr>
+						<tr>
+							<td>Status</td>
+							<td><select name="status" id="status" class="form-control">
+                    			<option value="">Select Status</option>
+                    			<option value="Active" selected>Active</option>
+                        		<option value="InActive">InActive</option>
+                    		</select></td>
+						</tr>
+						<tr>
+							<td>Description</td>
+							<td><textarea rows="5" name="sdescription" id="sdescription" class="form-control" ></textarea></td>
+						</tr>
+					</table>
+					<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
+            		<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />	
+				</form>
+				</div>
+			</div>
 
 <?php
 if(isset($_POST['Add'])) {
@@ -62,7 +63,7 @@ if(isset($_POST['Add'])) {
 	$imageerror = $_FILES['uploadimage']['error'];
 	
 	$image = $_FILES['uploadimage'];
-	$destination = "images/";
+	$destination = "images/sample/";
 
 	$fileext = explode('.',$imagename);
 	$ext = strtolower(end($fileext));
@@ -111,7 +112,7 @@ if(isset($_POST['Add'])) {
 
 <script type="text/javascript">
 function previewImage() {
-  var preview = document.querySelector('img');
+  var preview = document.querySelector('#previewim');
   var file    = document.querySelector('#uploadimage').files[0];
   var reader  = new FileReader();
 

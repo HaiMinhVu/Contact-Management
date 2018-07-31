@@ -5,22 +5,23 @@ include('header.php');
 
 ?>
 <span id="alert_action"></span>
-<form method="POST" id="sample_form">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
 
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Sample Record List</h3>
-            	</div>
+                	<h3 class="panel-title"><font color="#2775F5">Sample Records List</font></h3>
+                </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button>   					
-            	</div>
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button> 	
+                </div>
             </div>
-			
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<form method="POST" id="samplerecord_add_form">
 			<table id="samplerecord_data" class="table table-bordered table-striped">
 				<tr>
 					<td width=10%>Type</td>
@@ -78,17 +79,13 @@ include('header.php');
             		<td width=10%>Shipping Term</td>
             		<td><input type="text" name="shippingterm" id="shippingterm" value="<?php echo $row['ShippingTerms'];?>" /></td>
 				</tr>
-            	<tr>
-				</tr>
-            	
 			</table>
             <input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
             <input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
-            
+            </form>
 		</div>
 	</div>
-</div>
-</form>
+
 <?php
 if(isset($_POST['Add'])){
 	$sid = $_POST['sid'];
