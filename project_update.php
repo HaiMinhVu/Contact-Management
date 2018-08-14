@@ -5,12 +5,20 @@ include('header.php');
 $projectid =$_GET['project_id'];
 $progress; $status; $empid;
 $sidarray = array();
+<<<<<<< HEAD
 $p_require_s = "SELECT SID FROM PD_Project_Require_Sample WHERE ProjectID = $projectid";
+=======
+$p_require_s = "SELECT SID FROM Project_Require_Sample WHERE ProjectID = $projectid";
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 $p_require_s_result = $dbconnect->query($p_require_s);
 while($sidrow = $p_require_s_result->fetch_assoc()){
 	array_push($sidarray, $sidrow['SID']);
 }
 ?>
+<<<<<<< HEAD
+=======
+<span id="alert_action"></span>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -21,15 +29,22 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
                 <div class="row" align="right">
+<<<<<<< HEAD
                     <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button> 	
+=======
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='project.php'">Back</button> 	
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 </div>
             </div>
             <div style="clear:both"></div>
         </div>
 		<div class="panel-body">
+<<<<<<< HEAD
 			<div id="reopen" style="text-align:center; display:none;">
             	<button name="reopenclick" id="reopenclick" class="btn btn-success">Re-Open</button>
             </div>
+=======
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			<?php
 			$projectsql = "SELECT * FROM PD_Project JOIN PD_DB_Account ON EnterBy = AcctID WHERE ProjectID = $projectid";
 			$projectfetch = $dbconnect->query($projectsql);
@@ -40,7 +55,11 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
             $modifybyid = $row['ModifyBy'];
 			?>
             <form method="POST" id="project_update_form">
+<<<<<<< HEAD
 			<table id="project_data" class="table table-bordered table-striped" >
+=======
+			<table id="project_data" class="table table-bordered table-striped">
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 				<tr>
 					<td width=20%>Project Name</td>
 					<td><input type="text" name="project_name" id="project_name" value="<?php echo $row['ProjectName'];?>" class="form-control"/></td>
@@ -52,15 +71,31 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 				</tr>
             	<tr>
 					<td >Date Created</td>
+<<<<<<< HEAD
             		<td><?php echo date('Y-m-d H:i', strtotime($row['DateCreated'])) ;?></td>
+=======
+            		<td><?php echo date('Y-m-d', strtotime($row['DateCreated'])) ;?></td>
+				</tr>
+            	<tr>
+					<td>Created By</td>
+					<td><?php echo $row['username'] ;?></td>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 				</tr>
             	<tr>
 					<td>Created By</td>
 					<td><?php echo $row['username'] ;?></td>
 				</tr>
             	<tr>
+<<<<<<< HEAD
 					<td>Start Date</td>
             		<td><input type="date" name="startdate" id="startdate" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['StartDate'])) ;?>"  /></td>
+=======
+					<td >Project Lead</td>
+            		<td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" data-style="btn-primary">
+                    	<option value="">Select Leader</option>
+                    	<?php echo employee_option_list($dbconnect);?>
+                    </select></td>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 				</tr>
             	<tr>
 					<td >Estimate End Date</td>
@@ -68,7 +103,11 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 				</tr>
             	<tr>
 					<td>End Date</td>
+<<<<<<< HEAD
             		<td><input type="date" name="completedate" id="completedate" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['EndDate'])) ;?>" /></td>
+=======
+            		<td><input type="date" name="completedate" id="completedate" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['EndDate'])) ;?>"required /></td>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 				</tr>
                 <tr>
                     <td >Project Lead</td>
@@ -79,7 +118,11 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
                 </tr>
             	<tr>
 					<td>Progress</td>
+<<<<<<< HEAD
             		<td><select name="progress" id="progress" class="selectpicker" data-live-search="true"  >
+=======
+            		<td><select name="progress" id="progress" class="form-control" >
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                     	<option value="">Select Progress</option>
                     	<option value="Complete">Complete</option>
                         <option value="InComplete">InComplete</option>
@@ -102,7 +145,11 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 				</tr>
                 <tr>
 					<td>Select Sample</td>
+<<<<<<< HEAD
             		<td><select name="sampleid[]" id="sampleid" multiple class="selectpicker" data-live-search="true" data-width="fit" >
+=======
+            		<td><select name="sampleid[]" id="sampleid" multiple class="selectpicker" data-live-search="true" data-width="fit" data-style="btn-primary" >
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                     	<?php echo sample_option_list($dbconnect);?>
                     </select></td>
 				</tr>
@@ -114,6 +161,7 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
             <?php
             }
             ?>
+<<<<<<< HEAD
             <div style="text-align:center">
             	<span id="alert_action"></span>
             	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
@@ -123,10 +171,77 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 		</div>
 	</div>
             
+=======
+            	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
+            	<input type="submit" name="Reset" id="Reset" class="btn btn-warning" value="Reset" />
+            </form>
+            
+		</div>
+	</div>
+         
+<?php
+if(isset($_POST['Save'])){
+	if(empty($_POST['projectstatus'])){
+    	$status = 'InActive';
+    }
+	else{
+    	$status = 'Active';
+    }
+	$projectname = $_POST['project_name'];
+	$projectdescription = $_POST['project_description'];
+	$start_date = $_POST['startdate'];
+	$est_end_date = $_POST['estcompletedate'];
+	$end_date = $_POST['completedate'];
+	$project_progress = $_POST['progress'];
+	$project_lead = $_POST['project_lead'];
+	$modify_date = date('Y-m-d H:i');
+	$modify_by = $_SESSION['acct_id'];
+	
+	$sampleid = $_POST['sampleid'];
+
+	$sql = "UPDATE Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ModifyDate = '$modify_date', ModifyBy = $modify_by, ProjectStatus = '$status', ProjectLead = '$project_lead'
+            WHERE ProjectID = $projectid";
+	$oldarray = $newarray = $lostarray = array();
+	foreach ($sampleid as $sid){
+    	if(in_array($sid, $sidarray)){
+        	array_push($oldarray, $sid);
+        }
+    	else{
+        	array_push($newarray, $sid);
+        }
+    }
+	$lostarray = array_diff( $sidarray, $sampleid);
+	
+    if($dbconnect->query($sql) === TRUE){
+    	foreach ($newarray as $newsid){
+            	$newsql = "INSERT INTO Project_Require_Sample VALUES($projectid, $newsid)";
+            	$newresult = $dbconnect->query($newsql);
+        }
+    	foreach ($lostarray as $lostsid){
+            	$lostsql = "DELETE FROM Project_Require_Sample WHERE ProjectID = $projectid AND SID = $lostsid";
+            	$lostresult = $dbconnect->query($lostsql);
+        		//echo $lostsql;
+        }
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Project Updated</div>';
+       			</script>";
+		echo "<meta http-equiv='refresh' content='2'>";
+	}
+    else{
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       		 	</script>";
+    }
+}     
+?>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 <script>
            
 $(document).ready(function(){
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	var pro_status = "<?php echo $status; ?>";
 	if(pro_status == "Active"){
     	$('#projectstatus').prop("checked", true);
@@ -137,6 +252,7 @@ $(document).ready(function(){
     $('#progress').val("<?php echo $progress;?>");
 	$('#project_lead').val("<?php echo $empid?>");
 	$('#sampleid').val([<?php foreach($sidarray as $id){echo '"'.$id.'",'; } ?>]);
+<<<<<<< HEAD
             
     var progress = "<?php echo $progress;?>";
     // if project is completed => all fields are readonly
@@ -185,6 +301,10 @@ $(document).ready(function(){
     	});
 	});
 
+=======
+
+	
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 });
 </script>
 

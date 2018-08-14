@@ -4,8 +4,13 @@ include('functions.php');
 include('header.php');
 
 ?>
+<<<<<<< HEAD
 
 
+=======
+<span id="alert_action"></span>
+
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	<div class="panel panel-default">
 		<div class="panel-heading">
         	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -15,7 +20,11 @@ include('header.php');
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
                 <div class="row" align="right">
+<<<<<<< HEAD
                     <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button> 	
+=======
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button> 	
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 </div>
             </div>
             <div style="clear:both"></div>
@@ -76,15 +85,53 @@ include('header.php');
             		<td><input type="text" name="shippingterm" id="shippingterm" value="<?php echo $row['ShippingTerms'];?>" /></td>
 				</tr>
 			</table>
+<<<<<<< HEAD
 			<div style="text-align:center">
 				<span id="alert_action"></span>
             	<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
             	<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
 			</div>
+=======
+            <input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
+            <input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
             </form>
 		</div>
 	</div>
 
+<<<<<<< HEAD
+=======
+<?php
+if(isset($_POST['Add'])){
+	$sid = $_POST['sid'];
+	$eid = $_POST['eid'];
+	$type = $_POST['type'];
+	$quantity = $_POST['quantity'];
+	$priceperunit = (($_POST['priceperunit'] != '') ? ($priceperunit = $_POST['priceperunit']) : ($priceperunit = 0));
+	$daterequested = $_POST['daterequested'];
+	$estdeliver = $_POST['estdeliver'];
+	$arrivaldate = $_POST['arrivaldate'];
+	$paymentterm = $_POST['paymentterm'];
+	$shippingterm = $_POST['shippingterm'];
+	$warrantyterm = $_POST['warrantyterm'];
+	$status = $_POST['status'];
+	$modify_date = date('Y-m-d H:i');
+	$modify_by = $_SESSION['acct_id'];
+	
+	$sql = "INSERT INTO SampleRecord VALUES(null, $sid, $eid, $quantity, $priceperunit, '$daterequested', '$type', '$estdeliver', '$arrivaldate', '$paymentterm', '$warrantyterm', '$shippingterm', $modify_by, '$modify_date', '$modify_by', '$status')";
+    if($dbconnect->query($sql) === TRUE){
+		echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Record Added</div>';
+       			 </script>";
+	}
+    else{
+        echo "<script type='text/javascript'>
+            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
+       			 </script>";
+    }
+}     
+?>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 <script>
 $(document).ready(function(){
 	$('#samplerecord_add_form').submit(function(event){

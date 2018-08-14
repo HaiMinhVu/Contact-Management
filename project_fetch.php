@@ -4,9 +4,15 @@ include('dbconnect.php');
 $query = '';
 $output = array();
 $query .= "
+<<<<<<< HEAD
 	SELECT * FROM PD_Project p
 INNER JOIN PD_Employee sme ON sme.SMEmID = p.ProjectLead
 INNER JOIN PD_DB_Account sma ON sma.AcctID = p.EnterBy
+=======
+	SELECT * FROM Project p
+INNER JOIN SMEmployees sme ON sme.SMEmID = p.ProjectLead
+INNER JOIN SMDBAccounts sma ON sma.AcctID = p.EnterBy
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 WHERE ";
 
 if($_POST["is_date_search"] == "yes")
@@ -25,6 +31,7 @@ if(isset($_POST["search"]["value"]))
 
 if(isset($_POST['order']))
 {
+<<<<<<< HEAD
 	$orderby = $_POST['order']['0']['column'] + 1;
 	$query .= ' ORDER BY '.$orderby.' '.$_POST['order']['0']['dir'].' ';
 }
@@ -33,6 +40,15 @@ else
 	$query .= ' ORDER BY p.ProjectStatus, p.Progress DESC, p.StartDate DESC ';
 }
 
+=======
+	$query .= ' ORDER BY '.$_POST['order']['0']['column'].' '.$_POST['order']['0']['dir'].' ';
+}
+else
+{
+	$query .= ' ORDER BY p.ProjectStatus, p.StartDate DESC ';
+}
+//$query .= ' ORDER BY p.ProjectStatus, p.StartDate DESC ';
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 if($_POST['length'] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
@@ -57,8 +73,13 @@ while($row = $statement->fetch_assoc()){
 	$sub_array[] = $row['StartDate'];
 	$sub_array[] = $row['Progress'];
 	$sub_array[] = $status;
+<<<<<<< HEAD
 	$sub_array[] = '<a href="project_update.php?project_id='.$row["ProjectID"].'" class="btn btn-warning btn-xs update">Edit</a> <button type="button" name="delete" id="'.$row["ProjectID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ProjectStatus"].'">Delete</button>';
 	
+=======
+	$sub_array[] = '<a href="project_update.php?project_id='.$row["ProjectID"].'" class="btn btn-warning btn-xs update">Edit</button>';
+	$sub_array[] = '<button type="button" name="delete" id="'.$row["ProjectID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ProjectStatus"].'">Delete</button>';
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	$data[] = $sub_array;
 }
 

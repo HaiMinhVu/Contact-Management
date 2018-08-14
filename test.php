@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
   <head>
  <style>
@@ -142,3 +143,21 @@ background-color:#5fa2db;
         </nav>
   </body>
 </html>
+=======
+<?php
+include('dbconnect.php');
+$email; $phone;
+$tmpsql = 'SELECT * FROM Entity_Attribute WHERE EID = 1 AND EASubCategoty = "Primary"';
+$tmpresult = $dbconnect->query($tmpsql);
+while($tmprow = $tmpresult->fetch_assoc()){
+	//echo 1;
+	if($tmprow['EACategory'] == "email"){
+		$email = $tmprow['EAString'];
+    }
+	else if($tmprow['EACategory'] == "phone"){
+    	$phone = $tmprow['EAString'];
+    }
+}
+echo $email.$phone;
+?>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23

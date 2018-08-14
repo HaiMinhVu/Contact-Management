@@ -29,6 +29,7 @@ include('header.php');
 			<div class="panel-body" align="center">
 				<h1>Active: <?php echo count_total_sample_active($dbconnect); ?></h1>
                 <h1>InActive: <?php echo count_total_sample_inactive($dbconnect); ?></h1>
+<<<<<<< HEAD
 			</div>
 		</div>
 	</div>
@@ -38,6 +39,8 @@ include('header.php');
 			<div class="panel-body" align="center">
 				<h1>Active: <?php echo count_total_contact_active($dbconnect); ?></h1>
                 <h1>InActive: <?php echo count_total_contact_inactive($dbconnect); ?></h1>
+=======
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			</div>
 		</div>
 	</div>

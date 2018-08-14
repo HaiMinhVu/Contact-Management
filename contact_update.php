@@ -7,28 +7,30 @@ $status;
 
 ?>
 <span id="alert_action"></span>
-<form method="POST" id="vender_form">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
 
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+            	<div class="row">
+                	<h3 class="panel-title"><font color="#2775F5">Contact Update</font></h3>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='contact.php'">Back</button> 	
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
 			<?php
-            $sql = "SELECT * FROM Entity_Contact ec INNER JOIN SMDBAccounts sma ON sma.AcctID = ec.ECEnterBy WHERE ec.ECID = $ecid";
+            $sql = "SELECT * FROM Entity_Contact_Person ecp INNER JOIN SMDBAccounts sma ON sma.AcctID = ecp.ECEnterBy WHERE ecp.ECPID = $ecid";
 			$ecfetch = $dbconnect->query($sql);
 			while($row = $ecfetch->fetch_array()){
             	$status = $row['ECStatus'];
             	
             ?>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-            		<h3>Contact Update</h3>
-            	</div>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='contact.php'">Back</button>   					
-            	</div>
-            </div>
+            <form method="POST" id="contact_update_form">
 			<table id="contact_data" class="table table-bordered table-striped">
 				<tr>
 					<td width=20%>Name</td>
@@ -96,25 +98,27 @@ $status;
                 </tr>
             	<tr>
 					<td >Status</td>
-            		<td><select name="status" id="status" class="form-control" >
-                    	<option value="">Select Status</option>
-                    	<option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
-                    </select></td>
+            		<td><input type="checkbox" name="ecpstatus" id="ecpstatus" value="status"> Active</td>
 				</tr>
 			</table>
-            <input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            <input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
+            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
             <?php
             }
             ?>
-            
+            </form>
 		</div>
 	</div>
-</div>
-</form>
+
+
 <?php
 if(isset($_POST['Save'])){
+	if(empty($_POST['ecpstatus'])){
+    	$ecstatus = 'InActive';
+    }
+	else{
+    	$ecstatus = 'Active';
+    }
 	$ecname = $_POST['ecname'];
 	$ecemail = $_POST['ecemail'];
 	$ecphone = $_POST['ecphone'];
@@ -130,8 +134,8 @@ if(isset($_POST['Save'])){
 	$modify_date = date('Y-m-d H:i');
 	$modify_by = $_SESSION['acct_id'];
 	
-	$sql = "UPDATE Entity_Contact SET ECname = '$ecname', ECEmail = '$ecemail', ECPhone = '$ecphone', ECFax = '$ecfax', ECWebsite = '$ecwebsite', ECAddress1 = '$ecaddress1', ECAddress2 = '$ecaddress2', ECCity = '$eccity', ECState = '$ecstate', ECZip = '$eczip', ECCountry = '$eccountry', ECModifyDate = '$modify_date', ECModifyBy = $modify_by, ECStatus = '$ecstatus'
-            WHERE ECID = $ecid";
+	$sql = "UPDATE Entity_Contact_Person SET ECname = '$ecname', ECEmail = '$ecemail', ECPhone = '$ecphone', ECFax = '$ecfax', ECWebsite = '$ecwebsite', ECAddress1 = '$ecaddress1', ECAddress2 = '$ecaddress2', ECCity = '$eccity', ECState = '$ecstate', ECZip = '$eczip', ECCountry = '$eccountry', ECModifyDate = '$modify_date', ECModifyBy = $modify_by, ECStatus = '$ecstatus'
+            WHERE ECPID = $ecid";
     if($dbconnect->query($sql) === TRUE){
 		echo "<script type='text/javascript'>
             	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Contact Updated</div>';
@@ -145,14 +149,20 @@ if(isset($_POST['Save'])){
     }
 }     
 ?>
+
 <script>
 $(document).ready(function(){
-	$('#status').val("<?php echo $status?>");
+	var ecpstatus = "<?php echo $status; ?>";
+	if(ecpstatus == "Active"){
+    	$('#ecpstatus').prop("checked", true);
+    }
+	else{
+    	$('#ecpstatus').prop("checked", false);
+    }
 	$('#epid').val("<?php echo $epid?>");
 
 });
 </script>
-
 
 <?php
 include ('footer.php');

@@ -28,6 +28,7 @@ if(!isset($_SESSION['type'])){
 
 <script>
 function openNav() {
+<<<<<<< HEAD
     document.getElementById("divMenu").style.width = "250px";
 }
 function closeNav() {
@@ -181,6 +182,31 @@ background-color:#5fa2db;
     
     
     <a href="index.php"><img src='images/sellmarklogo.png' width=120dp height=40dp><a>
+=======
+    document.getElementById("mySidenav").style.width = "250px";
+}
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
+</script>
+</head>
+<body>
+<div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="vendor.php"><i class="fa fa-university"></i> Vendors</a>
+        <a href="project.php"><i class="fa fa-briefcase"></i></span> Projects</a>
+        <a href="sample.php"><i class="fa fa-inbox"></i> Samples</a>
+        <a href="contact.php"><i class="fa fa-user"></i> Contacts</a>
+        <a href="#"><i class="fa fa-newspaper-o"></i> Reports</a>
+</div>
+<div class="container">
+	<nav >
+	<div class="container-fluid">
+    <ul class="nav navbar-nav">
+    <span>
+    <button class="btn btn-info"><span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776</span></button>
+    <a href="index.php"><img src='images/sellmarklogo.png' width=120dp height=40dp><a></span>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
     </ul>
     <ul class="nav navbar-nav navbar-right">
         <div class="dropdown">
@@ -191,7 +217,11 @@ background-color:#5fa2db;
 		</div>
     </ul>
     </div>
+<<<<<<< HEAD
 
+=======
+	</nav>
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	<h2 align="center" style="color:#006EC4">Product Development</h2>
 
 			

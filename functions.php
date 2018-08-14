@@ -50,15 +50,47 @@ function samplerecord_option_list($dbconnect){
 	return $output;
 }
 
+<<<<<<< HEAD
 function count_total_project_active($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM PD_Project WHERE ProjectStatus = 'Active'");
 	return mysqli_num_rows($result);
 }
 function count_total_project_inactive($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM PD_Project WHERE ProjectStatus = 'InActive'");
+=======
+function sample_option_list($dbconnect){
+	$sql = "SELECT * FROM Sample";
+	$result = $dbconnect->query($sql);
+	$output = '';
+	foreach ($result as $row){
+    	$output .='<option value = "'.$row['SID'].'">'.$row['SName'].'</option>';
+    }
+	return $output;
+}
+
+function samplerecord_option_list($dbconnect){
+	$sql = "SELECT * FROM SampleRecord sr INNER JOIN Sample s ON s.SID = sr.SID 
+    										INNER JOIN Entity e ON e.EID = sr.EID";
+	$result = $dbconnect->query($sql);
+	$output = '';
+	foreach ($result as $row){
+    	$output .= '<option value = "'.$row['SRID'].'">'.$row['SName'].' - '.$row['EName'].' - '.$row['Type'].'</option>';
+    }
+	return $output;
+}
+
+function count_total_project_active($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Project WHERE ProjectStatus = 'Active'");
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
+	return mysqli_num_rows($result);
+}
+function count_total_project_inactive($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Project WHERE ProjectStatus = 'InActive'");
 	return mysqli_num_rows($result);
 }
 
+
+<<<<<<< HEAD
 
 function count_total_entity_active($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM PD_Entity WHERE EStatus = 'Active'");
@@ -66,6 +98,23 @@ function count_total_entity_active($dbconnect){
 }
 function count_total_entity_inactive($dbconnect){
 	$result = $dbconnect->query("SELECT * FROM PD_Entity WHERE EStatus = 'InActive'");
+=======
+function count_total_entity_active($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Entity WHERE EStatus = 'Active'");
+	return mysqli_num_rows($result);
+}
+function count_total_entity_inactive($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Entity WHERE EStatus = 'InActive'");
+	return mysqli_num_rows($result);
+}
+
+function count_total_sample_active($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Sample WHERE SStatus = 'Active'");
+	return mysqli_num_rows($result);
+}
+function count_total_sample_inactive($dbconnect){
+	$result = $dbconnect->query("SELECT * FROM Sample WHERE SStatus = 'InActive'");
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	return mysqli_num_rows($result);
 }
 

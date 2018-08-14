@@ -23,6 +23,7 @@ if(isset($_POST["search"]["value"]))
 	$query .= 'OR sr.DateRequested LIKE "%'.$_POST["search"]["value"].'%" ';
 }
 
+<<<<<<< HEAD
 if(isset($_POST['order']))
 {
 	$orderby = $_POST['order']['0']['column'] + 1;
@@ -33,6 +34,9 @@ else
 	$query .= "ORDER BY SRStatus, SName, SRID ";
 }
 
+=======
+$query .= "ORDER BY s.SName ";
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
 if($_POST['length'] != -1)
 {
@@ -64,8 +68,13 @@ while($row = $statement->fetch_assoc())
 	$sub_array[] = $row['Available'];
 	$sub_array[] = $row['Type'];
 	$sub_array[] = $status;
+<<<<<<< HEAD
 	$sub_array[] = '<a href="samplerecord_update.php?srid='.$row["SRID"].'" class="btn btn-warning btn-xs">Edit</a> <button type="button" name="delete" id="'.$row["SRID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["SRStatus"].'">Delete</button>';
 	$sub_array[] = '';
+=======
+	$sub_array[] = '<a href="samplerecord_update.php?srid='.$row["SRID"].'" class="btn btn-warning btn-xs">Update</a>';
+	$sub_array[] = '<button type="button" name="delete" id="'.$row["SRID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["SRStatus"].'">Delete</button>';
+>>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
 	$data[] = $sub_array;
 }
