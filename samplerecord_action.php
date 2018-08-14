@@ -2,92 +2,62 @@
 include('dbconnect.php');
 include('functions.php');
 
+if($_POST['action'] == "Add"){
+	$sid = $_POST['sid'];
+	$eid = $_POST['eid'];
+	$type = $_POST['type'];
+	$quantity = $_POST['quantity'];
+	$priceperunit = (($_POST['priceperunit'] != '') ? ($priceperunit = $_POST['priceperunit']) : ($priceperunit = 0));
+	$daterequested = $_POST['daterequested'];
+	$estdeliver = $_POST['estdeliver'];
+	$arrivaldate = $_POST['arrivaldate'];
+	$paymentterm = $_POST['paymentterm'];
+	$shippingterm = $_POST['shippingterm'];
+	$warrantyterm = $_POST['warrantyterm'];
+	$status = "Active";
+	$modify_date = date('Y-m-d H:i');
+	$modify_by = $_SESSION['acct_id'];
+	
+	$sql = "INSERT INTO PD_SampleRecord VALUES(null, $sid, $eid, $quantity, 0, $quantity, $priceperunit, '$daterequested', '$type', '$estdeliver', '$arrivaldate', '$paymentterm', '$warrantyterm', '$shippingterm', $modify_by, '$modify_date', '$modify_by', '$status')";
+    if($dbconnect->query($sql) === TRUE){
+		echo '<div class="alert alert-info">New Record Added</div>';
+	}
+    else{
+        echo '<div class="alert alert-danger">Failed to Add</div>';
+    }
+}
+
+if($_POST['action'] == "save_update"){
+	$srid = $_POST['srid'];
+	$sid = $_POST['sid'];
+	$eid = $_POST['eid'];
+	$type = $_POST['type'];
+	$quantity = $_POST['quantity'];
+	$used = $_POST['used'];
+	$available = $_POST['available'];
+	$priceperunit = $_POST['priceperunit'];
+	$daterequested = $_POST['daterequested'];
+	$estdeliver = $_POST['estdeliver'];
+	$arrivaldate = $_POST['arrivaldate'];
+	$paymentterm = $_POST['paymentterm'];
+	$shippingterm = $_POST['shippingterm'];
+	$warrantyterm = $_POST['warrantyterm'];
+	$modify_date = date('Y-m-d H:i');
+	$modify_by = $_SESSION['acct_id'];
+	
+	$sql = "UPDATE PD_SampleRecord SET SID = $sid, EID = $eid, Type = '$type', Quantity = $quantity, Used = $used, Available = $available, PriceperUnit = $priceperunit, DateRequested = '$daterequested', EstDeliver = '$estdeliver', ArrivalDate = '$arrivaldate', PaymentTerms = '$paymentterm', ShippingTerms = '$shippingterm', WarrantyTerms = '$warrantyterm', SRModifyDate = '$modify_date', SRModifyBy = $modify_by
+            WHERE SRID = $srid";
+    if($dbconnect->query($sql) === TRUE){
+    	echo '<div class="alert alert-info">Record Updated</div>';
+	}
+    else{
+        
+    	echo '<div class="alert alert-danger">Failed to Update</div>';
+    }
+}
+
 if(isset($_POST['btn_action']))
 {
-	//// add new item
-	if($_POST['btn_action'] == 'Add')
-	{	
-    	$paymentterm = $warrantyterm = $shippingterm = "";
-    	$sid = $_POST['sid'];
-    	$eid = $_POST['eid'];
-    	$quantity = $_POST['quantity'];
-    	$price = $_POST['price'];
-    	$daterequested = $_POST['daterequested'];
-    	$type = $_POST['type'];
-    	$estdeliver = (($_POST['estdeliver'] != '') ? ($estdeliver = $_POST['estdeliver']) : ($estdeliver = "1969-12-31"));
-    	
-    	$arrivaldate = (($_POST['arrivaldate'] != '') ? ($arrivaldate = $_POST['arrivaldate']) : ($arrivaldate = "1969-12-31"));
-    	$paymentterm = $_POST['paymentterm'];
-    	$warrantyterm = $_POST['warrantyterm'];
-    	$shippingterm = $_POST['shippingterm'];
-    	$modify_date = date("Y-m-d h:i");
-    	$modify_by = $_SESSION['acct_id'];
-    	$status = "Active";
-    	$query = "INSERT INTO SampleRecord VALUES(null, $sid, $eid, $quantity, $price, '$daterequested', '$type', '$estdeliver', '$arrivaldate', '$paymentterm', '$warrantyterm', '$shippingterm', $modify_by, '$modify_date', $modify_by, '$status')";
-    
-		if($dbconnect->query($query) == TRUE)
-		{
-			echo 'New Record Added';
-		}
-    	else
-        {
-        	echo "Failed to Add";
-        }
-	}
-
-	//// load single item into update form
-	if($_POST['btn_action'] == 'fetch_single')
-	{
-    	$srid = $_POST['srid'];
-		$query = "SELECT * FROM SampleRecord WHERE SRID = $srid";
-		$result = $dbconnect->query($query);
-    	while($row = $result->fetch_assoc()){
-        	// retrieve data from database and load into edit form
-			$output['sid'] = $row['SID'];
-        	$output['eid'] = $row['EID'];
-			$output['quantity'] = $row['Quantity'];
-        	$output['price'] = $row['PriceperUnit'];
-        	$output['daterequested'] = date('Y-m-d', strtotime($row['DateRequested']));
-        	$output['type'] = $row['Type'];
-        	$output['estdeliver'] = date('Y-m-d', strtotime($row['EstDeliver']));
-        	$output['arrivaldate'] = date('Y-m-d', strtotime($row['ArrivalDate']));
-        	$output['paymentterm'] = $row['PaymentTerms'];
-        	$output['shippingterm'] = $row['ShippingTerms'];
-        	$output['warrantyterm'] = $row['WarrantyTerms'];
-		}
-		echo json_encode($output);
-	}
-
-	//// submit update/edit item information
-	if($_POST['btn_action'] == 'Edit')
-	{
-    	$srid = $_POST['srid'];
-    	$sid = $_POST['sid'];
-    	$eid = $_POST['eid'];
-    	$quantity = $_POST['quantity'];
-    	$price = $_POST['price'];
-    	$daterequested = $_POST['daterequested'];
-    	$type = $_POST['type'];
-    	$estdeliver = $_POST['estdeliver'];
-    	$arrivaldate = $_POST['arrivaldate'];
-    	$paymentterm = $_POST['paymentterm'];
-    	$warrantyterm = $_POST['warrantyterm'];
-    	$shippingterm = $_POST['shippingterm'];
-    	$modify_date = date("Y-m-d h:i");
-    	$modify_by = $_SESSION['acct_id'];
-    
-    	$query = "UPDATE SampleRecord SET SID = $sid, EID = $eid, Quantity = $quantity, PriceperUnit = $price, DateRequested = '$daterequested', Type = '$type', EstDeliver = '$estdeliver', ArrivalDate = '$arrivaldate', PaymentTerms = '$paymentterm', WarrantyTerms = '$warrantyterm', ShippingTerms = '$shippingterm', SRModifyDate = '$modify_date', SRModifyBy = $modify_by WHERE SRID = $srid";
-
-		if($dbconnect->query($query) == TRUE)
-		{
-			echo 'Sample '.$sid.' Updated';
-		}
-    	else
-        {
-        	echo $query;
-        }
-	}
-
 	/// delete an item
 	if($_POST['btn_action'] == 'delete')
 	{	
@@ -99,14 +69,13 @@ if(isset($_POST['btn_action']))
     	$modify_date = date("Y-m-d H:i");
     	$modify_by = $_SESSION['acct_id'];
     	
-    	$query = "UPDATE SampleRecord SET SRStatus = '$status', SRModifyDate = '$modify_date', SRModifyBy = $modify_by WHERE SRID = $srid";
+    	$query = "UPDATE PD_SampleRecord SET SRStatus = '$status', SRModifyDate = '$modify_date', SRModifyBy = $modify_by WHERE SRID = $srid";
 		if($dbconnect->query($query) == TRUE){
 			echo 'Record '.$_POST['srid'].'  Set to '.$status;
 		}
     	else{
         	echo "Failed to Delete";
         }
-    	
 	}
 }
 

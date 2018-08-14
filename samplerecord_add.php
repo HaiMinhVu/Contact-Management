@@ -4,28 +4,29 @@ include('functions.php');
 include('header.php');
 
 ?>
-<span id="alert_action"></span>
-<form method="POST" id="sample_form">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
 
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Sample Record List</h3>
-            	</div>
+                	<h3 class="panel-title"><font color="#2775F5">Sample Records List</font></h3>
+                </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button>   					
-            	</div>
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button> 	
+                </div>
             </div>
-			
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<form method="POST" id="samplerecord_add_form">
 			<table id="samplerecord_data" class="table table-bordered table-striped">
 				<tr>
 					<td width=10%>Type</td>
 					<td width=40%>
-            			<select name="type" id="type" class="form-control" required>
+            			<select name="type" id="type" class="selectpicker" data-live-search="true"class="form-control" required>
                                 <option value="">Select Type</option>
                         		<option value="Quote">Quote</option>
                         		<option value="P.O">P.O</option>
@@ -69,58 +70,38 @@ include('header.php');
             		<td><input type="text" name="warrantyterm" id="warrantyterm" value="<?php echo $row['WarrantyTerms'];?>" /></td>
 				</tr>
             	<tr>
-					<td width=10%>Status</td>
-					<td width=40%><select name="status" id="status" class="form-control" >
-                    	<option value="">Select Status</option>
-                    	<option value="Active" selected>Active</option>
-                        <option value="InActive">InActive</option>
-                    </select></td>
+					<td width=10%></td>
+					<td width=40%></td>
             		<td width=10%>Shipping Term</td>
             		<td><input type="text" name="shippingterm" id="shippingterm" value="<?php echo $row['ShippingTerms'];?>" /></td>
 				</tr>
-            	<tr>
-				</tr>
-            	
 			</table>
-            <input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
-            <input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
-            
+			<div style="text-align:center">
+				<span id="alert_action"></span>
+            	<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
+            	<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+			</div>
+            </form>
 		</div>
 	</div>
-</div>
-</form>
-<?php
-if(isset($_POST['Add'])){
-	$sid = $_POST['sid'];
-	$eid = $_POST['eid'];
-	$type = $_POST['type'];
-	$quantity = $_POST['quantity'];
-	$priceperunit = (($_POST['priceperunit'] != '') ? ($priceperunit = $_POST['priceperunit']) : ($priceperunit = 0));
-	$daterequested = $_POST['daterequested'];
-	$estdeliver = $_POST['estdeliver'];
-	$arrivaldate = $_POST['arrivaldate'];
-	$paymentterm = $_POST['paymentterm'];
-	$shippingterm = $_POST['shippingterm'];
-	$warrantyterm = $_POST['warrantyterm'];
-	$status = $_POST['status'];
-	$modify_date = date('Y-m-d H:i');
-	$modify_by = $_SESSION['acct_id'];
-	
-	$sql = "INSERT INTO SampleRecord VALUES(null, $sid, $eid, $quantity, $priceperunit, '$daterequested', '$type', '$estdeliver', '$arrivaldate', '$paymentterm', '$warrantyterm', '$shippingterm', $modify_by, '$modify_date', '$modify_by', '$status')";
-    if($dbconnect->query($sql) === TRUE){
-		echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Record Added</div>';
-       			 </script>";
-	}
-    else{
-        echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
-       			 </script>";
-    }
-}     
-?>
+
 <script>
 $(document).ready(function(){
+	$('#samplerecord_add_form').submit(function(event){
+        event.preventDefault();
+    	var action="Add";
+        var data = $('#samplerecord_add_form').serialize()+"&action="+action;
+        $.ajax({
+            type:"post",
+            url:"samplerecord_action.php",
+            data:data,
+            success: function(mess){
+                $('#alert_action').fadeIn().html(mess);
+                window.setTimeout(function(){location.reload()},2000)
+            }
+        });
+    });
+
 	$('#paymentterm').selectize({
     plugins: ['remove_button'],
     delimiter: ',',

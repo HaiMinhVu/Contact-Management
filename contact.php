@@ -39,11 +39,9 @@ include('header.php');
                                     <th>Phone</th>
                                     <th>Fax</th>
                                     <th>Website</th>
-                                    <th>Status</th>
                                     <?php
                                     if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
                                     ?>
-                                    <th></th>
                                     <th></th>
                                     <?php
                                     }
@@ -137,7 +135,7 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8],
+                "targets":[0,1,2,3,4,5,6],
                 "orderable":false,
             },
         ],
@@ -146,7 +144,7 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6],
+                "targets":[0,1,2,3,4,5],
                 "orderable":false,
             },
         ],
@@ -155,15 +153,6 @@ $(document).ready(function(){
         ?>
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
-
-    ////// Add new item to the table
-    /*$('#add_button').click(function(){
-        $('#ContactAddModal').modal('show');
-        $('#contact_form')[0].reset();
-        $('.modal-title').html("<i class='fa fa-plus'></i> Add Project");
-        $('#action').val("Add");
-        $('#btn_action').val("Add");
-    });*/
 
     $(document).on('submit', '#contact_form', function(event){
         event.preventDefault();
@@ -184,29 +173,6 @@ $(document).ready(function(){
         })
     });
                         
-    $(document).on('click', '.update', function(){
-        // display hidden fields - update has 3 more fields than add
-        var ercid = $(this).attr("id");
-        var btn_action = 'fetch_single';
-        $.ajax({
-            url:"contact_action.php",
-            method:"POST",
-            data:{ercid:ercid, btn_action:btn_action},
-            dataType:"json",
-            success:function(data){
-                $('#ContactAddModal').modal('show');
-                $('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Project");
-                $('#id').val(data.ercid);
-                $('#eid').val(data.eid);
-                $('#ecid').val(data.ecid);
-                $('#priority').val(data.priority);
-                $('#erctitle').val(data.erctitle);
-                $('#action').val("Edit");
-                $('#btn_action').val("Edit");
-            }
-        })
-    });
-
     $(document).on('click', '.delete', function(){
         var ecid = $(this).attr("id");
         var btn_action = 'delete';
@@ -229,8 +195,6 @@ $(document).ready(function(){
 
 });
 </script>
-
-
 
 <?php
 include ('footer.php');

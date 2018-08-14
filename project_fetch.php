@@ -4,27 +4,34 @@ include('dbconnect.php');
 $query = '';
 $output = array();
 $query .= "
-	SELECT * FROM Project p
-INNER JOIN SMBrands smb ON smb.BrandID = p.BrandBelongTo
-INNER JOIN SMDepartments smd ON smd.SMDeptID = p.DeptBelongTo 
-INNER JOIN SMEmployees sme ON sme.SMEmID = p.ProjectLead
-INNER JOIN SMDBAccounts sma ON sma.AcctID = p.EnterBy
-";
+	SELECT * FROM PD_Project p
+INNER JOIN PD_Employee sme ON sme.SMEmID = p.ProjectLead
+INNER JOIN PD_DB_Account sma ON sma.AcctID = p.EnterBy
+WHERE ";
+
+if($_POST["is_date_search"] == "yes")
+{
+ $query .= 'p.StartDate BETWEEN "'.$_POST["start_date"].'" AND "'.$_POST["end_date"].'" AND ';
+}
 
 if(isset($_POST["search"]["value"]))
 {
-	$query .= 'WHERE smb.BrandName LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR smd.SMDeptName LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR p.ProjectName LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= '(p.ProjectName LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR p.Progress LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR p.ProjectStatus LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR p.StartDate LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR p.DateCreated LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR sme.SMEmName LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR sma.username LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'OR sma.username LIKE "%'.$_POST["search"]["value"].'%" ) ';
 }
 
-$query .= 'ORDER BY p.ProjectID DESC ';
+if(isset($_POST['order']))
+{
+	$orderby = $_POST['order']['0']['column'] + 1;
+	$query .= ' ORDER BY '.$orderby.' '.$_POST['order']['0']['dir'].' ';
+}
+else
+{
+	$query .= ' ORDER BY p.ProjectStatus, p.Progress DESC, p.StartDate DESC ';
+}
 
 if($_POST['length'] != -1)
 {
@@ -47,17 +54,16 @@ while($row = $statement->fetch_assoc()){
 	$sub_array[] = '<a href="project_detail.php?project_id='.$row["ProjectID"].'">'.$row['ProjectName'].'</a>';
 	$sub_array[] = $row['username'];
 	$sub_array[] = $row['SMEmName'];
-	$sub_array[] = $row['DateCreated'];
+	$sub_array[] = $row['StartDate'];
 	$sub_array[] = $row['Progress'];
 	$sub_array[] = $status;
-	//$sub_array[] = '<a href="project_detail.php?project_id='.$row["ProjectID"].'" class="btn btn-info btn-xs">View</a>';
-	$sub_array[] = '<a href="project_update.php?project_id='.$row["ProjectID"].'" class="btn btn-warning btn-xs update">Update</button>';
-	$sub_array[] = '<button type="button" name="delete" id="'.$row["ProjectID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ProjectStatus"].'">Delete</button>';
+	$sub_array[] = '<a href="project_update.php?project_id='.$row["ProjectID"].'" class="btn btn-warning btn-xs update">Edit</a> <button type="button" name="delete" id="'.$row["ProjectID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ProjectStatus"].'">Delete</button>';
+	
 	$data[] = $sub_array;
 }
 
 function get_total_all_records($dbconnect){
-	$statement = $dbconnect->query('SELECT * FROM Project');
+	$statement = $dbconnect->query('SELECT * FROM PD_Project');
 	return mysqli_num_rows($statement);
 }
 

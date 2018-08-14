@@ -5,21 +5,20 @@ $query = '';
 
 $output = array();
 $query .= "
-	SELECT * FROM Entity_Contact ec INNER JOIN SMDBAccounts sma ON sma.AcctID = ec.ECEnterBy
+	SELECT * FROM PD_Entity_Contact_Person ecp INNER JOIN PD_DB_Account sma ON sma.AcctID = ecp.ECEnterBy
 ";
 
 if(isset($_POST["search"]["value"]))
 {
-	$query .= 'WHERE ec.ECName LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR ec.ECEmail LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR ec.ECPhone LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR ec.ECFax LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR ec.ECStatus LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR ec.ECWebsite LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'WHERE ecp.ECName LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'OR ecp.ECEmail LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'OR ecp.ECPhone LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'OR ecp.ECFax LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'OR ecp.ECWebsite LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR sma.username LIKE "%'.$_POST["search"]["value"].'%" ';
 }
 
-$query .= "ORDER BY ECID ";
+$query .= "ORDER BY ECPID ";
 
 if($_POST['length'] != -1)
 {
@@ -30,34 +29,25 @@ $data = array();
 $filtered_rows = mysqli_num_rows($statement);
 while($row = $statement->fetch_assoc())
 {
-	$status = '';
-	if($row['ECStatus'] == 'Active')
-	{
-		$status = '<span class="label label-success">Active</span>';
-	}
-	else
-	{
-		$status = '<span class="label label-danger">InActive</span>';
-	}
+	
 	$sub_array = array();
-	$sub_array[] = $row['ECID'];
-	//$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'">'.$row['ECName'].'</a>';
+	$sub_array[] = $row['ECPID'];
 	$sub_array[] = $row['ECName'];
 	$sub_array[] = $row['ECEmail'];
 	$sub_array[] = $row['ECPhone'];
 	$sub_array[] = $row['ECFax'];
 	$sub_array[] = $row['ECWebsite'];
-	$sub_array[] = $status;
 	//$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'" class="btn btn-info btn-xs">View</a>';
-	$sub_array[] = '<a href="contact_update.php?ecid='.$row["ECID"].'" class="btn btn-warning btn-xs">Update</a>';
-	$sub_array[] = '<button type="button" name="delete" id="'.$row["ECID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ECStatus"].'">Delete</button>';
+	$sub_array[] = '<a href="contact_update.php?ecid='.$row["ECPID"].'" class="btn btn-warning btn-xs">Edit</a>
+    				<button type="button" name="delete" id="'.$row["ECPID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ECStatus"].'">Delete</button>';
+	
 
 	$data[] = $sub_array;
 }
 
 function get_total_all_records($dbconnect)
 {
-	$statement = $dbconnect->query('SELECT * FROM Entity_Contact');
+	$statement = $dbconnect->query('SELECT * FROM Entity_Contact_Person');
 	return mysqli_num_rows($statement);
 }
 

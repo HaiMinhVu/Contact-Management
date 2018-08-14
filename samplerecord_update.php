@@ -4,26 +4,25 @@ include('functions.php');
 include('header.php');
 $srid =$_GET['srid'];
 $status; $type; $eid; $sid;
-
 ?>
-<span id="alert_action"></span>
-<form method="POST" id="sample_form">
-<div class="panel-body">
-	<div class="row">
-		<div class="col-sm-12 table-responsive">
-
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-            		<h3>Update Record</h3>
-            	</div>
+                	<h3 class="panel-title"><font color="#2775F5">Record Update</font></h3>
+                </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-            	<div class="row" align="right">
-            		<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button>   					
-            	</div>
+                <div class="row" align="right">
+                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button> 	
+                </div>
             </div>
+            <div style="clear:both"></div>
+        </div>
+		<div class="panel-body">
+			<form method="POST" id="samplerecord_update_form">
 			<?php
-            $recordquery = "SELECT * FROM SampleRecord sr INNER JOIN SMDBAccounts sma ON sma.AcctID = sr.SRRequestBy WHERE SRID = $srid";
+            $recordquery = "SELECT * FROM PD_SampleRecord sr INNER JOIN PD_DB_Account sma ON sma.AcctID = sr.SRRequestBy WHERE SRID = $srid";
 			$recordfetch = $dbconnect->query($recordquery);
 			$countrecord = mysqli_num_rows($recordfetch);
 			while($row = $recordfetch->fetch_array()){
@@ -36,7 +35,7 @@ $status; $type; $eid; $sid;
 				<tr>
 					<td width=10%>Type</td>
 					<td width=40%>
-            			<select name="type" id="type" class="form-control" required>
+            			<select name="type" id="type" class="selectpicker" data-live-search="true" required>
                                 <option value="">Select Type</option>
                         		<option value="Quote">Quote</option>
                         		<option value="P.O">P.O</option>
@@ -74,21 +73,29 @@ $status; $type; $eid; $sid;
             		<td><input type="text" name="paymentterm" id="paymentterm" value="<?php echo $row['PaymentTerms'];?>" /></td>
 				</tr>
             	<tr>
-					<td width=10%>Price/Unit</td>
-					<td width=40%><input type="text" name="priceperunit" id="priceperunit" value="<?php echo $row['PriceperUnit'];?>" class="form-control"/></td>
+					<td width=10%>Used</td>
+					<td width=40%><input type="text" name="used" id="used" value="<?php echo $row['Used'];?>" class="form-control"/></td>
             		<td width=10%>Warranty Term</td>
             		<td><input type="text" name="warrantyterm" id="warrantyterm" value="<?php echo $row['WarrantyTerms'];?>" /></td>
 				</tr>
             	<tr>
-					<td width=10%>Last Modify</td>
-					<td width=40%><?php echo date('Y-m-d H:i', strtotime($row['SRModifyDate'])) ;?></td>
+            		
+					<td width=10%>Available</td>
+					<td width=40%><input type="text" name="available" id="available" value="<?php echo $row['Available'];?>" class="form-control"/></td>
             		<td width=10%>Shipping Term</td>
             		<td><input type="text" name="shippingterm" id="shippingterm" value="<?php echo $row['ShippingTerms'];?>" /></td>
 				</tr>
             	<tr>
-            		<?php
+            		<td width=10%>Price/Unit</td>
+					<td width=40%><input type="text" name="priceperunit" id="priceperunit" value="<?php echo $row['PriceperUnit'];?>" class="form-control"/></td>
+            		
+            		<td>Enter By</td>
+            		<td><?php echo $row['username'];?></td>
+				</tr>
+            	<tr>
+					<?php
 					$modifybyid = $row['SRModifyBy'];
-    				$modifybyresult = $dbconnect->query("SELECT username FROM SMDBAccounts WHERE AcctID = $modifybyid");
+    				$modifybyresult = $dbconnect->query("SELECT username FROM PD_DB_Account WHERE AcctID = $modifybyid");
     				while($modifyrow = $modifybyresult->fetch_assoc()){
             		?>
 					<td width=10%>Modify By</td>
@@ -96,64 +103,45 @@ $status; $type; $eid; $sid;
                     <?php
                     }
                     ?>
-            		<td>Enter By</td>
-            		<td><?php echo $row['username'];?></td>
-            		
-				</tr>
-            	<tr>
-					<td width=10%>Status</td>
-					<td width=40%><select name="status" id="status" class="form-control" >
-                    	<option value="">Select Status</option>
-                    	<option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
-                    </select></td>
-            		
+                    <td width=10%>Last Modify</td>
+					<td width=40%><?php echo date('Y-m-d H:i', strtotime($row['SRModifyDate'])) ;?></td>
 				</tr>
 			</table>
-            <input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            <input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
             <?php
             }
             ?>
+            <div style="text-align:center">
+            	<span id="alert_action"></span>
+            	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
+            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            </div>
             
+            </form>
 		</div>
 	</div>
-</div>
-</form>
-<?php
-if(isset($_POST['Save'])){
-	$sid = $_POST['sid'];
-	$eid = $_POST['eid'];
-	$type = $_POST['type'];
-	$quantity = $_POST['quantity'];
-	$priceperunit = $_POST['priceperunit'];
-	$daterequested = $_POST['daterequested'];
-	$estdeliver = $_POST['estdeliver'];
-	$arrivaldate = $_POST['arrivaldate'];
-	$paymentterm = $_POST['paymentterm'];
-	$shippingterm = $_POST['shippingterm'];
-	$warrantyterm = $_POST['warrantyterm'];
-	$status = $_POST['status'];
-	$modify_date = date('Y-m-d H:i');
-	$modify_by = $_SESSION['acct_id'];
-	
-	$sql = "UPDATE SampleRecord SET SID = $sid, EID = $eid, Type = '$type', Quantity = $quantity, PriceperUnit = $priceperunit, DateRequested = '$daterequested', EstDeliver = '$estdeliver', ArrivalDate = '$arrivaldate', PaymentTerms = '$paymentterm', ShippingTerms = '$shippingterm', WarrantyTerms = '$warrantyterm', SRModifyDate = '$modify_date', SRModifyBy = $modify_by, SRStatus = '$status'
-            WHERE SRID = $srid";
-    if($dbconnect->query($sql) === TRUE){
-    	echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Record Updated</div>';
-       			 </script>";
-		echo "<meta http-equiv='refresh' content='2'>";
-	}
-    else{
-        echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Failed to Update</div>';
-       			 </script>";
-    }
-}     
-?>
+
 <script>
 $(document).ready(function(){
+
+	$('#Save').click(function(){
+		$('#samplerecord_update_form').submit(function(event){
+        	event.preventDefault();
+    		var action="save_update";
+        	var srid = "<?php echo $srid?>"
+        	var data = $(this).serialize()+"&action="+action+"&srid="+srid;
+        	$.ajax({
+            	type:"post",
+            	url:"samplerecord_action.php",
+            	data:data,
+            	success: function(mess){
+                	$('#alert_action').fadeIn().html(mess);
+                	window.setTimeout(function(){location.reload()},2000)
+            	}
+        	});
+    	});
+	});
+
+
 	$('#status').val("<?php echo $status?>");
 	$('#type').val("<?php echo $type?>");
 	$('#eid').val("<?php echo $eid?>");
@@ -194,7 +182,6 @@ $(document).ready(function(){
 	});
 });
 </script>
-
 
 <?php
 include ('footer.php');

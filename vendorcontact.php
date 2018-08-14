@@ -12,7 +12,7 @@ include('header.php');
                 <div class="panel-heading">
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                         <div class="row">
-                            <h3 class="panel-title">Vendor Contact Relationship List</h3>
+                            <h3 class="panel-title"><label>Vendor - Contact Relationship List</label></h3>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -20,7 +20,7 @@ include('header.php');
                             <?php
                             if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
                             ?>
-                             <button type="button" name="add" id="add_button" class="btn btn-success btn-xs">Add</button>   
+                              <button type="button" name="add" id="add_button" onclick="location.href='vendorcontact_add.php'" class="btn btn-success btn-xs">Add</button>    
                             <?php
                             }
                             ?>
@@ -37,14 +37,14 @@ include('header.php');
                                     <th>Vender Name</th>
                                     <th>Contact Name</th>
                                     <th>Title</th>
+                            		<th>Priority</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Status</th>
                                     <?php
                                     if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){
                                     ?>
-                                    <th></th>
-                                    <th></th>
+                                    <th width=10%></th>
                                     <?php
                                     }
                                     ?>
@@ -68,7 +68,7 @@ include('header.php');
                         
                     <div class="modal-body">
                         <div class="relation-group">
-                                <label>Select Vender</label>
+                                <label>Select Vendor</label>
                                 <select name="eid" id="eid" class="form-control" required>
                                     <option value="">Select Vender</option>
                                     <?php echo entity_option_list($dbconnect);?>
@@ -119,7 +119,7 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6,7,8],
+                "targets":[5,6,7,8],
                 "orderable":false,
             },
         ],
@@ -128,7 +128,7 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-                "targets":[0,1,2,3,4,5,6],
+                "targets":[5,6,7],
                 "orderable":false,
             },
         ],
@@ -139,13 +139,13 @@ $(document).ready(function(){
     });
 
     ////// Add new item to the table
-    $('#add_button').click(function(){
+    /*$('#add_button').click(function(){
         $('#RelationAddModal').modal('show');
         $('#relation_form')[0].reset();
         $('.modal-title').html("<i class='fa fa-plus'></i>Add Relationship");
         $('#action').val("Add");
         $('#btn_action').val("Add");
-    });
+    });*/
 
     $(document).on('submit', '#relation_form', function(event){
         event.preventDefault();
