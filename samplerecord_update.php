@@ -5,11 +5,6 @@ include('header.php');
 $srid =$_GET['srid'];
 $status; $type; $eid; $sid;
 ?>
-<<<<<<< HEAD
-=======
-<span id="alert_action"></span>
-
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	<div class="panel panel-default">
 		<div class="panel-heading">
         	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -19,11 +14,7 @@ $status; $type; $eid; $sid;
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
                 <div class="row" align="right">
-<<<<<<< HEAD
                     <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button> 	
-=======
-                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='samplerecord.php'">Back</button> 	
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 </div>
             </div>
             <div style="clear:both"></div>
@@ -112,125 +103,23 @@ $status; $type; $eid; $sid;
                     <?php
                     }
                     ?>
-<<<<<<< HEAD
                     <td width=10%>Last Modify</td>
 					<td width=40%><?php echo date('Y-m-d H:i', strtotime($row['SRModifyDate'])) ;?></td>
-=======
-            		<td>Enter By</td>
-            		<td><?php echo $row['username'];?></td>
-				</tr>
-            	<tr>
-					<td width=10%>Status</td>
-					<td width=40%><select name="status" id="status" class="form-control" >
-                    	<option value="">Select Status</option>
-                    	<option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
-                    </select></td>
-            		
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 				</tr>
 			</table>
             <?php
             }
             ?>
-<<<<<<< HEAD
             <div style="text-align:center">
             	<span id="alert_action"></span>
             	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
             	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
             </div>
             
-=======
-            	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
             </form>
 		</div>
 	</div>
 
-<<<<<<< HEAD
-=======
-    <!-- 
-	<div class="panel panel-default">
-		<div class="panel-heading">
-        	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	<div class="row">
-                	<h3 class="panel-title"><font color="#2775F5">Related Reviews</font></h3>
-                </div>
-            </div>
-            <div style="clear:both"></div>
-        </div>
-		<div class="panel-body">
-            <?php
-            $getsreidsql = "SELECT SReID FROM SampleReview WHERE SRID = $srid";
-			$getsreidresult = $dbconnect->query($getsreidsql);
-			foreach ($getsreidresult as $sreidrow){
-            	$sreid = $sreidrow['SReID'];
-            	$sreidsql = "SELECT * FROM SampleReview JOIN SMDBAccounts ON ReviewBy = AcctID WHERE SReID = $sreid";
-            	$samplefetch = $dbconnect->query($sreidsql);
-				while($srerow = $samplefetch->fetch_assoc()){
-            ?>
-                <table id="samplereview_update_data" class="table table-bordered table-striped">
-            	<tr>
-            		<a href="samplereview_update.php?sreid=<?php echo $sreid; ?>" class="btn btn-warning btn-xs">Edit</a>
-            	</tr>
-				<tr>
-					<td width=10%>Comment</td>
-            		<td width=60%><?php echo $srerow['SReComments'];?></td>
-            		<td rowspan="3"><?php echo "<img src='images/sample_review/". $srerow['SReImages']."' height='250' width='250'>"; ?></td>
-				</tr>
-            	
-            	<tr>
-					<td>Review By</td>
-					<td><?php echo $srerow['username'] ;?></td>
-				</tr>
-            	<tr>
-					<td>Last Modify</td>
-            		<td><?php echo date('Y-m-d H:i', strtotime($srerow['ReviewDate'])) ;?></td>
-				</tr>
-			</table>
-            <br>
-            <?php
-                }
-            }
-            ?>
-		</div>
-	</div>
-    -->
-            
-<?php
-if(isset($_POST['Save'])){
-	$sid = $_POST['sid'];
-	$eid = $_POST['eid'];
-	$type = $_POST['type'];
-	$quantity = $_POST['quantity'];
-	$priceperunit = $_POST['priceperunit'];
-	$daterequested = $_POST['daterequested'];
-	$estdeliver = $_POST['estdeliver'];
-	$arrivaldate = $_POST['arrivaldate'];
-	$paymentterm = $_POST['paymentterm'];
-	$shippingterm = $_POST['shippingterm'];
-	$warrantyterm = $_POST['warrantyterm'];
-	$status = $_POST['status'];
-	$modify_date = date('Y-m-d H:i');
-	$modify_by = $_SESSION['acct_id'];
-	
-	$sql = "UPDATE SampleRecord SET SID = $sid, EID = $eid, Type = '$type', Quantity = $quantity, PriceperUnit = $priceperunit, DateRequested = '$daterequested', EstDeliver = '$estdeliver', ArrivalDate = '$arrivaldate', PaymentTerms = '$paymentterm', ShippingTerms = '$shippingterm', WarrantyTerms = '$warrantyterm', SRModifyDate = '$modify_date', SRModifyBy = $modify_by, SRStatus = '$status'
-            WHERE SRID = $srid";
-    if($dbconnect->query($sql) === TRUE){
-    	echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Record Updated</div>';
-       			 </script>";
-		echo "<meta http-equiv='refresh' content='2'>";
-	}
-    else{
-        echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Failed to Update</div>';
-       			 </script>";
-    }
-}     
-?>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 <script>
 $(document).ready(function(){
 

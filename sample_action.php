@@ -121,7 +121,7 @@ else{
             }
         }
         else{
-            $sql = "UPDATE PD_Sample SET SName = \"$sname\", SLocation = \"$slocation\", SDescription = \"$sdescription\", SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+            $sql = "UPDATE PD_Sample SET SName = '$sname', SLocation = '$slocation', SDescription = '$sdescription', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
             $imageresult = $dbconnect->query($sql);
             if($imageresult){
                 echo "Sample Updated";

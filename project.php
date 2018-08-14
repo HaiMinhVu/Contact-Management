@@ -89,11 +89,7 @@ $(document).ready(function(){
 		?>
         "columnDefs":[
             {
-<<<<<<< HEAD
                 "targets":[2,3,5,6,7],
-=======
-                "targets":[0,2,3,4,5,6,7,8],
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 "orderable":false,
             },
         ],
@@ -102,22 +98,14 @@ $(document).ready(function(){
         ?>
         "columnDefs":[
             {
-<<<<<<< HEAD
                 "targets":[2,3,5,6],
-=======
-                "targets":[0,2,3,4,5,6],
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 "orderable":false,
             },
         ],
         <?php
         }
         ?>
-<<<<<<< HEAD
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
-=======
-        "lengthMenu": [[15, 30, 50, -1], [15, 30, 50, "All"]]
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
     	});
  	}
 
@@ -157,40 +145,6 @@ $(document).ready(function(){
             }
         })
     });
-<<<<<<< HEAD
-=======
-           
-	              
-    $(document).on('click', '.update', function(){
-    	// display hidden fields - update has 3 more fields than add
-        var project_id = $(this).attr("id");
-        var btn_action = 'fetch_single';
-        $.ajax({
-            url:"project_action.php",
-            method:"POST",
-            data:{project_id:project_id, btn_action:btn_action},
-            dataType:"json",
-            success:function(data){
-                $('#ProjectAddModal').modal('show');
-            	$('.modal-title').html("<i class='fa fa-pencil-square-o'></i>Edit Project");
-            	$('#project_id').val(project_id);
-                $('#project_name').val(data.project_name);
-                $('#project_description').val(data.project_description);
-                $('#brand_id').val(data.brand_id);
-                $('#dept_id').val(data.dept_id);
-            	$('#datecreated').val(data.created_date);
-                $('#startdate').val(data.start_date);
-                $('#estcompletedate').val(data.est_end_date);
-            	$('#completedate').val(data.end_date);
-            	$('#project_lead').val(data.project_lead);
-            	$('#progress').val(data.progress);
-            	$('#status').val(data.status);
-                $('#action').val("Edit");
-                $('#btn_action').val("Edit");
-            }
-        })
-    });
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
     $(document).on('click', '.delete', function(){
         var project_id = $(this).attr("id"); /// this will get project id

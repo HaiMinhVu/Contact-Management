@@ -4,7 +4,6 @@ include('functions.php');
 include('header.php');
 
 ?>
-<<<<<<< HEAD
 <?php
 	$vendors = array();
 	$vendornamesql = "SELECT EName FROM PD_Entity";
@@ -14,15 +13,6 @@ include('header.php');
     }
 	
 ?>
-=======
-<style>
-#contactoptiondisplay{
- display: none;
-}
-</style>
-<span id="alert_action"></span>
-
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	<div class="panel panel-default">
 		<div class="panel-heading">
         	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -32,11 +22,7 @@ include('header.php');
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
                 <div class="row" align="right">
-<<<<<<< HEAD
                     <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button> 	
-=======
-                    <button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='vendor.php'">Back</button> 	
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 </div>
             </div>
             <div style="clear:both"></div>
@@ -57,11 +43,7 @@ include('header.php');
 				</tr>
 				<tr>
 					<td>Vendor Name <span style="color:red">*</span></td>
-<<<<<<< HEAD
 					<td><input type="text" name="ename" id="ename" class="form-control" required /><span id="hintvendorname"></span></td>
-=======
-					<td><input type="text" name="ename" id="ename" class="form-control" required /></td>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 					<td>Annual Sales</td>
             		<td><input type="number" name="annualsale" id="annualsale" class="form-control" min="0" max="9007199254740991" /></td>
             		
@@ -88,19 +70,12 @@ include('header.php');
                 </tr>
 			</table>
 			
-<<<<<<< HEAD
 		<!------------- address group ----------------->
-=======
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			<div class="form-group vendoraddress">
 			<table id="vendor_data_address" class="table table-bordered table-striped">
 				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                 	<div class="row">
-<<<<<<< HEAD
                     	<h5><label>Address Detail</label></h5>
-=======
-                    	<h5><label>Address</label></h5>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
                 	</div>
             	</div>
             	<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -110,11 +85,7 @@ include('header.php');
             	</div>
 				<tr>
 					<td width=12%>Sub Category</td>
-<<<<<<< HEAD
 					<td width=38%><input type="text" name="esubaddress[]" id="esubaddress" class="form-control" value="Primary" readonly   /></td>
-=======
-					<td width=38%><input type="text" name="esubaddress[]" id="esubaddress" class="form-control" value="Primary" readonly /></td>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 					<td width=12%>City</td>
             		<td><input type="text" name="ecity[]" id="ecity" class="form-control" /></td>
 				</tr>
@@ -139,10 +110,7 @@ include('header.php');
 			</table>
 			</div>
 
-<<<<<<< HEAD
 		<!------------- email group ----------------->
-=======
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			<div class="form-group vendoremail">
 			<table id="vendor_data_email" class="table table-bordered table-striped">
 				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -164,10 +132,7 @@ include('header.php');
 			</table>
 			</div>
 
-<<<<<<< HEAD
 		<!------------- phone group ----------------->
-=======
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			<div class="form-group vendorphone">
 			<table id="vendor_data_phone" class="table table-bordered table-striped">
 				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -182,11 +147,7 @@ include('header.php');
             	</div>
 				<tr>
 					<td width=12%>Sub Category</td>
-<<<<<<< HEAD
 					<td width=38%><input type="text" name="esubphone[]" id="esubphone" class="form-control" value="Primary" readonly  /></td>
-=======
-					<td width=38%><input type="text" name="esubphone[]" id="esubphone" class="form-control" value="Primary" readonly /></td>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 					<td width=12%>Phone <span style="color:red">*</span></td>
             		<td width=38%><input type="number" name="ephone[]" id="ephone" class="form-control" required /></td>
 				</tr>
@@ -194,13 +155,8 @@ include('header.php');
 			</div>
 
 		</form>
-<<<<<<< HEAD
 		<span id="alert_action"></span>
 		<!----------------------- ANOTHER FORM OF ADDRESS, EMAIL, PHONE ------------------------->
-=======
-	
-			<!-- ANOTHER FORM OF ADDRESS, EMAIL, PHONE -->
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			<div class="form-group vendoraddresscopy" style="display: none;">
 			<table id="vendor_data_address" class="table table-bordered table-striped" >
 				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -212,11 +168,7 @@ include('header.php');
             	</div>
 				<tr>
 					<td width=12%>Sub Category</td>
-<<<<<<< HEAD
 					<td width=38%><input type="text" name="esubaddress[]" id="esubaddresscopy" class="form-control" placeholder="Alternative Address"  onchange="check_prim_address()"  /></td>
-=======
-					<td width=38%><input type="text" name="esubaddress[]" id="esubaddress" class="form-control" placeholder="Alternative Address" /></td>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 					<td width=12%>City</td>
             		<td><input type="text" name="ecity[]" id="ecity" class="form-control" /></td>
 				</tr>
@@ -238,50 +190,10 @@ include('header.php');
 					<td><input type="text" name="epobox[]" id="epobox" class="form-control" /></td>
 					<td>Zip Code</td>
 					<td><input type="text" name="ezip[]" id="ezip" class="form-control"  /></td>
-<<<<<<< HEAD
-=======
 				</tr>
 			</table>
 			</div>
 
-			<div class="form-group vendoremailcopy" style="display: none;">
-			<table id="vendor_data_email" class="table table-bordered table-striped">
-				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	</div>
-            	<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                	<div class="row" align="right">   
-                		<button type="button" name="removeemail" id="removeemail"  class="btn btn-danger btn-xs">Remove Email</button>   		
-                	</div>
-            	</div>
-				<tr>
-					<td width=12%>Sub Category</td>
-					<td width=38%><input type="text" name="esubemail[]" id="esubemail" class="form-control" placeholder="Alternative Email" /></td>
-					<td width=12%>Email <span style="color:red">*</span></td>
-            		<td width=38%><input type="email" name="eemail[]" id="eemail" class="form-control" required /></td>
-				</tr>
-			</table>
-			</div>
-			
-			<div class="form-group vendorphonecopy" style="display: none;">
-			<table id="vendor_data_phone" class="table table-bordered table-striped">
-				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-            	</div>
-            	<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                	<div class="row" align="right">   
-                		<button type="button" name="removephone" id="removephone"  class="btn btn-danger btn-xs">Remove Phone</button>   		
-                	</div>
-            	</div>
-				<tr>
-					<td width=12%>Sub Category</td>
-					<td width=38%><input type="text" name="esubphone[]" id="esubphone" class="form-control" placeholder="Alternative Phone" /></td>
-					<td width=12%>Phone <span style="color:red">*</span></td>
-            		<td width=38%><input type="number" name="ephone[]" id="ephone" class="form-control" required /></td>
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
-				</tr>
-			</table>
-			</div>
-
-<<<<<<< HEAD
 			<div class="form-group vendoremailcopy" style="display: none;">
 			<table id="vendor_data_email" class="table table-bordered table-striped">
 				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
@@ -361,113 +273,11 @@ function check_prim_phone(){
             num[i].value = "";
         }
     }
-=======
-			<input type="submit" name="Add" id="Add" form="vendor_add_form" class="btn btn-info" value="Add" />
-            <input type="reset" name="reset" id="reset" form="vendor_add_form" class="btn btn-warning" value="Reset" />
-		</div>
-	</div>
-	
-<?php
-if(isset($_POST['Add'])){
-	$addressresult; $emailresult; $phoneresult;
-	$estatus = '';
-	if(empty($_POST['estatus'])){
-    	$estatus = 'InActive';
-    }
-	else{
-    	$estatus = 'Active';
-    }
-    $epid = (($_POST['epid'] != '') ? ($epid = $_POST['epid']) : ($epid = 0));
-    $ename = $_POST['ename'];
-    $eregisteredname = $_POST['eregisteredname'];
-    $owner = $_POST['owner'];
-    $supplier = (($_POST['supplier'] != '') ? ($supplier = $_POST['supplier']) : ($supplier = ""));
-    $oemcustomer = (($_POST['oemcustomer'] != '') ? ($oemcustomer = $_POST['oemcustomer']) : ($oemcustomer = ""));
-    $numberofworker = (($_POST['numberofworker'] != '') ? ($numberofworker = $_POST['numberofworker']) : ($numberofworker = 0));
-    $annualsale = (($_POST['annualsale'] != '') ? ($annualsale = $_POST['annualsale']) : ($annualsale = 0));
-    $productmanufactured = $_POST['productmanufactured'];
-    $eenterby = $_SESSION['acct_id'];
-    $emodifydate = date("Y-m-d h:i");
-    $emodifyby = $_SESSION['acct_id'];
-
-	$subaddressArr = $_POST['esubaddress'];
-	$address1Arr = $_POST['eaddress1'];
-	$address2Arr = $_POST['eaddress2'];
-	$cityArr = $_POST['ecity'];
-	$stateArr = $_POST['estate'];
-	$countryArr = $_POST['ecountry'];
-	$zipArr = $_POST['ezip'];
-	$poboxArr = $_POST['epobox'];
-	$subemailArr = $_POST['esubemail'];
-	$emailArr = $_POST['eemail'];
-	$subphoneArr = $_POST['esubphone'];
-	$phoneArr = $_POST['ephone'];
-
-    $query ="INSERT INTO Entity(EPID, Ename, ERegisteredName, Owner, Supplier, OEMCustomer, NumberofWorker, AnnualSales, ProductManufactured, EStatus, EEnterBy, EModifyDate, EModifyBy) VALUES ($epid, '$ename', '$eregisteredname', '$owner', '$supplier', '$oemcustomer', $numberofworker, $annualsale, '$productmanufactured', '$estatus', $eenterby, '$emodifydate', $emodifyby)";
-	if($dbconnect->query($query) == TRUE){
-    	$tmpsql = "SELECT MAX(EID) FROM Entity";
-    	$tmpresult = $dbconnect->query($tmpsql);
-    	while($erow = $tmpresult->fetch_assoc()){
-        	$maxeid = $erow['MAX(EID)'];
-    		if(!empty($address1Arr)){
-    			for($i = 0; $i < count($address1Arr); $i++){
-        			if(!empty($address1Arr[$i])){
-            			$subaddress = $subaddressArr[$i];
-            			$address['address1'] = $address1Arr[$i];
-            			$address['address2'] = $address2Arr[$i];
-            			$address['city'] = $cityArr[$i];
-            			$address['state'] = $stateArr[$i];
-            			$address['country'] = $countryArr[$i];
-            			$address['zip'] = $zipArr[$i];
-            			$address['pobox'] = $poboxArr[$i];
-                    	$jsonaddress = json_encode($address);
-            			//$jsonaddress = json_encode(array($subaddress." Address".$i => $address));
-            			$insertaddress = "INSERT INTO Entity_Attribute VALUES (null, $maxeid, 'address', '$subaddress', '$jsonaddress', 'Active' )";
-            			$addressresult = $dbconnect->query($insertaddress);
-            		}
-        		}
-    		}
-        	if(!empty($emailArr)){
-    			for($i = 0; $i < count($emailArr); $i++){
-        			if(!empty($emailArr[$i])){
-            			$subemail = $subemailArr[$i];
-            			$email = $emailArr[$i];
-            			$insertemail = "INSERT INTO Entity_Attribute VALUES (null, $maxeid, 'email', '$subemail', '$email', 'Active')";
-            			$emailresult = $dbconnect->query($insertemail);
-            		}
-        		}
-    		}
-			if(!empty($phoneArr)){
-    			for($i = 0; $i < count($phoneArr); $i++){
-        			if(!empty($phoneArr[$i])){
-            			$subphone = $subphoneArr[$i];
-            			$phone = $phoneArr[$i];
-            			$insertphone = "INSERT INTO Entity_Attribute VALUES (null, $maxeid, 'phone', '$subphone', '$phone', 'Active')";
-            			$phoneresult = $dbconnect->query($insertphone);
-                    }
-        		}
-    		}
-			
-        }
-    	if($addressresult == true && $emailresult == true && $phoneresult == true){
-        	echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">New Vendor Added</div>';
-       			 </script>";
-        }
-	}
-    else{
-        echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed:</div>';
-       			 </script>";
-    }
-	
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 }
 
 </script>
 <script>
 $(document).ready(function(){
-<<<<<<< HEAD
 	
 	// hint for vendor name
 	var vendors = <?php echo json_encode($vendors)?>;
@@ -508,19 +318,6 @@ $(document).ready(function(){
            	}
         });
     });
-=======
-
-	$("#esubaddress").change(function(){
-    	var s = this.value;
-        if(s == "Primary" || s== "primary"){
-        	alert("wrong");
-            $('#esubaddress').val('');
-        }
-        else{
-        	alert(s);
-        }
-  	});
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
 	$('#productmanufactured').selectize({
     plugins: ['remove_button'],
@@ -568,13 +365,7 @@ $(document).ready(function(){
     });
     //remove fields group
     $("body").on("click","#removeaddress",function(){ 
-<<<<<<< HEAD
         $(this).parents(".vendoraddress").remove();
-=======
-    	if(confirm("Remove Cannot Be Undo. Are You Sure???")){
-       		$(this).parents(".vendoraddress").remove();
-        }
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
     });
 
 	$("#addmoreemail").click(function(){
@@ -587,13 +378,7 @@ $(document).ready(function(){
     });
     //remove fields group
     $("body").on("click","#removeemail",function(){ 
-<<<<<<< HEAD
         $(this).parents(".vendoremail").remove();
-=======
-    	if(confirm("Remove Cannot Be Undo. Are You Sure???")){
-        	$(this).parents(".vendoremail").remove();
-        }
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
     });
 
 	$("#addmorephone").click(function(){
@@ -606,13 +391,7 @@ $(document).ready(function(){
     });
     //remove fields group
     $("body").on("click","#removephone",function(){ 
-<<<<<<< HEAD
         $(this).parents(".vendorphone").remove();
-=======
-    	if(confirm("Remove Cannot Be Undo. Are You Sure???")){
-        	$(this).parents(".vendorphone").remove();
-        }
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
     });
 
 

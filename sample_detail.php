@@ -12,11 +12,7 @@ $status; $oldname;
     </div>
     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
         <div class="row" align="right">
-<<<<<<< HEAD
 			<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.history.back()">Back</button>	
-=======
-			<button type="button" name="back" id="back" class="btn btn-success btn-xs" onclick="window.location.href='sample.php'">Back</button>	
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
         </div>
     </div>
 	<div style="clear:both"></div>
@@ -45,11 +41,7 @@ $status; $oldname;
         </div>
 		<div class="panel-body">
 			<?php
-<<<<<<< HEAD
 			$sql = "SELECT * FROM PD_Sample JOIN PD_DB_Account ON SModifyBy = AcctID WHERE SID = $sid";
-=======
-			$sql = "SELECT * FROM Sample JOIN SMDBAccounts ON SModifyBy = AcctID WHERE SID = $sid";
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			$samplefetch = $dbconnect->query($sql);
 			while($row = $samplefetch->fetch_assoc()){
 			?>
@@ -94,14 +86,9 @@ $status; $oldname;
         </div>
 		<div class="panel-body">
 			<?php
-<<<<<<< HEAD
             $recordquery = "SELECT * FROM PD_SampleRecord sr INNER JOIN PD_Entity e ON sr.EID = e.EID
 															INNER JOIN PD_DB_Account sma ON sma.AcctID = sr.SRRequestBy 
                                                             WHERE SID = $sid";
-=======
-            $recordquery = "SELECT * FROM SampleRecord sr INNER JOIN Entity e ON sr.EID = e.EID
-								INNER JOIN SMDBAccounts sma ON sma.AcctID = sr.SRRequestBy WHERE SID = $sid";
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 			$recordfetch = $dbconnect->query($recordquery);
 			while($rcrow = $recordfetch->fetch_array()){
             ?>
@@ -161,102 +148,7 @@ $status; $oldname;
             ?>
 		</div>
 	</div>
-<<<<<<< HEAD
 
-=======
-
-<?php
-if(isset($_POST['Save'])) {
-	$sname = $_POST['sname'];
-	$sdescription = $_POST['sdescription'];
-	$status = $_POST['status'];
-	$modify_date = date("Y-m-d h:i");
-	$modify_by = $_SESSION['acct_id'];
-
-	$image = $_FILES['uploadimage'];
-	$imagename = $_FILES['uploadimage']['name'];
-	$imagesize = $_FILES['uploadimage']['size'];
-	$imageerror = $_FILES['uploadimage']['error'];
-	$destination = "images/sample/";
-
-	$fileext = explode('.',$imagename);
-	$ext = strtolower(end($fileext));
-	$validext = array('jpg', 'jpeg', 'png');
-
-	if($imagename != ""){
-    	unlink($destination.$oldname);	// delete old image when uploading new one
-		if(in_array($ext,$validext)){
-    		if($imageerror === 0){
-        		if($imagesize < 5000000){
-            		$view = compress_image($image, $destination, 100);
-            		$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
-            		$imageresult = $dbconnect->query($sql);
-            		if($imageresult){
-                		echo "<script type='text/javascript'>
-            				document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
-       			 			</script>";
-                		echo "<meta http-equiv='refresh' content='1'>";
-               		}
-            	}
-        		else{
-            			echo "<script type='text/javascript'>
-            			document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">File is too big</div>';
-       			 		</script>";
-            	}
-        	}
-    		else{
-        		echo "<script type='text/javascript'>
-            		document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Error uploading image. Error Code: ".$imageerror."</div>';
-       			 	</script>";
-        	}
-    	}
-		else{
-    		echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Only allow .jpg .png files</div>';
-       			 </script>";
-    	}
-    }
-	else{
-    	$sql = "UPDATE Sample SET SName = '$sname', SDescription = '$sdescription', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
-        $imageresult = $dbconnect->query($sql);
-    	if($imageresult){
-        	echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-info"'.">Sample Updated</div>';
-       			 </script>";
-            echo "<meta http-equiv='refresh' content='2'>";
-        }
-    	else{
-        	echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Failed to Update</div>';
-       			 </script>";
-        }
-    }
-}
-?>
-
-<script type="text/javascript">
-function previewImage() {
-  var preview = document.querySelector('img');
-  var file    = document.querySelector('#uploadimage').files[0];
-  var reader  = new FileReader();
-
-  reader.addEventListener("load", function () {
-    preview.src = reader.result;
-  }, false);
-
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-}
-</script>
-
-<script>
-$(document).ready(function(){
-	$('#status').val("<?php echo $status?>");
-});
-</script>
-
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 <?php
 include ('footer.php');
 ?>

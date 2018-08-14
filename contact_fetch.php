@@ -5,11 +5,7 @@ $query = '';
 
 $output = array();
 $query .= "
-<<<<<<< HEAD
 	SELECT * FROM PD_Entity_Contact_Person ecp INNER JOIN PD_DB_Account sma ON sma.AcctID = ecp.ECEnterBy
-=======
-	SELECT * FROM Entity_Contact_Person ecp INNER JOIN SMDBAccounts sma ON sma.AcctID = ecp.ECEnterBy
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 ";
 
 if(isset($_POST["search"]["value"]))
@@ -18,19 +14,11 @@ if(isset($_POST["search"]["value"]))
 	$query .= 'OR ecp.ECEmail LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR ecp.ECPhone LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR ecp.ECFax LIKE "%'.$_POST["search"]["value"].'%" ';
-<<<<<<< HEAD
-=======
-	$query .= 'OR ecp.ECStatus LIKE "%'.$_POST["search"]["value"].'%" ';
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 	$query .= 'OR ecp.ECWebsite LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR sma.username LIKE "%'.$_POST["search"]["value"].'%" ';
 }
 
-<<<<<<< HEAD
 $query .= "ORDER BY ECPID ";
-=======
-$query .= "ORDER BY ECStatus, ECPID ";
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
 if($_POST['length'] != -1)
 {
@@ -50,14 +38,9 @@ while($row = $statement->fetch_assoc())
 	$sub_array[] = $row['ECFax'];
 	$sub_array[] = $row['ECWebsite'];
 	//$sub_array[] = '<a href="contact_detail.php?ecid='.$row["ECID"].'" class="btn btn-info btn-xs">View</a>';
-<<<<<<< HEAD
 	$sub_array[] = '<a href="contact_update.php?ecid='.$row["ECPID"].'" class="btn btn-warning btn-xs">Edit</a>
     				<button type="button" name="delete" id="'.$row["ECPID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ECStatus"].'">Delete</button>';
 	
-=======
-	$sub_array[] = '<a href="contact_update.php?ecid='.$row["ECPID"].'" class="btn btn-warning btn-xs">Edit</a>';
-	$sub_array[] = '<button type="button" name="delete" id="'.$row["ECPID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["ECStatus"].'">Delete</button>';
->>>>>>> 3eb9be92b01e1ad40c96a52ddee23ba0b0de8a23
 
 	$data[] = $sub_array;
 }
