@@ -37,7 +37,7 @@ include('header.php');
 									<th>Sample Name</th>
 									<th>Description</th>
 									<th>Image</th>
-									<th>Enter By</th>
+									<th>Location</th>
 									<th>Status</th>
 									<?php
 									if(($_SESSION['type'] == "Admin") || $_SESSION['type'] == "Manager"){

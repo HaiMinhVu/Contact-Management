@@ -43,7 +43,7 @@ $status; $type; $eid; $sid;
                         		<option value="Payment">Payment</option>
                        	</select></td>
             		<td width=10%>Date Request</td>
-            		<td><input type="date" name="daterequested" id="daterequested" class="form-control" value="<?php echo date('Y-m-d', strtotime($row['DateRequested'])) ;?>" required /></td>
+            		<td><?php echo date('Y-m-d', strtotime($row['DateRequested'])) ;?></td>
 				</tr>
 				<tr>
 					<td width=10%>Sample</td>
@@ -68,26 +68,26 @@ $status; $type; $eid; $sid;
 				</tr>
             	<tr>
 					<td width=10%>Quantity</td>
-					<td width=40%><input type="text" name="quantity" id="quantity" value="<?php echo $row['Quantity'];?>" class="form-control"/></td>
+					<td width=40%><input type="number" name="quantity" id="quantity" value="<?php echo $row['Quantity'];?>" class="form-control" pattern="[0-9]+" required/></td>
             		<td width=10%>Payment Term</td>
             		<td><input type="text" name="paymentterm" id="paymentterm" value="<?php echo $row['PaymentTerms'];?>" /></td>
 				</tr>
             	<tr>
 					<td width=10%>Used</td>
-					<td width=40%><input type="text" name="used" id="used" value="<?php echo $row['Used'];?>" class="form-control"/></td>
+					<td width=40%><input type="number" name="used" id="used" value="<?php echo $row['Used'];?>" class="form-control" pattern="[0-9]+"/></td>
             		<td width=10%>Warranty Term</td>
             		<td><input type="text" name="warrantyterm" id="warrantyterm" value="<?php echo $row['WarrantyTerms'];?>" /></td>
 				</tr>
             	<tr>
             		
 					<td width=10%>Available</td>
-					<td width=40%><input type="text" name="available" id="available" value="<?php echo $row['Available'];?>" class="form-control"/></td>
+					<td width=40%><input type="number" name="available" id="available" value="<?php echo $row['Available'];?>" class="form-control" pattern="[0-9]+"/></td>
             		<td width=10%>Shipping Term</td>
             		<td><input type="text" name="shippingterm" id="shippingterm" value="<?php echo $row['ShippingTerms'];?>" /></td>
 				</tr>
             	<tr>
             		<td width=10%>Price/Unit</td>
-					<td width=40%><input type="text" name="priceperunit" id="priceperunit" value="<?php echo $row['PriceperUnit'];?>" class="form-control"/></td>
+					<td width=40%><input type="number" name="priceperunit" id="priceperunit" value="<?php echo $row['PriceperUnit'];?>" class="form-control" pattern="[0-9.]+"/></td>
             		
             		<td>Enter By</td>
             		<td><?php echo $row['username'];?></td>
@@ -113,7 +113,7 @@ $status; $type; $eid; $sid;
             <div style="text-align:center">
             	<span id="alert_action"></span>
             	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="Reset" id="Reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
             </div>
             
             </form>
@@ -123,24 +123,21 @@ $status; $type; $eid; $sid;
 <script>
 $(document).ready(function(){
 
-	$('#Save').click(function(){
-		$('#samplerecord_update_form').submit(function(event){
-        	event.preventDefault();
-    		var action="save_update";
-        	var srid = "<?php echo $srid?>"
-        	var data = $(this).serialize()+"&action="+action+"&srid="+srid;
-        	$.ajax({
-            	type:"post",
-            	url:"samplerecord_action.php",
-            	data:data,
-            	success: function(mess){
-                	$('#alert_action').fadeIn().html(mess);
-                	window.setTimeout(function(){location.reload()},2000)
-            	}
-        	});
-    	});
-	});
-
+	$('#samplerecord_update_form').submit(function(event){
+       	event.preventDefault();
+    	var action="save_update";
+       	var srid = "<?php echo $srid?>"
+       	var data = $(this).serialize()+"&action="+action+"&srid="+srid;
+       	$.ajax({
+           	type:"post",
+           	url:"samplerecord_action.php",
+           	data:data,
+           	success: function(mess){
+               	$('#alert_action').fadeIn().html(mess);
+               	window.setTimeout(function(){location.reload()},2000)
+           	}
+       	});
+    });
 
 	$('#status').val("<?php echo $status?>");
 	$('#type').val("<?php echo $type?>");

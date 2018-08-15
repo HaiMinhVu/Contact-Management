@@ -11,7 +11,7 @@ $srid; $oldname;
 		<div class="panel-heading">
         	<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
             	<div class="row">
-                	<h3 class="panel-title"><font color="#2775F5">Review Update</font></h3>
+                	<h3 class="panel-title">Review Update</h3>
                 </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -23,7 +23,7 @@ $srid; $oldname;
         </div>
 		<div class="panel-body">
 			<?php
-			$sql = "SELECT * FROM PD_SampleReview JOIN SMDBAccounts ON ReviewBy = AcctID WHERE SReID = $sreid";
+			$sql = "SELECT * FROM PD_SampleReview JOIN PD_DB_Account ON ReviewBy = AcctID WHERE SReID = $sreid";
 			$samplefetch = $dbconnect->query($sql);
 			while($row = $samplefetch->fetch_assoc()){
             	$srid = $row['SRID'];
@@ -62,7 +62,7 @@ $srid; $oldname;
             ?>
             <div style="text-align:center">
 				<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
             </div>
             </form>
 		</div>

@@ -4,7 +4,7 @@ include('functions.php');
 include('header.php');
 $srid = $_GET['srid'];
 ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <span id="alert_action"></span>
 
 	<div class="panel panel-default">
@@ -43,7 +43,7 @@ $srid = $_GET['srid'];
 			</table>
 			<div style="text-align:center">
 				<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
-            	<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
 			</div>
 			</form>
 		</div>
@@ -66,7 +66,8 @@ function previewImage() {
 </script>
 <script>
 $(document).ready(function(){
-	$('#srid').val("<?php echo $srid?>");
+	var srid = <?php echo $srid?>;
+	$('#srid').selectpicker('val', srid);
 
 	$('#samplereview_add_form').submit(function(event){
         event.preventDefault();

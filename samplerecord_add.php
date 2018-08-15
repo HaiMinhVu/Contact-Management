@@ -2,9 +2,7 @@
 include('dbconnect.php');
 include('functions.php');
 include('header.php');
-
 ?>
-
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -59,27 +57,27 @@ include('header.php');
 				</tr>
             	<tr>
 					<td width=10%>Quantity</td>
-					<td width=40%><input type="text" name="quantity" id="quantity" value="<?php echo $row['Quantity'];?>" class="form-control" required /></td>
+					<td width=40%><input type="number" name="quantity" id="quantity" class="form-control" pattern="[0-9]+" placeholder="Number 0-9 Only" required /></td>
             		<td width=10%>Payment Term</td>
-            		<td><input type="text" name="paymentterm" id="paymentterm" value="<?php echo $row['PaymentTerms'];?>" /></td>
+            		<td><input type="text" name="paymentterm" id="paymentterm" /></td>
 				</tr>
             	<tr>
 					<td width=10%>Price/Unit</td>
-					<td width=40%><input type="text" name="priceperunit" id="priceperunit" value="<?php echo $row['PriceperUnit'];?>" class="form-control" /></td>
+					<td width=40%><input type="number" name="priceperunit" id="priceperunit" class="form-control" pattern="[0-9.]+" placeholder="500.00" /></td>
             		<td width=10%>Warranty Term</td>
-            		<td><input type="text" name="warrantyterm" id="warrantyterm" value="<?php echo $row['WarrantyTerms'];?>" /></td>
+            		<td><input type="text" name="warrantyterm" id="warrantyterm" /></td>
 				</tr>
             	<tr>
 					<td width=10%></td>
 					<td width=40%></td>
             		<td width=10%>Shipping Term</td>
-            		<td><input type="text" name="shippingterm" id="shippingterm" value="<?php echo $row['ShippingTerms'];?>" /></td>
+            		<td><input type="text" name="shippingterm" id="shippingterm" /></td>
 				</tr>
 			</table>
 			<div style="text-align:center">
 				<span id="alert_action"></span>
             	<input type="submit" name="Add" id="Add" class="btn btn-info" value="Add" />
-            	<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()" />
 			</div>
             </form>
 		</div>

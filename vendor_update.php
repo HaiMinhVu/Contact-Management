@@ -354,7 +354,7 @@ $eaidphone = array();
             <div style="text-align:center">
             	<span id="alert_action"></span>
             	<input type="submit" name="Save" id="Save" form="vendor_update_form" class="btn btn-info" value="Save" />
-            	<button  class="btn btn-warning" onclick="reloadfunction()">Reset</button>
+            	<input type="button" name="Reset" id="Reset"  class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
             </div>
 		</div>
 	</div>
@@ -440,24 +440,29 @@ function reloadfunction() {
 }
 
 $(document).ready(function(){
+
+	$('#ecity, #eaddress1, #estate, #eaddress2, #ecountry, #epobox, #ezip, #ecitycopy, #eaddress1copy, #estatecopy, #eaddress2copy, #ecountrycopy, #epoboxcopy, #ezipcopy').keypress(function(e){
+    	if(e.which == 39 || e.which == 34 || e.which == 92){
+    		return false;
+    	}
+  	});
 	
-	$('#Save').click(function(){
-		$('#vendor_update_form').submit(function(event){
-        	event.preventDefault();
-    		var action="save_update";
-        	var eid = "<?php print_r($eid);?>";
-        	var data = $(this).serialize()+"&action="+action+"&eid="+eid;
-        	$.ajax({
-            	type:"post",
-            	url:"vendor_action.php",
-            	data:data,
-            	success: function(mess){
-                	$('#alert_action').fadeIn().html('<div class="alert alert-info">'+mess+'</div>');
-                	window.setTimeout(function(){location.reload()},2000)
-            	}
-        	});
-    	});
-	});
+	$('#vendor_update_form').submit(function(event){
+       	event.preventDefault();
+    	var action="save_update";
+       	var eid = "<?php print_r($eid);?>";
+       	var data = $(this).serialize()+"&action="+action+"&eid="+eid;
+       	$.ajax({
+           	type:"post",
+           	url:"vendor_action.php",
+           	data:data,
+           	success: function(mess){
+               	$('#alert_action').fadeIn().html('<div class="alert alert-info">'+mess+'</div>');
+               	window.setTimeout(function(){location.reload()},2000)
+           	}
+       	});
+    });
+
 
 	var estatus = "<?php echo $status; ?>";
 	if(estatus == "Active"){
@@ -509,6 +514,11 @@ $(document).ready(function(){
         if($('body').find('.vendoraddress').length < maxGroup){
             var fieldHTML = '<div class="form-group vendoraddress">'+$(".vendoraddresscopy").html()+'</div>';
             $('body').find('.vendoraddress:last').after(fieldHTML);
+        	$('#ecitycopy, #eaddress1copy, #estatecopy, #eaddress2copy, #ecountrycopy, #epoboxcopy, #ezipcopy').keypress(function(e){
+    	if(e.which == 39 || e.which == 34 || e.which == 92){
+    		return false;
+    	}
+  	});
         }else{
             alert('Maximum 5 Addresses are allowed.');
         }

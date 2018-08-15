@@ -23,7 +23,7 @@ if($_POST['action'] == "add") {
     		if($imageerror == 0){
         		if($imagesize < 5000000){
             		$returnimage = compress_image($image, $destination, 100);
-            		$imagesql = "INSERT INTO PD_SampleReview VALUES(null, $srid, '$returnimage', '$srecomment', $modify_by, '$modify_date')";
+            		$imagesql = "INSERT INTO PD_SampleReview VALUES(null, $srid, '$returnimage', \"$srecomment\", $modify_by, '$modify_date')";
             		$imageresult = $dbconnect->query($imagesql);
             		if($imageresult){
                 		echo "New Review Added";
@@ -77,7 +77,7 @@ if($_POST['action'] == "save") {
     		if($imageerror === 0){
         		if($imagesize < 5000000){
             		$view = compress_image($image, $destination, 100);
-            		$sql = "UPDATE PD_SampleReview SET SRID = $srid, SReComments = '$srecomment', SReImages = '$view', ReviewDate = '$modify_date', ReviewBy = $modify_by WHERE SReID = $sreid";
+            		$sql = "UPDATE PD_SampleReview SET SRID = $srid, SReComments = \"$srecomment\", SReImages = '$view', ReviewDate = '$modify_date', ReviewBy = $modify_by WHERE SReID = $sreid";
             		$imageresult = $dbconnect->query($sql);
             		if($imageresult){
                 		echo "Review Updated";
@@ -99,7 +99,7 @@ if($_POST['action'] == "save") {
     	}
     }
 	else{
-    	$sql = "UPDATE PD_SampleReview SET SRID = $srid, SReComments = '$srecomment', ReviewDate = '$modify_date', ReviewBy = $modify_by WHERE SReID = $sreid";
+    	$sql = "UPDATE PD_SampleReview SET SRID = $srid, SReComments = \"$srecomment\", ReviewDate = '$modify_date', ReviewBy = $modify_by WHERE SReID = $sreid";
         $imageresult = $dbconnect->query($sql);
     	if($imageresult){
         	echo "Sample Updated";

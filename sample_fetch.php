@@ -8,13 +8,13 @@ $query = '';
 
 $output = array();
 $query .= "
-	SELECT * FROM PD_Sample s INNER JOIN PD_DB_Account sma ON sma.AcctID = s.SEnterBy
+	SELECT * FROM PD_Sample s 
 ";
 
 if(isset($_POST["search"]["value"]))
 {
 	$query .= 'WHERE SName LIKE "%'.$_POST["search"]["value"].'%" ';
-	$query .= 'OR username LIKE "%'.$_POST["search"]["value"].'%" ';
+	$query .= 'OR SLocation LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR SDescription LIKE "%'.$_POST["search"]["value"].'%" ';
 	$query .= 'OR SStatus LIKE "%'.$_POST["search"]["value"].'%" ';
 }
@@ -55,7 +55,7 @@ while($row = $statement->fetch_assoc())
 	$sub_array[] = '<a href="sample_detail.php?sid='.$row["SID"].'">'.$row['SName'].'</a>';
 	$sub_array[] = $row['SDescription'];
 	$sub_array[] = '<a href="sample_image.php?id='.$row['SID'].'" target="_blank"><img src="images/sample/'. $row['SImages'].'" height="30" width="30"></a>';
-	$sub_array[] = $row['username'];
+	$sub_array[] = $row['SLocation'];
 	$sub_array[] = $status;
 	$sub_array[] = '<a href="sample_update.php?sid='.$row["SID"].'" class="btn btn-warning btn-xs">Edit</a> 
     				<button type="button" name="delete" id="'.$row["SID"].'" class="btn btn-danger btn-xs delete" data-status="'.$row["SStatus"].'">Delete</button>';

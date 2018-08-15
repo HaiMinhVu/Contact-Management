@@ -167,10 +167,10 @@ background-color:#5fa2db;
 		<nav class="main-menu">
             <ul>
                 <li><a href="index.php"><i class="fa fa-home fa-2x"></i><span class="nav-text">Dashboard</span></a></li>
-                <li><a href="vendor.php"><i class="fa fa-building"></i><span class="nav-text">Vendors</span></a></li>
                 <li><a href="project.php"><i class="fa fa-briefcase"></i><span class="nav-text">Projects</span></a></li>
                 <li><a href="sample.php"><i class="fa fa-inbox"></i><span class="nav-text">Samples</span></a></li>
                 <li><a href="samplerecord.php"><i class="fa fa-ticket"></i><span class="nav-text">Request Records</span></a></li>
+                <li><a href="vendor.php"><i class="fa fa-building"></i><span class="nav-text">Vendors</span></a></li>
                 <li><a href="vendorcontact.php"><i class="fa fa-user"></i><span class="nav-text">Contacts</span></a></li>
             </ul>
         </nav>

@@ -74,7 +74,7 @@ include('header.php');
 				&nbsp;
             	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />	
                 &nbsp;
-            	<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
 			</div>
 			</form>
 		</div>

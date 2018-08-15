@@ -11,7 +11,6 @@ include('header.php');
 	while($row = $vendornameresult->fetch_assoc()){
     	array_push($vendors, $row['EName']);
     }
-	
 ?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -234,7 +233,7 @@ include('header.php');
 				&nbsp;
 				<input type="submit" name="Save" id="Save" form="vendor_add_form" class="btn btn-info" value="Save" />
                 &nbsp;
-            	<input type="reset" name="reset" id="reset" form="vendor_add_form" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" form="vendor_add_form" class="btn btn-warning" value="Reset" onClick="window.location.reload()" />
 			</div>
 		</div>
 	</div>

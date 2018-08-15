@@ -42,7 +42,7 @@ else{
     	$modify_by = $_SESSION['acct_id'];
     	$sampleid = $_POST['sampleid'];
 
-    	$sql = "INSERT INTO PD_Project VALUES(null, '$projectname', '$projectdescription', '$date_created', '$start_date', '$est_end_date', '$end_date', $modify_by, $project_lead, '$modify_date', $modify_by, '$project_progress', '$status')";
+    	$sql = "INSERT INTO PD_Project VALUES(null, \"$projectname\", \"$projectdescription\", '$date_created', '$start_date', '$est_end_date', '$end_date', $modify_by, $project_lead, '$modify_date', $modify_by, '$project_progress', '$status')";
         if($dbconnect->query($sql) == TRUE){
         	$maxproid;
         	$tmpsql = "SELECT MAX(ProjectID) FROM PD_Project";
@@ -91,13 +91,13 @@ else{
     	$modify_date = date('Y-m-d H:i');
     	$modify_by = $_SESSION['acct_id'];
         if($project_progress == "Complete"){
-            $end_date = date('Y-m-d H:i');
+            $end_date = date('Y-m-d');
         }
         else{
             $end_date = (($_POST['completedate'] != '') ? ($end_date = $_POST['completedate']) : ($end_date = "1969-12-31"));
         }
     	
-    	$sql = "UPDATE PD_Project SET ProjectName = '$projectname', ProjectDescription = '$projectdescription', StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ModifyDate = '$modify_date', ModifyBy = $modify_by, ProjectStatus = '$status', ProjectLead = '$project_lead'
+    	$sql = "UPDATE PD_Project SET ProjectName = \"$projectname\", ProjectDescription = \"$projectdescription\", StartDate = '$start_date', EstEndDate = '$est_end_date', EndDate = '$end_date', Progress = '$project_progress', ModifyDate = '$modify_date', ModifyBy = $modify_by, ProjectStatus = '$status', ProjectLead = '$project_lead'
                 WHERE ProjectID = $projectid";
 
         $sampleid = $_POST['sampleid'];
@@ -134,7 +134,7 @@ else{
     	$manager = (($_POST['manager'] != NULL) ? ($manager = $_POST['manager']) : ($manager = 'NULL'));
     	
     	$worktype = $_POST['worktype'];
-    	$insertlead = "INSERT INTO PD_Employee VALUES (null, '$employeename', '$employeetitle', $manager, '$worktype', 'Active')";
+    	$insertlead = "INSERT INTO PD_Employee VALUES (null, \"$employeename\", \"$employeetitle\", $manager, \"$worktype\", 'Active')";
     	if($dbconnect->query($insertlead)){
         	echo "New Employee Added";
         }

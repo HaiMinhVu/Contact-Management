@@ -43,7 +43,7 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 			<table id="project_data" class="table table-bordered table-striped" >
 				<tr>
 					<td width=20%>Project Name</td>
-					<td><input type="text" name="project_name" id="project_name" value="<?php echo $row['ProjectName'];?>" class="form-control"/></td>
+					<td><input type="text" name="project_name" id="project_name" value="<?php echo $row['ProjectName'];?>" class="form-control" required/></td>
 				</tr>
 				<tr>
 					<td >Description</td>
@@ -72,10 +72,11 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 				</tr>
                 <tr>
                     <td >Project Lead</td>
-                    <td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" >
+                    <td><select name="project_lead" id="project_lead" class="selectpicker" data-live-search="true" required>
                         <option value="">Select Leader</option>
                         <?php echo employee_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+            		<button type="button" name="addleader" id="addleader" class="btn btn-success btn-xs" >Add</button> </td>
                 </tr>
             	<tr>
 					<td>Progress</td>
@@ -102,9 +103,10 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
 				</tr>
                 <tr>
 					<td>Select Sample</td>
-            		<td><select name="sampleid[]" id="sampleid" multiple class="selectpicker" data-live-search="true" data-width="fit" >
+            		<td><select name="sampleid[]" id="sampleid" multiple class="selectpicker" data-live-search="true" data-width="fit" required>
                     	<?php echo sample_option_list($dbconnect);?>
-                    </select></td>
+                    </select>
+                    <button type="button" name="addsample" id="addsample" class="btn btn-success btn-xs" onclick="window.location.href='sample_add.php'">Add</button></td></td>
 				</tr>
                 <tr>
 					<td>Status</td>
@@ -117,11 +119,50 @@ while($sidrow = $p_require_s_result->fetch_assoc()){
             <div style="text-align:center">
             	<span id="alert_action"></span>
             	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            	<input type="submit" name="Reset" id="Reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="Reset" id="Reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
             </div>
             </form>
 		</div>
 	</div>
+           
+<!------------------------ Add Employee Modal ------------------------------>
+    <div id="projectlead_add" class="modal fade">
+    	<div class="modal-dialog">
+    		<form method="post" id="projectlead_form">
+    			<div class="modal-content">
+    				<div class="modal-header">
+    					<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title"><i class="fa fa-plus"></i>Employee</h4>
+    				</div>
+    				<div class="modal-body">
+    					<div class="form-group">
+    						<label>Employee Name</label>
+							<input type="text" name="employeename" id="employeename" class="form-control" required />
+    					</div>
+    					<div class="form-group">
+							<label>Employee Title</label>
+							<input type="text" name="employeetitle" id="employeetitle" class="form-control"  required />
+						</div>
+                        <div class="form-group">
+							<label>Manager</label>
+							<select name="manager" id="manager" class="selectpicker" data-width="fit" data-live-search="true" >
+                    			<option value="">Select Leader</option>
+                    			<?php echo employee_option_list($dbconnect);?>
+                    		</select>
+						</div>
+                         <div class="form-group">
+							<label>Work Type</label>
+							<input type="text" name="worktype" id="worktype" class="form-control" placeholder="Full Time / Part Time" required/>
+						</div>
+    				</div>
+                    <div class="modal-footer">
+                        <input type="submit" name="addlead" id="addlead" class="btn btn-info" value="Add" />
+    					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+    			</div>
+    		</form>
+    	</div>
+    </div>
             
 <script>
            
@@ -139,17 +180,20 @@ $(document).ready(function(){
 	$('#sampleid').val([<?php foreach($sidarray as $id){echo '"'.$id.'",'; } ?>]);
             
     var progress = "<?php echo $progress;?>";
-    // if project is completed => all fields are readonly
+    // if project is completed => all fields are disabled
     if (progress == "Complete"){
-    	$('#project_data').find("input, textarea").prop('readonly', true);
+    	$('#project_data').find("input, textarea, select, button").prop('disabled', true);
+    	$('#Save, #Reset').prop('disabled', true);
     	$('#reopen').css({"display": "block"});
     }
-    // reopen the project => all field can be edited
+    // reopen the project => all fields turn to be editable
 	$('#reopenclick').click(function(){
         if(confirm("Want to reopen this project ???")){
-    	   $('#project_data').find("input, textarea, select").prop('readonly', false);
-    	   $('#reopen').css({"display": "none"});
-           var today = new Date();
+    	   	$('#project_data').find("input, textarea, select, button").prop('disabled', false);
+           	$('#project_data').find("select").selectpicker('refresh');
+           	$('#Save, #Reset').prop('disabled', false);
+    	   	$('#reopen').css({"display": "none"});
+           	var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth()+1;
             var yyyy = today.getFullYear();
@@ -160,30 +204,51 @@ $(document).ready(function(){
                 mm = '0'+mm
             } 
             today = yyyy+'-'+mm+'-'+dd;
-           $('#startdate').val(today);
-           $('#estcompletedate').val("");
-           $('#completedate').val("");
-           $('#progress').selectpicker("val","InComplete");
+           	$('#startdate').val(today);
+           	$('#estcompletedate').val("");
+           	$('#completedate').val("");
+           	$('#progress').selectpicker("val","InComplete");
         }
     });
-            
-	$('#Save').click(function(){
-		$('#project_update_form').submit(function(event){
-        	event.preventDefault();
-    		var action="save_update";
-        	var projectid = "<?php echo $projectid?>"
-        	var data = $(this).serialize()+"&action="+action+"&projectid="+projectid;
-        	$.ajax({
-            	type:"post",
-            	url:"project_action.php",
-            	data:data,
-            	success: function(mess){
-                	$('#alert_action').fadeIn().html('<div class="alert alert-info">'+mess+'</div>');
-                	window.setTimeout(function(){location.reload()},2000)
-            	}
-        	});
-    	});
+    
+	$('#project_update_form').submit(function(event){
+       	event.preventDefault();
+    	var action="save_update";
+       	var projectid = "<?php echo $projectid?>"
+       	var data = $(this).serialize()+"&action="+action+"&projectid="+projectid;
+       	$.ajax({
+           	type:"post",
+           	url:"project_action.php",
+           	data:data,
+           	success: function(mess){
+               	$('#alert_action').fadeIn().html('<div class="alert alert-info">'+mess+'</div>');
+               	window.setTimeout(function(){location.reload()},2000)
+           	}
+       	});
+    });
+
+                        
+	$('#addleader').click(function(){
+		$('#projectlead_add').modal('show');
+		$('#projectlead_form')[0].reset();
+		$('.modal-title').html("Add Employee");
 	});
+                        
+    $('#projectlead_form').submit(function(event){
+        event.preventDefault();
+    	var action = "addlead";
+        var data = $(this).serialize()+"&action="+action;
+        $.ajax({
+           	type:"post",
+           	url:"project_action.php",
+           	data:data,
+           	success: function(mess){
+               	$('#alert_action').fadeIn().html('<div class="alert alert-info">'+mess+'</div>');
+            	$('#projectlead_add').modal('hide');
+            	window.setTimeout(function(){location.reload()},1000)
+           	}
+        });
+    });
 
 });
 </script>

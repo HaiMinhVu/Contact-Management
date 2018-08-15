@@ -24,10 +24,16 @@ if(isset($_POST['btn_action']))
 }
 else{
     if($_POST['action'] == "add") {
+        $status = '';
+        if(empty($_POST['sstatus'])){
+            $status = 'InActive';
+        }
+        else{
+            $status = 'Active';
+        }
         $sname = $_POST['sname'];
         $sdescription = $_POST['sdescription'];
         $slocation = $_POST['slocation'];
-        $status = $_POST['status'];
         $modify_date = date("Y-m-d h:i");
         $modify_by = $_SESSION['acct_id'];
 
@@ -47,11 +53,14 @@ else{
                 if($imageerror === 0){
                     if($imagesize < 5000000){
                         $view = compress_image($image, $destination, 100);
-                        $imagesql = "INSERT INTO PD_Sample VALUES(null, '$sname', '$sdescription', '$view', '$slocation', $modify_by, '$status', '$modify_date', $modify_by)";
+                        $imagesql = "INSERT INTO PD_Sample VALUES(null, \"$sname\", \"$sdescription\", '$view', \"$slocation\", $modify_by, '$status', '$modify_date', $modify_by)";
                         $imageresult = $dbconnect->query($imagesql);
                         if($imageresult){
                             echo "New Sample Added";
                         }
+                    	else{
+            				echo "Failed to Add Sample";
+            			}
                     }
                     else{
                         echo "File is too big";
@@ -66,10 +75,13 @@ else{
             }
         }
         else{
-            $imagesql = "INSERT INTO PD_Sample VALUES(null, '$sname', '$sdescription', null, '$slocation', $modify_by, '$status', '$modify_date', $modify_by)";
+            $imagesql = "INSERT INTO PD_Sample VALUES(null, \"$sname\", \"$sdescription\", null, \"$slocation\", $modify_by, '$status', '$modify_date', $modify_by)";
             $imageresult = $dbconnect->query($imagesql);
             if($imageresult){
                 echo "New Sample Added";
+            }
+        	else{
+            	echo "Failed to Add Sample";
             }
         }
     }
@@ -79,7 +91,13 @@ else{
         $sname = $_POST['sname'];
         $sdescription = $_POST['sdescription'];
     	$slocation = $_POST['slocation'];
-        $status = $_POST['status'];
+        $status = '';
+        if(empty($_POST['sstatus'])){
+            $status = 'InActive';
+        }
+        else{
+            $status = 'Active';
+        }
         $modify_date = date("Y-m-d h:i");
         $modify_by = $_SESSION['acct_id'];
 
@@ -99,7 +117,7 @@ else{
                 if($imageerror === 0){
                     if($imagesize < 5000000){
                         $view = compress_image($image, $destination, 100);
-                        $sql = "UPDATE PD_Sample SET SName = '$sname', SLocation = '$slocation', SDescription = '$sdescription', SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+                        $sql = "UPDATE PD_Sample SET SName = \"$sname\", SLocation = \"$slocation\", SDescription = \"sdescription\", SImages = '$view', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
                         $imageresult = $dbconnect->query($sql);
                         if($imageresult){
                             echo "Sample Updated";
@@ -121,7 +139,7 @@ else{
             }
         }
         else{
-            $sql = "UPDATE PD_Sample SET SName = '$sname', SLocation = '$slocation', SDescription = '$sdescription', SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
+            $sql = "UPDATE PD_Sample SET SName = \"$sname\", SLocation = \"$slocation\", SDescription = \"$sdescription\", SModifyDate = '$modify_date', SModifyBy = $modify_by, SStatus = '$status' WHERE SID = $sid";
             $imageresult = $dbconnect->query($sql);
             if($imageresult){
                 echo "Sample Updated";

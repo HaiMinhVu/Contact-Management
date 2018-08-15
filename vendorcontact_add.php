@@ -34,11 +34,11 @@ include('header.php');
 				</tr>
             	<tr>
 					<td width=20%>Phone</td>
-					<td><input type="number" name="ecphone" id="ecphone" class="form-control" placeholder="123-456-7890" required /></td>
+					<td><input type="number" name="ecphone" id="ecphone" class="form-control" placeholder="1234567890" required /></td>
 				</tr>
             	<tr>
 					<td width=20%>Fax</td>
-					<td><input type="number" name="ecfax" id="ecfax" class="form-control" placeholder="123-456-7890" /></td>
+					<td><input type="number" name="ecfax" id="ecfax" class="form-control" placeholder="1234567890" /></td>
 				</tr>
             	<tr>
 					<td width=20%>Website</td>
@@ -101,7 +101,7 @@ include('header.php');
 				<span id="alert_action"></span>
             	<input type="submit" name="Add" id="Add" class="btn btn-success" value="Save & Add More" />
 				<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            	<input type="reset" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()" />
 			</div>
 			</form>
 		</div>

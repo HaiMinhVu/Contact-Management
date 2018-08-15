@@ -8,7 +8,6 @@ $status;
 $priority;
 $relateEID;
 ?>
-<span id="alert_action"></span>
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -146,62 +145,13 @@ $relateEID;
             }
             ?>
             <div style="text-align:center">
+            	<span id="alert_action"></span>
             	<input type="submit" name="Save" id="Save" class="btn btn-info" value="Save" />
-            	<input type="submit" name="reset" id="reset" class="btn btn-warning" value="Reset" />
+            	<input type="button" name="reset" id="reset" class="btn btn-warning" value="Reset" onClick="window.location.reload()"/>
             </div>
             </form>
 		</div>
 	</div>
-
-<?php
-if(isset($_POST['Save'])){
-	
-	$ecname = $_POST['ecname'];
-	$ecemail = $_POST['ecemail'];
-	$ecphone = $_POST['ecphone'];
-	$ecfax = $_POST['ecfax'];
-	$ecwebsite = $_POST['ecwebsite'];
-	$ecaddress1 = $_POST['ecaddress1'];
-	$ecaddress2 = $_POST['ecaddress2'];
-	$eccity = $_POST['eccity'];
-	$ecstate = $_POST['ecstate'];
-	$eczip = $_POST['eczip'];
-	$ecstatus = $_POST['status'];
-	$eccountry = $_POST['eccountry'];
-	$modify_date = date('Y-m-d H:i');
-	$modify_by = $_SESSION['acct_id'];
-
-	$eid = $_POST['eid'];
-    $erctitle = $_POST['erctitle'];
-    $priority = $_POST['priority'];
-	$ercstatus;
-	if(empty($_POST['ecrstatus'])){
-    	$ercstatus = 'InActive';
-    }
-	else{
-    	$ercstatus = 'Active';
-    }
-
-	// query update contact
-	$sql = "UPDATE PD_Entity_Contact_Person SET ECname = '$ecname', ECEmail = '$ecemail', ECPhone = '$ecphone', ECFax = '$ecfax', ECWebsite = '$ecwebsite', ECAddress1 = '$ecaddress1', ECAddress2 = '$ecaddress2', ECCity = '$eccity', ECState = '$ecstate', ECZip = '$eczip', ECCountry = '$eccountry', ECModifyDate = '$modify_date', ECModifyBy = $modify_by
-            WHERE ECPID = $ecid";
-
-	// query update relationship
-	$relationupdatesql = "UPDATE PD_Entity_RelateTo_Contact SET EID = $eid, ECID = $ecid, Priority = '$priority', ERCTitle = '$erctitle', ERCStatus = '$ercstatus', ERCModifyDate = '$modify_date', ERCModifyBy = $modify_by WHERE ECID = $ecid AND EID = $relateEID";
-
-    if(($dbconnect->query($sql) === TRUE) && ($dbconnect->query($relationupdatesql) === TRUE)){
-		echo "<script type='text/javascript'>
-            	alert('Contact Updated');
-                window.location.href = 'vendorcontact.php';
-       			 </script>";
-	}
-    else{
-        echo "<script type='text/javascript'>
-            	document.getElementById('alert_action').innerHTML = '<div class=".'"alert alert-danger"'.">Query Failed: ".$sql."</div>';
-       			 </script>";
-    }
-}     
-?>
 
 <script>
 $(document).ready(function(){
@@ -217,6 +167,24 @@ $(document).ready(function(){
 	
 	$('#eid').val("<?php echo $relateEID; ?>");
 	$('#priority').val("<?php echo $priority?>");
+                
+	$('#contact_update_form').submit(function(event){
+       	event.preventDefault();
+    	var action="save_update";
+       	var ecid = "<?php echo $ecid;?>";
+       	var relateEID = "<?php echo $relateEID; ?>";
+       	var data = $(this).serialize()+"&action="+action+"&ecid="+ecid+"&relateEID="+relateEID;
+       	$.ajax({
+           	type:"post",
+           	url:"vendorcontact_action.php",
+           	data:data,
+           	success: function(mess){
+               	$('#alert_action').fadeIn().html('<div class="alert alert-info">'+mess+'</div>');
+               	window.setTimeout(function(){location.reload()},2000)
+           	}
+       	});
+    });
+
 });
 </script>
 

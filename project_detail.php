@@ -9,7 +9,7 @@ $eidarray = array();
     
     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
         <div class="row">
-            <h4>View Project Detail</h4> 
+            <h4><label>View Project Detail</label></h4> 
         </div>
     </div>
     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -19,11 +19,12 @@ $eidarray = array();
     </div>
     <div style="clear:both"></div>
 
+<!--------------------- Project general detail ---------------------->
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                 <div class="row">
-                    <h3 class="panel-title">Project Info</h3>
+                    <h3 class="panel-title"><label>Project Info</label></h3>
                 </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -115,11 +116,12 @@ $eidarray = array();
         </div>
     </div>
 
+<!--------------------- All requested sample for this project ---------------------->
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                 <div class="row">
-                    <h3 class="panel-title">Requested Samples</h3>
+                    <h3 class="panel-title"><label>Requested Samples</label></h3>
                 </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -207,11 +209,12 @@ $eidarray = array();
         </div>
     </div>
 
+<!--------------------- All vendor contact related to the requests ---------------------->
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                 <div class="row">
-                    <h3 class="panel-title">Vendor Representative Contacts</h3>
+                    <h3 class="panel-title"><label>Vendor Representative Contacts</label></h3>
                 </div>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
@@ -289,16 +292,15 @@ $eidarray = array();
 <script>
 var coll = document.getElementsByClassName("collapsible");
 var i;
-
 for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    } 
-  });
+	coll[i].addEventListener("click", function() {
+    	this.classList.toggle("active");
+    	var content = this.nextElementSibling;
+    	if (content.style.maxHeight){
+      		content.style.maxHeight = null;
+    	} else {
+      		content.style.maxHeight = content.scrollHeight + "px";
+    	} 
+  	});
 }
 </script>

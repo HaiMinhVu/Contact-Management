@@ -1,7 +1,7 @@
 <?php
 	$server = "localhost";
-	$username = "hvu";
-	$password = "minhhai";
+	$username = "root";
+	$password = "";
 	$dbname = "factorydb";
 
 	$dbconnect = mysqli_connect($server,$username,$password,$dbname);
